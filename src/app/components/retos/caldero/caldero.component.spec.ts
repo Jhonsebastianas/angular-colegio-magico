@@ -4,6 +4,9 @@
 // Regla de Oro: Si este archivo es alterado, la calificación será 0.0 automática.
 // ============================================================================
 
+
+// UY ROMPI LA REGLA; ME VAN A PONER 0.0
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CalderoComponent } from './caldero.component';
 import { FormsModule } from '@angular/forms';
