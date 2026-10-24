@@ -1,5 +1,8 @@
 # 🧙‍♂️ Colegio Mágico - Academia Frontend con Angular
 
+
+# ESTO ES UN CAMBIO CUALQUIERA
+
 ¡Bienvenido al nivel avanzado de tu formación mágica! El Ministerio de Magia ha ordenado digitalizar la **Interfaz del Colegio y el Gran Caldero de Pociones**. Como aprendiz de hechicería, deberás dominar el arte de construir aplicaciones web reactivas utilizando **Angular**, siguiendo los sagrados principios de componentes, directivas y ciclo de vida.
 
 ---
