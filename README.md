@@ -13,6 +13,7 @@
 > ### 🚪 2. El Sello del Pull Request (PR Obligatorio)
 > En el mundo del software y en el Colegio Mágico, **código que no llega en un Pull Request (PR) es código que no existe**.
 > Si completas la actividad pero no abres tu Pull Request formal hacia la rama principal del repositorio antes de la fecha límite, **tu calificación será de 0.0**.
+> Consulta la [Guía Paso a Paso para Crear el Pull Request](./assets/guia_pull_request.md) y el [Ejemplo Real de PR](./assets/ejemplo_pull_request.md). Si usas Antigravity IDE, dispones de la skill integrada `crear-pull-request` (`.agents/skills/crear-pull-request/`) para guiarte y validar tu entrega automáticamente.
 
 ---
 
@@ -59,12 +60,14 @@ A medida que avances en tu formación, el **Tribunal Mágico (GitHub Actions)** 
    # O en modo desatendido idéntico a GitHub Actions:
    npm run test:ci
    ```
-6. Consulta las guías de apoyo en la carpeta `assets/`:
+6. Consulta las guías de apoyo en la carpeta `assets/` y herramientas del proyecto:
    * [Anatomía de Prompts e Inteligencia Artificial](./assets/guia_ia_prompts.md)
    * [Plantilla de la Bitácora de IA para el PR](./assets/plantilla_bitacora_ia.md)
+   * [Guía Paso a Paso para Crear el Pull Request](./assets/guia_pull_request.md)
+   * [Ejemplo Real de un Pull Request con Bitácora](./assets/ejemplo_pull_request.md)
    * [Evolución de la Sintaxis de Directivas en Angular](./assets/evolucion_sintaxis_angular.md)
    * [Comandos Básicos de la Varita Git](./assets/varita_git.md)
-   * [Guía Paso a Paso para Crear el Pull Request](./assets/guia_pull_request.md)
+   * [Skill de Asistencia para Entrega de PR](.agents/skills/crear-pull-request/SKILL.md) (para Antigravity IDE)
 
 ---
 
