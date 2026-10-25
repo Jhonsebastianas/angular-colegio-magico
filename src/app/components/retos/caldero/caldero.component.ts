@@ -156,9 +156,12 @@ ngOnInit(): void {
   // TODO: Reto 4 - En ngOnDestroy(), limpia el intervalo 'this.timerIntervalId'
   // usando clearInterval() para evitar fugas de memoria o maldiciones residuales.
   // =========================================================================
-  ngOnDestroy(): void {
-    // TODO: Reto 4 - Escribe aquí tu clearInterval
+ ngOnDestroy(): void {
+    if (this.timerIntervalId) {
+      clearInterval(this.timerIntervalId);
+    }
   }
+  
 
   // -------------------------------------------------------------------------
   // RETO 5 (IA CHALLENGE): MOTOR DE FILTRADO Y ESTABILIDAD
