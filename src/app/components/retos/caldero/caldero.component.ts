@@ -49,18 +49,45 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // -------------------------------------------------------------------------
   // IMPLEMENTACIÓN DEL CICLO DE VIDA (RETO 1)
   // -------------------------------------------------------------------------
-  ngOnInit(): void {
+ngOnInit(): void {
     // Inicia el fuego del caldero (utilizado en el Reto 4)
     this.iniciarFuegoCaldero();
 
     // =======================================================================
-    // TODO: Reto 1 - En ngOnInit(), inicializa 'this.pociones' con al menos 3 pociones:
-    // 1. "Poción Multijugos" (peligro: 8, tiempo: 45, tipo: 'Transmutacion')
-    // 2. "Felix Felicis" (peligro: 3, tiempo: 120, tipo: 'Curacion')
-    // 3. "Filtro de Muertos" (peligro: 10, tiempo: 90, tipo: 'Prohibida')
-    //
-    // Pista: Construye objetos con la estructura de la interfaz 'Pocion'.
+    // 🔮 RETO 1: Inicialización de las 3 pociones ancestrales obligatorias
     // =======================================================================
+    this.pociones = [
+      {
+        id: 1,
+        nombre: 'Poción Multijugos',
+        descripcion: 'Permite adoptar la forma física de otra persona temporalmente.',
+        nivelPeligro: 8,
+        tiempoCoccionMinutos: 45,
+        tipoMagia: 'Transmutacion',
+        ingredientes: ['Descurainia sophia', 'Sanguinaria', 'Cuerno de bicornio'],
+        estable: false
+      },
+      {
+        id: 2,
+        nombre: 'Felix Felicis',
+        descripcion: 'Suerte líquida que otorga éxito en todas las empresas emprendidas.',
+        nivelPeligro: 3,
+        tiempoCoccionMinutos: 120,
+        tipoMagia: 'Curacion',
+        ingredientes: ['Akwamenti', 'Esencia de ajenjo', 'Tintura de tomillo'],
+        estable: true
+      },
+      {
+        id: 3,
+        nombre: 'Filtro de Muertos',
+        descripcion: 'Poderoso somnífero que sumerge al bebedor en un sueño profundo.',
+        nivelPeligro: 10,
+        tiempoCoccionMinutos: 90,
+        tipoMagia: 'Prohibida',
+        ingredientes: ['Raíz de valeriana', 'Jugo de soporíforo'],
+        estable: false
+      }
+    ];
 
     // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
     this.guardarEstadoGiratiempo();
