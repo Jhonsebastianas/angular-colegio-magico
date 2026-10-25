@@ -174,19 +174,35 @@ ngOnInit(): void {
   // 3. Filtro peligro (filtroSoloPeligrosas): Si es true, solo incluir pociones con nivelPeligro > 7.
   // 4. Ordenamiento: Si ordenAscendente es true, menor a mayor peligro; si false, mayor a menor.
   // =========================================================================
-  getPocionesFiltradas(): Pocion[] {
-    // TODO: Reto 5 - Reemplaza este retorno simple por el algoritmo completo
-    return this.pociones;
+ getPocionesFiltradas(): Pocion[] {
+    return this.pociones
+      .filter(p => {
+        const texto = this.filtroTexto.toLowerCase().trim();
+        const coincideTexto = 
+          p.nombre.toLowerCase().includes(texto) || 
+          p.descripcion.toLowerCase().includes(texto);
+
+        const coincideTipo = this.filtroTipoMagia === 'TODAS' || p.tipoMagia === this.filtroTipoMagia;
+        const coincidePeligro = !this.filtroSoloPeligrosas || p.nivelPeligro > 7;
+
+        return coincideTexto && coincideTipo && coincidePeligro;
+      })
+      .sort((a, b) => {
+        return this.ordenAscendente 
+          ? a.nivelPeligro - b.nivelPeligro 
+          : b.nivelPeligro - a.nivelPeligro;
+      });
   }
 
-  // =========================================================================
-  // TODO: Reto 5 - Calcular Estabilidad General del Caldero:
-  // - Si hay 2 o más pociones con nivelPeligro >= 8 -> Retornar 'CRÍTICO'
-  // - Si hay al menos 1 poción con nivelPeligro >= 5 (y menos de 2 críticas) -> Retornar 'INESTABLE'
-  // - De lo contrario -> Retornar 'SEGURO'
-  // =========================================================================
   calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
-    // TODO: Reto 5 - Reemplaza este retorno por tu lógica de cálculo
+    const pocionesCriticas = this.pociones.filter(p => p.nivelPeligro >= 8).length;
+    const pocionesInestables = this.pociones.filter(p => p.nivelPeligro >= 5).length;
+
+    if (pocionesCriticas >= 2) {
+      return 'CRÍTICO';
+    } else if (pocionesInestables >= 1 || pocionesCriticas === 1) {
+      return 'INESTABLE';
+    }
     return 'SEGURO';
   }
 
