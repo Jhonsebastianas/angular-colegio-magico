@@ -220,24 +220,34 @@ ngOnInit(): void {
   // - giratiempoRehacer(): Avanza el índice y restaura una copia de ese estado.
   // =========================================================================
   guardarEstadoGiratiempo(): void {
-    // TODO: Reto 6 - Implementar guardado inmutable en el historial
+    // Trunca los estados futuros si se hizo undo y se genera una nueva acción
+    this.historialPasos = this.historialPasos.slice(0, this.indiceHistorial + 1);
+    
+    // Clonación profunda inmutable del arreglo de pociones
+    const estadoClonado = JSON.parse(JSON.stringify(this.pociones));
+    this.historialPasos.push(estadoClonado);
+    this.indiceHistorial = this.historialPasos.length - 1;
   }
 
   puedeDeshacer(): boolean {
-    // TODO: Reto 6 - Retornar si es posible retroceder
-    return false;
+    return this.indiceHistorial > 0;
   }
 
   puedeRehacer(): boolean {
-    // TODO: Reto 6 - Retornar si es posible avanzar
-    return false;
+    return this.indiceHistorial < this.historialPasos.length - 1;
   }
 
   giratiempoDeshacer(): void {
-    // TODO: Reto 6 - Revertir al estado anterior
+    if (this.puedeDeshacer()) {
+      this.indiceHistorial--;
+      this.pociones = JSON.parse(JSON.stringify(this.historialPasos[this.indiceHistorial]));
+    }
   }
 
   giratiempoRehacer(): void {
-    // TODO: Reto 6 - Avanzar al estado siguiente
+    if (this.puedeRehacer()) {
+      this.indiceHistorial++;
+      this.pociones = JSON.parse(JSON.stringify(this.historialPasos[this.indiceHistorial]));
+    }
   }
 }
