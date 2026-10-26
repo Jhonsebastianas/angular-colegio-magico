@@ -107,22 +107,34 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // - nuevoNivelPeligro esté entre 1 y 10 inclusive.
   // =========================================================================
   esFormularioValido(): boolean {
-    // TODO: Reto 3 - Reemplaza 'return false' por tus validaciones
-    return false;
+    const nombreValido = !!this.nuevoNombre && this.nuevoNombre.trim().length >= 3;
+    const tiempoValido = this.nuevoTiempoCoccion > 0;
+    const peligroValido = this.nuevoNivelPeligro >= 1 && this.nuevoNivelPeligro <= 10;
+    return nombreValido && tiempoValido && peligroValido;
   }
 
-  // =========================================================================
-  // TODO: Reto 3 - Agregar la nueva poción al arreglo 'this.pociones'
-  // - Debe validar que el formulario sea válido con this.esFormularioValido().
-  // - Debe crear un objeto 'Pocion' con id único (ej. Date.now()).
-  // - Debe agregarla a 'this.pociones'.
-  // - Debe llamar a this.guardarEstadoGiratiempo() para registrar el paso.
-  // - Debe limpiar los inputs del formulario (nuevoNombre = '', etc.).
-  // =========================================================================
   prepararPocion(): void {
     if (!this.esFormularioValido()) return;
 
-    // TODO: Reto 3 - Construye el objeto Pocion, haz push a this.pociones y resetea las variables
+    const nuevaPocion: Pocion = {
+      id: Date.now(),
+      nombre: this.nuevoNombre.trim(),
+      descripcion: this.nuevaDescripcion,
+      nivelPeligro: this.nuevoNivelPeligro,
+      tiempoCoccionMinutos: this.nuevoTiempoCoccion,
+      tipoMagia: this.nuevoTipoMagia,
+      ingredientes: [],
+      estable: this.nuevoNivelPeligro <= 7
+    };
+
+    this.pociones.push(nuevaPocion);
+    this.guardarEstadoGiratiempo();
+
+    this.nuevoNombre = '';
+    this.nuevaDescripcion = '';
+    this.nuevoNivelPeligro = 1;
+    this.nuevoTiempoCoccion = 10;
+    this.nuevoTipoMagia = 'Curacion';
   }
 
   eliminarPocion(id: number): void {
