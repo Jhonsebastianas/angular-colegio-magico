@@ -46,9 +46,9 @@ export class CalderoComponent implements OnInit, OnDestroy {
   historialPasos: Pocion[][] = [];
   indiceHistorial: number = -1;
 
-  // -------------------------------------------------------------------------
+  // ------------------------------------------------------------------------
   // IMPLEMENTACIÓN DEL CICLO DE VIDA (RETO 1)
-  // -------------------------------------------------------------------------
+  // ------------------------------------------------------------------------
   ngOnInit(): void {
     // Inicia el fuego del caldero (utilizado en el Reto 4)
     this.iniciarFuegoCaldero();
