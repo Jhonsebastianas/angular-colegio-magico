@@ -15,8 +15,9 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // 🔮 RETO 1: EL INGREDIENTE BASE (Listado de Pociones & ngOnInit)
   // =========================================================================
   // El arreglo arranca vacío. Debes inicializarlo en ngOnInit()
-  pociones: Pocion[] = [];
+  pociones: Pocion[] = []
 
+  
   // =========================================================================
   // 🪞 RETO 3: EL VÍNCULO CON EL CALDERO (Variables para [(ngModel)])
   // =========================================================================
@@ -60,6 +61,58 @@ export class CalderoComponent implements OnInit, OnDestroy {
     // 3. "Filtro de Muertos" (peligro: 10, tiempo: 90, tipo: 'Prohibida')
     //
     // Pista: Construye objetos con la estructura de la interfaz 'Pocion'.
+    this.pociones = [
+      {
+        id: 1, 
+        nombre: 'Poción Multijugos',
+        descripcion: 'Hace que te combiertas en las persona que quieras',
+        nivelPeligro: 8,
+        tiempoCoccionMinutos: 45,
+        tipoMagia: 'Transmutacion',
+        ingredientes: ['Pelo de la persona', 'Sanguijuelas', 'Crisopos'],
+        estable: false
+      },
+      {
+        id: 2, 
+        nombre: 'Felix Felicis',
+        descripcion: 'Si la bebes vas a tener buena suerte',
+        nivelPeligro: 3,
+        tiempoCoccionMinutos: 120,
+        tipoMagia: 'Curacion',
+        ingredientes: ['Tentáculo de Murtlap', 'Ruda', 'Raíz de jengibre'],
+        estable: true
+      },
+      {
+        id: 3,
+        nombre: 'Filtro de Muertos',
+        descripcion: 'Sumerge a quien la bebe en un sueño profundo.',
+        nivelPeligro: 10,
+        tiempoCoccionMinutos: 90,
+        tipoMagia: 'Prohibida',
+        ingredientes: ['Raíz de asfódelo', 'Infusión de ajenjo'],
+        estable: false
+      },
+      {
+        id: 4,
+        nombre: 'Crecehuesos',
+        descripcion: 'Hace crecer de nuevo los huesos rotos o perdidos',
+        nivelPeligro: 2,
+        tiempoCoccionMinutos: 60,
+        tipoMagia: 'Curacion',
+        ingredientes: ['Polvo de hueso', 'Agua de manantial'],
+        estable: true
+      },
+      {
+        id: 5,
+        nombre: 'Elixir de Luz Lunar',
+        descripcion: 'Ilumina los lugares oscuros con un resplandor plateado',
+        nivelPeligro: 4,
+        tiempoCoccionMinutos: 30,
+        tipoMagia: 'Luz',
+        ingredientes: ['Rocío de luna', 'Pétalos de lirio'],
+        estable: true
+      }
+    ];
     // =======================================================================
 
     // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
