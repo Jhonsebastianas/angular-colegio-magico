@@ -149,10 +149,44 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // RETO 5 (IA CHALLENGE): MOTOR DE FILTRADO Y ESTABILIDAD
   // -------------------------------------------------------------------------
   getPocionesFiltradas(): Pocion[] {
-    return this.pociones;
+    return this.pociones.filter(pocion => {
+      // 1. Filtro por texto (nombre o descripción, insensible a mayúsculas)
+      const textoCoincide = 
+        pocion.nombre.toLowerCase().includes(this.filtroTexto.toLowerCase()) ||
+        pocion.descripcion.toLowerCase().includes(this.filtroTexto.toLowerCase());
+
+      // 2. Filtro por tipo de magia
+      const tipoCoincide = 
+        this.filtroTipoMagia === 'TODAS' || pocion.tipoMagia === this.filtroTipoMagia;
+
+      // 3. Filtro por nivel de peligro (> 7)
+      const peligroCoincide = 
+        !this.filtroSoloPeligrosas || pocion.nivelPeligro > 7;
+
+      return textoCoincide && tipoCoincide && peligroCoincide;
+    }).sort((a, b) => {
+      // 4. Ordenamiento por nivel de peligro (ascendente o descendente)
+      return this.ordenAscendente 
+        ? a.nivelPeligro - b.nivelPeligro 
+        : b.nivelPeligro - a.nivelPeligro;
+    });
   }
 
   calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
+    const pocionesCriticas = this.pociones.filter(p => p.nivelPeligro >= 8).length;
+    const pocionesInestables = this.pociones.filter(p => p.nivelPeligro >= 5).length;
+
+    // - Si hay 2 o más pociones con nivelPeligro >= 8 -> Retornar 'CRÍTICO'
+    if (pocionesCriticas >= 2) {
+      return 'CRÍTICO';
+    }
+
+    // - Si hay al menos 1 poción con nivelPeligro >= 5 (y menos de 2 críticas) -> Retornar 'INESTABLE'
+    if (pocionesInestables >= 1) {
+      return 'INESTABLE';
+    }
+
+    // - De lo contrario -> Retornar 'SEGURO'
     return 'SEGURO';
   }
 
