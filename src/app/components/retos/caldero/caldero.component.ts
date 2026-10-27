@@ -150,22 +150,18 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // -------------------------------------------------------------------------
   getPocionesFiltradas(): Pocion[] {
     return this.pociones.filter(pocion => {
-      // 1. Filtro por texto (nombre o descripción, insensible a mayúsculas)
       const textoCoincide = 
         pocion.nombre.toLowerCase().includes(this.filtroTexto.toLowerCase()) ||
         pocion.descripcion.toLowerCase().includes(this.filtroTexto.toLowerCase());
 
-      // 2. Filtro por tipo de magia
       const tipoCoincide = 
         this.filtroTipoMagia === 'TODAS' || pocion.tipoMagia === this.filtroTipoMagia;
 
-      // 3. Filtro por nivel de peligro (> 7)
       const peligroCoincide = 
         !this.filtroSoloPeligrosas || pocion.nivelPeligro > 7;
 
       return textoCoincide && tipoCoincide && peligroCoincide;
     }).sort((a, b) => {
-      // 4. Ordenamiento por nivel de peligro (ascendente o descendente)
       return this.ordenAscendente 
         ? a.nivelPeligro - b.nivelPeligro 
         : b.nivelPeligro - a.nivelPeligro;
@@ -176,17 +172,12 @@ export class CalderoComponent implements OnInit, OnDestroy {
     const pocionesCriticas = this.pociones.filter(p => p.nivelPeligro >= 8).length;
     const pocionesInestables = this.pociones.filter(p => p.nivelPeligro >= 5).length;
 
-    // - Si hay 2 o más pociones con nivelPeligro >= 8 -> Retornar 'CRÍTICO'
     if (pocionesCriticas >= 2) {
       return 'CRÍTICO';
     }
-
-    // - Si hay al menos 1 poción con nivelPeligro >= 5 (y menos de 2 críticas) -> Retornar 'INESTABLE'
     if (pocionesInestables >= 1) {
       return 'INESTABLE';
     }
-
-    // - De lo contrario -> Retornar 'SEGURO'
     return 'SEGURO';
   }
 
@@ -194,22 +185,38 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // RETO 6 (IA CHALLENGE): EL GIRATIEMPO (Historial Undo / Redo)
   // -------------------------------------------------------------------------
   guardarEstadoGiratiempo(): void {
-    // TODO: Reto 6 - Implementar guardado inmutable en el historial
+    // Si estábamos en medio del historial y se realiza una nueva acción, descartamos el "futuro"
+    if (this.indiceHistorial < this.historialPasos.length - 1) {
+      this.historialPasos = this.historialPasos.slice(0, this.indiceHistorial + 1);
+    }
+
+    // Clonación profunda de las pociones para mantener inmutabilidad
+    const estadoClonado: Pocion[] = JSON.parse(JSON.stringify(this.pociones));
+    this.historialPasos.push(estadoClonado);
+    this.indiceHistorial = this.historialPasos.length - 1;
   }
 
   puedeDeshacer(): boolean {
-    return false;
+    return this.indiceHistorial > 0;
   }
 
   puedeRehacer(): boolean {
-    return false;
+    return this.indiceHistorial < this.historialPasos.length - 1;
   }
 
   giratiempoDeshacer(): void {
-    // TODO: Reto 6 - Revertir al estado anterior
+    if (this.puedeDeshacer()) {
+      this.indiceHistorial--;
+      // Restauramos profundamente el estado anterior
+      this.pociones = JSON.parse(JSON.stringify(this.historialPasos[this.indiceHistorial]));
+    }
   }
 
   giratiempoRehacer(): void {
-    // TODO: Reto 6 - Avanzar al estado siguiente
+    if (this.puedeRehacer()) {
+      this.indiceHistorial++;
+      // Restauramos profundamente el estado siguiente
+      this.pociones = JSON.parse(JSON.stringify(this.historialPasos[this.indiceHistorial]));
+    }
   }
 }
