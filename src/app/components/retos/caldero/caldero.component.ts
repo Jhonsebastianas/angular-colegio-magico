@@ -94,14 +94,18 @@ export class CalderoComponent implements OnInit, OnDestroy {
   ];
 
   // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
+    this.iniciarFuegoCaldero();
+
+  // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
   this.guardarEstadoGiratiempo();
+  }
+  iniciarFuegoCaldero(): void {
+  this.timerIntervalId = setInterval(() => {
+    this.segundosCoccion++;
+  }, 1000);
 }
 
-  iniciarFuegoCaldero(): void {
-    this.timerIntervalId = setInterval(() => {
-      this.segundosCoccion++;
-    }, 1000);
-  }
+
 
   // -------------------------------------------------------------------------
   // MÉTODOS DEL RETO 3: PREPARAR NUEVA POCIÓN (DATA BINDING)
@@ -164,8 +168,9 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // usando clearInterval() para evitar fugas de memoria o maldiciones residuales.
   // =========================================================================
   ngOnDestroy(): void {
-    // TODO: Reto 4 - Escribe aquí tu clearInterval
-  }
+  window.clearInterval(this.timerIntervalId);
+  this.timerIntervalId = null;
+}
 
   // -------------------------------------------------------------------------
   // RETO 5 (IA CHALLENGE): MOTOR DE FILTRADO Y ESTABILIDAD
