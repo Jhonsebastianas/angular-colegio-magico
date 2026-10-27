@@ -115,8 +115,11 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // - nuevoNivelPeligro esté entre 1 y 10 inclusive.
   // =========================================================================
   esFormularioValido(): boolean {
-    // TODO: Reto 3 - Reemplaza 'return false' por tus validaciones
-    return false;
+    const nombreValido = this.nuevoNombre.trim().length >= 3;
+    const tiempoValido = Number(this.nuevoTiempoCoccion) > 0;
+    const peligroValido = this.nuevoNivelPeligro >= 1 && this.nuevoNivelPeligro <= 10;
+
+    return nombreValido && tiempoValido && peligroValido;
   }
 
   // =========================================================================
@@ -130,7 +133,26 @@ export class CalderoComponent implements OnInit, OnDestroy {
   prepararPocion(): void {
     if (!this.esFormularioValido()) return;
 
-    // TODO: Reto 3 - Construye el objeto Pocion, haz push a this.pociones y resetea las variables
+    const nuevaPocion: Pocion = {
+      id: Date.now(),
+      nombre: this.nuevoNombre.trim(),
+      descripcion: this.nuevaDescripcion.trim() || 'Sin descripción detallada.',
+      nivelPeligro: Number(this.nuevoNivelPeligro),
+      tiempoCoccionMinutos: Number(this.nuevoTiempoCoccion),
+      tipoMagia: this.nuevoTipoMagia,
+      ingredientes: [],
+      estable: this.nuevoNivelPeligro < 7
+    };
+
+    this.pociones.push(nuevaPocion);
+    this.guardarEstadoGiratiempo();
+
+    // Limpiar inputs del formulario
+    this.nuevoNombre = '';
+    this.nuevaDescripcion = '';
+    this.nuevoNivelPeligro = 1;
+    this.nuevoTiempoCoccion = 10;
+    this.nuevoTipoMagia = 'Curacion';
   }
 
   eliminarPocion(id: number): void {
@@ -146,7 +168,9 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // usando clearInterval() para evitar fugas de memoria o maldiciones residuales.
   // =========================================================================
   ngOnDestroy(): void {
-    // TODO: Reto 4 - Escribe aquí tu clearInterval
+    if (this.timerIntervalId) {
+      clearInterval(this.timerIntervalId);
+    }
   }
 
   // -------------------------------------------------------------------------
