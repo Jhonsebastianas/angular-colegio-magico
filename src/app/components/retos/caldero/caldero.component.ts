@@ -230,25 +230,34 @@ calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
   // - giratiempoDeshacer(): Retrocede el índice y restaura una copia de ese estado.
   // - giratiempoRehacer(): Avanza el índice y restaura una copia de ese estado.
   // =========================================================================
-  guardarEstadoGiratiempo(): void {
-    // TODO: Reto 6 - Implementar guardado inmutable en el historial
-  }
+  private clonarPociones(pociones: Pocion[]): Pocion[] {
+  return JSON.parse(JSON.stringify(pociones));
+}
 
-  puedeDeshacer(): boolean {
-    // TODO: Reto 6 - Retornar si es posible retroceder
-    return false;
-  }
+guardarEstadoGiratiempo(): void {
+  // Si hubo Undo y se hace una acción nueva, se descarta el futuro
+  this.historialPasos = this.historialPasos.slice(0, this.indiceHistorial + 1);
+  this.historialPasos.push(this.clonarPociones(this.pociones));
+  this.indiceHistorial = this.historialPasos.length - 1;
+}
 
-  puedeRehacer(): boolean {
-    // TODO: Reto 6 - Retornar si es posible avanzar
-    return false;
-  }
+puedeDeshacer(): boolean {
+  return this.indiceHistorial > 0;
+}
 
-  giratiempoDeshacer(): void {
-    // TODO: Reto 6 - Revertir al estado anterior
-  }
+puedeRehacer(): boolean {
+  return this.indiceHistorial < this.historialPasos.length - 1;
+}
 
-  giratiempoRehacer(): void {
-    // TODO: Reto 6 - Avanzar al estado siguiente
+giratiempoDeshacer(): void {
+  if (!this.puedeDeshacer()) return;
+  this.indiceHistorial--;
+  this.pociones = this.clonarPociones(this.historialPasos[this.indiceHistorial]);
+}
+
+giratiempoRehacer(): void {
+  if (!this.puedeRehacer()) return;
+  this.indiceHistorial++;
+  this.pociones = this.clonarPociones(this.historialPasos[this.indiceHistorial]);
   }
 }
