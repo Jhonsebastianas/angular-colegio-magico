@@ -125,6 +125,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
+
   // -------------------------------------------------------------------------
   // MÉTODOS DEL RETO 3: PREPARAR NUEVA POCIÓN (DATA BINDING)
   // -------------------------------------------------------------------------
@@ -136,7 +137,13 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   esFormularioValido(): boolean {
     // TODO: Reto 3 - Reemplaza 'return false' por tus validaciones
-    return false;
+     const nombreLimpio = (this.nuevoNombre ?? '').trim();
+    return(
+      nombreLimpio.length >= 3 &&
+      Number(this.nuevoTiempoCoccion) > 0 &&
+      Number(this.nuevoNivelPeligro) >= 1 &&
+      Number(this.nuevoNivelPeligro) <= 10
+    );
   }
 
   // =========================================================================
@@ -151,6 +158,24 @@ export class CalderoComponent implements OnInit, OnDestroy {
     if (!this.esFormularioValido()) return;
 
     // TODO: Reto 3 - Construye el objeto Pocion, haz push a this.pociones y resetea las variables
+    const nuevaPocion: Pocion = {
+      id: Date.now(),
+      nombre: this.nuevoNombre.trim(),
+      descripcion: this.nuevaDescripcion.trim(),
+      nivelPeligro: Number(this.nuevoNivelPeligro),
+      tiempoCoccionMinutos: Number(this.nuevoTiempoCoccion),
+      tipoMagia: this.nuevoTipoMagia,
+      ingredientes: [],
+      estable: Number(this.nuevoNivelPeligro) < 5
+    };
+
+    this.pociones.push(nuevaPocion);
+    this.guardarEstadoGiratiempo();
+    this.nuevoNombre = '';
+    this.nuevaDescripcion = '';
+    this.nuevoNivelPeligro = 1;
+    this.nuevoTiempoCoccion = 10;
+    this.nuevoTipoMagia = 'Curacion';
   }
 
   eliminarPocion(id: number): void {
