@@ -184,20 +184,38 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // 4. Ordenamiento: Si ordenAscendente es true, menor a mayor peligro; si false, mayor a menor.
   // =========================================================================
   getPocionesFiltradas(): Pocion[] {
-    // TODO: Reto 5 - Reemplaza este retorno simple por el algoritmo completo
-    return this.pociones;
-  }
+  const texto = this.filtroTexto.trim().toLowerCase();
 
-  // =========================================================================
-  // TODO: Reto 5 - Calcular Estabilidad General del Caldero:
-  // - Si hay 2 o más pociones con nivelPeligro >= 8 -> Retornar 'CRÍTICO'
-  // - Si hay al menos 1 poción con nivelPeligro >= 5 (y menos de 2 críticas) -> Retornar 'INESTABLE'
-  // - De lo contrario -> Retornar 'SEGURO'
-  // =========================================================================
-  calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
-    // TODO: Reto 5 - Reemplaza este retorno por tu lógica de cálculo
-    return 'SEGURO';
-  }
+  const resultado = this.pociones.filter(p => {
+    const coincideTexto =
+      texto === '' ||
+      p.nombre.toLowerCase().includes(texto) ||
+      p.descripcion.toLowerCase().includes(texto);
+
+    const coincideTipo =
+      this.filtroTipoMagia === 'TODAS' || p.tipoMagia === this.filtroTipoMagia;
+
+    const coincidePeligro =
+      !this.filtroSoloPeligrosas || p.nivelPeligro > 7;
+
+    return coincideTexto && coincideTipo && coincidePeligro;
+  });
+
+  return resultado.sort((a, b) =>
+    this.ordenAscendente
+      ? a.nivelPeligro - b.nivelPeligro
+      : b.nivelPeligro - a.nivelPeligro
+  );
+}
+
+calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
+  const criticas = this.pociones.filter(p => p.nivelPeligro >= 8).length;
+  const hayPeligrosa = this.pociones.some(p => p.nivelPeligro >= 5);
+
+  if (criticas >= 2) return 'CRÍTICO';
+  if (hayPeligrosa) return 'INESTABLE';
+  return 'SEGURO';
+}
 
   // -------------------------------------------------------------------------
   // RETO 6 (IA CHALLENGE): EL GIRATIEMPO (Historial Undo / Redo)
