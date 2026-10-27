@@ -50,21 +50,52 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // IMPLEMENTACIÓN DEL CICLO DE VIDA (RETO 1)
   // -------------------------------------------------------------------------
   ngOnInit(): void {
-    // Inicia el fuego del caldero (utilizado en el Reto 4)
-    this.iniciarFuegoCaldero();
+  this.pociones = [
+    {
+      id: 1,
+      nombre: 'Poción Multijugos',
+      descripcion: 'Transforma a quien la bebe en otra persona',
+      nivelPeligro: 8,
+      tiempoCoccionMinutos: 45,
+      tipoMagia: 'Transmutacion',
+      ingredientes: ['Pelo de la persona', 'Sanguijuelas', 'Crisopos'],
+      estable: false
+    },
+    {
+      id: 2,
+      nombre: 'Felix Felicis',
+      descripcion: 'Suerte líquida',
+      nivelPeligro: 3,
+      tiempoCoccionMinutos: 120,
+      tipoMagia: 'Curacion',
+      ingredientes: ['Tentáculos de Murtlap', 'Hojas de ajenjo'],
+      estable: true
+    },
+    {
+      id: 3,
+      nombre: 'Filtro de Muertos',
+      descripcion: 'Sueño profundo parecido a la muerte',
+      nivelPeligro: 10,
+      tiempoCoccionMinutos: 90,
+      tipoMagia: 'Prohibida',
+      ingredientes: ['Raíz de asfódelo', 'Infusión de ajenjo'],
+      estable: false
+    },
+    {      
+      id: 4,
+      nombre: 'paraiso de los muertos',
+      descripcion: 'Alcanza al objetivo con el fin de una muerte tranquila',
+      nivelPeligro: 15,
+      tiempoCoccionMinutos: 90,
+      tipoMagia: 'Prohibida',
+      ingredientes: ['Raíz de asfódelo', 'Infusión de ajenjo', 'Raíz de mandrágora'],
+      estable: false
+    }
+  ];
 
-    // =======================================================================
-    // TODO: Reto 1 - En ngOnInit(), inicializa 'this.pociones' con al menos 3 pociones:
-    // 1. "Poción Multijugos" (peligro: 8, tiempo: 45, tipo: 'Transmutacion')
-    // 2. "Felix Felicis" (peligro: 3, tiempo: 120, tipo: 'Curacion')
-    // 3. "Filtro de Muertos" (peligro: 10, tiempo: 90, tipo: 'Prohibida')
-    //
-    // Pista: Construye objetos con la estructura de la interfaz 'Pocion'.
-    // =======================================================================
-
-    // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
-    this.guardarEstadoGiratiempo();
-  }
+  // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
+  this.guardarEstadoGiratiempo();
+}
 
   iniciarFuegoCaldero(): void {
     this.timerIntervalId = setInterval(() => {
