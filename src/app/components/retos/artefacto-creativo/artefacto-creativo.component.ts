@@ -16,7 +16,7 @@ export interface RegistroTurno {
   emisor: string;
   hechizo: string;
   efecto: string;
-  tipo: 'damage' | 'shield' | 'heal';
+  tipo: 'damage' | 'shield' | 'heal' | 'critical';
 }
 
 @Component({
@@ -28,34 +28,32 @@ export interface RegistroTurno {
 })
 export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
   // =========================================================================
-  // 🎨 RETO 7: EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)
+  // 🎨 RETO 7: EL GRAN LIENZO CREATIVO (Versión Magistral & Inmersiva)
   // =========================================================================
-  // EJEMPLO ILUSTRATIVO: "El Simulador de Duelos del Club de Duelo de Hogwarts"
-  // Los estudiantes pueden personalizar este simulador o construir su propio
-  // artefacto mágico interactivo (ej: Mapa del Merodeador, Tienda de Ollivander,
-  // Herbario Mágico) cumpliendo la rúbrica de evaluación.
 
-  // 1. Estado Interactivo (Jugador vs Rival)
-  nombreMago: string = 'Harry Potter';
+  // 1. Estados Interactivos (Jugador vs Rival)
+  nombreMago: string = 'Aprendiz Estelar';
   saludMago: number = 100;
   energiaMago: number = 100;
 
-  nombreRival: string = 'Draco Malfoy';
+  nombreRival: string = 'Inquisidor Oscuro';
   saludRival: number = 100;
   energiaRival: number = 100;
 
-  // Estado general del duelo: 'PREPARACION' | 'EN_CURSO' | 'VICTORIA' | 'DERROTA'
+  // Estados del duelo y mecánicas creativas añadidas
   estadoDuelo: 'PREPARACION' | 'EN_CURSO' | 'VICTORIA' | 'DERROTA' = 'PREPARACION';
-
   numeroTurno: number = 1;
   arenaOscura: boolean = false;
+  
+  // 🌟 Estado Creativo Extra: Modo Concentración Mágica (Duplica poder pero gasta más energía)
+  modoConcentracion: boolean = false;
 
-  // Grimorio de hechizos disponibles para el aprendiz
+  // Grimorio de hechizos místicos
   hechizosDuelo: HechizoDuelo[] = [
-    { id: 1, nombre: 'Expelliarmus', tipo: 'Ataque', poder: 25, costoEnergia: 20, descripcion: 'Desarma al oponente con un rayo rojo escarlata.' },
-    { id: 2, nombre: 'Protego', tipo: 'Defensa', poder: 30, costoEnergia: 15, descripcion: 'Crea un escudo mágico que absorbe el siguiente impacto.' },
-    { id: 3, nombre: 'Episkey', tipo: 'Sanacion', poder: 20, costoEnergia: 25, descripcion: 'Restaura vitalidad y cura heridas menores.' },
-    { id: 4, nombre: 'Stupefy', tipo: 'Ataque', poder: 35, costoEnergia: 35, descripcion: 'Aturde al rival con una potente onda expansiva.' }
+    { id: 1, nombre: 'Expelliarmus', tipo: 'Ataque', poder: 25, costoEnergia: 20, descripcion: 'Desarma al oponente con un rayo escarlata.' },
+    { id: 2, nombre: 'Protego', tipo: 'Defensa', poder: 30, costoEnergia: 15, descripcion: 'Crea un escudo mágico protector.' },
+    { id: 3, nombre: 'Episkey', tipo: 'Sanacion', poder: 25, costoEnergia: 25, descripcion: 'Restaura vitalidad y cura heridas.' },
+    { id: 4, nombre: 'Stupefy', tipo: 'Ataque', poder: 40, costoEnergia: 35, descripcion: 'Onda expansiva de aturdimiento masivo.' }
   ];
 
   historialDuelo: RegistroTurno[] = [];
@@ -63,11 +61,13 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
 
   // 2. Lifecycle Hook: ngOnInit
   ngOnInit(): void {
-    console.log('🎨 Reto 7: Artefacto Creativo montado en el Gran Salón.');
-    // Temporizador ambiental sutil de recarga de energía
+    console.log('🎨 Reto 7: Artefacto Creativo avanzado montado con éxito.');
+    
+    // Temporizador ambiental de regeneración de maná/energía
     this.ambientMusicInterval = setInterval(() => {
       if (this.estadoDuelo === 'EN_CURSO') {
-        this.energiaMago = Math.min(100, this.energiaMago + 2);
+        const regeneracion = this.modoConcentracion ? 4 : 2;
+        this.energiaMago = Math.min(100, this.energiaMago + regeneracion);
         this.energiaRival = Math.min(100, this.energiaRival + 2);
       }
     }, 2000);
@@ -81,40 +81,53 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
     this.saludRival = 100;
     this.energiaRival = 100;
     this.numeroTurno = 1;
+    this.modoConcentracion = false;
     this.historialDuelo = [
       {
         turno: 1,
-        emisor: 'Profesor Flitwick',
-        hechizo: 'Apertura de Duelo',
-        efecto: '¡Varitas en alto! Hagan una reverencia y comiencen.',
+        emisor: 'Gran Maestro',
+        hechizo: 'Inicio de Duelo',
+        efecto: '¡Que comience el duelo de altares mágicos!',
         tipo: 'shield'
       }
     ];
   }
 
+  // 🌟 Método Creativo Extra: Alternar Concentración Mágica
+  toggleConcentracion(): void {
+    this.modoConcentracion = !this.modoConcentracion;
+  }
+
   // 4. Lanzar Hechizo del Jugador
   lanzarHechizo(hechizo: HechizoDuelo): void {
     if (this.estadoDuelo !== 'EN_CURSO') return;
-    if (this.energiaMago < hechizo.costoEnergia) return;
 
-    this.energiaMago -= hechizo.costoEnergia;
+    // Si el modo concentración está activo, el coste de energía aumenta un 50%
+    const costoReal = this.modoConcentracion ? Math.round(hechizo.costoEnergia * 1.5) : hechizo.costoEnergia;
+    if (this.energiaMago < costoReal) return;
+
+    this.energiaMago -= costoReal;
+
+    // Si está en concentración, los hechizos de ataque hacen un 50% más de daño
+    const multiplicadorPoder = this.modoConcentracion ? 1.5 : 1.0;
+    const poderReal = Math.round(hechizo.poder * multiplicadorPoder);
 
     if (hechizo.tipo === 'Ataque') {
-      this.saludRival = Math.max(0, this.saludRival - hechizo.poder);
+      this.saludRival = Math.max(0, this.saludRival - poderReal);
       this.historialDuelo.unshift({
         turno: this.numeroTurno,
         emisor: this.nombreMago,
-        hechizo: hechizo.nombre,
-        efecto: `¡Impacto directo! Causa ${hechizo.poder} puntos de daño a ${this.nombreRival}.`,
-        tipo: 'damage'
+        hechizo: `${hechizo.nombre} ${this.modoConcentracion ? '⚡(Potenciado)' : ''}`,
+        efecto: `¡Ataque crítico! Causa ${poderReal} de daño a ${this.nombreRival}.`,
+        tipo: this.modoConcentracion ? 'critical' : 'damage'
       });
     } else if (hechizo.tipo === 'Sanacion') {
-      this.saludMago = Math.min(100, this.saludMago + hechizo.poder);
+      this.saludMago = Math.min(100, this.saludMago + poderReal);
       this.historialDuelo.unshift({
         turno: this.numeroTurno,
         emisor: this.nombreMago,
         hechizo: hechizo.nombre,
-        efecto: `Cura mágica: Restaura ${hechizo.poder} puntos de vitalidad.`,
+        efecto: `Sanación arcana: Recupera ${poderReal} puntos de salud.`,
         tipo: 'heal'
       });
     } else {
@@ -122,18 +135,18 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
         turno: this.numeroTurno,
         emisor: this.nombreMago,
         hechizo: hechizo.nombre,
-        efecto: `Escudo activo: ${hechizo.descripcion}`,
+        efecto: `Escudo defensivo activado con éxito.`,
         tipo: 'shield'
       });
     }
 
-    // Verificar si el rival cayó
+    // Verificar si el rival fue vencido
     if (this.saludRival <= 0) {
       this.estadoDuelo = 'VICTORIA';
       return;
     }
 
-    // Respuesta del Rival (IA Simulada)
+    // Turno de respuesta del rival
     this.turnoRival();
   }
 
@@ -142,9 +155,9 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       if (this.estadoDuelo !== 'EN_CURSO') return;
 
-      const opcionesRival = ['Serpensortia', 'Tarantallegra', 'Rictusempra', 'Protego'];
+      const opcionesRival = ['Rayo Oscuro', 'Fulgor Sombra', 'Maldición Silenciosa', 'Eco de Tinieblas'];
       const elegido = opcionesRival[Math.floor(Math.random() * opcionesRival.length)];
-      const danoRival = Math.floor(Math.random() * 20) + 10;
+      const danoRival = Math.floor(Math.random() * 22) + 12;
 
       this.saludMago = Math.max(0, this.saludMago - danoRival);
       this.numeroTurno++;
@@ -153,7 +166,7 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
         turno: this.numeroTurno,
         emisor: this.nombreRival,
         hechizo: elegido,
-        efecto: `¡El rival contraataca con ${elegido}! Te causa ${danoRival} de daño.`,
+        efecto: `Contraataque de ${this.nombreRival} con ${elegido}: -${danoRival} PS.`,
         tipo: 'damage'
       });
 
@@ -163,7 +176,7 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
     }, 600);
   }
 
-  // 6. Alternar ambientación de la arena
+  // 6. Alternar diseño estético de la arena
   toggleArena(): void {
     this.arenaOscura = !this.arenaOscura;
   }
@@ -173,6 +186,6 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
     if (this.ambientMusicInterval) {
       clearInterval(this.ambientMusicInterval);
     }
-    console.log('🎨 Reto 7: Artefacto Creativo desmontado y recursos limpiados.');
+    console.log('🎨 Reto 7: Artefacto Creativo desmontado y recursos liberados correctamente.');
   }
 }
