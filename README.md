@@ -53,7 +53,7 @@ A medida que avances en tu formación, el **Tribunal Mágico (GitHub Actions)** 
    npm start
    ```
    Abre tu navegador en [http://localhost:4200](http://localhost:4200).
-5. Ejecuta las pruebas del Tribunal en cualquier momento:
+5. Ejecuta las prueñbas del Tribunal en cualquier momento:
    ```bash
    npm test
    # O en modo desatendido idéntico a GitHub Actions:
@@ -68,7 +68,7 @@ A medida que avances en tu formación, el **Tribunal Mágico (GitHub Actions)** 
 
 ---
 
-## 🗺️ Mapa de los Retos Mágicos
+{## 🗺️ Mapa de los Retos Mágicos
 
 Las puertas de acceso a los retos se encuentran en `src/app/components/`:
 
