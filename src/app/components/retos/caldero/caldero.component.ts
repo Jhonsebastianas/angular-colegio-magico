@@ -86,7 +86,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
   }
 
   esFormularioValido(): boolean {
-    // Reto 3: Validación
+    // Reto 3: Validación:
     const nombreValido = this.nuevoNombre.trim().length >= 3;
     const tiempoValido = this.nuevoTiempoCoccion > 0;
     const peligroValido = this.nuevoNivelPeligro >= 1 && this.nuevoNivelPeligro <= 10;
