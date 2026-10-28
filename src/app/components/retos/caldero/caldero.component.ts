@@ -124,7 +124,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
   }
 
   getPocionesFiltradas(): Pocion[] {
-    // Reto 5: Filtros combinados:
+    // Reto 5: Filtros combinados
     return this.pociones
       .filter(p => 
         (p.nombre.toLowerCase().includes(this.filtroTexto.toLowerCase()) || 
