@@ -15,8 +15,9 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // 🔮 RETO 1: EL INGREDIENTE BASE (Listado de Pociones & ngOnInit)
   // =========================================================================
   // El arreglo arranca vacío. Debes inicializarlo en ngOnInit()
-  pociones: Pocion[] = [];
+  pociones: Pocion[] = []
 
+  
   // =========================================================================
   // 🪞 RETO 3: EL VÍNCULO CON EL CALDERO (Variables para [(ngModel)])
   // =========================================================================
@@ -60,6 +61,58 @@ export class CalderoComponent implements OnInit, OnDestroy {
     // 3. "Filtro de Muertos" (peligro: 10, tiempo: 90, tipo: 'Prohibida')
     //
     // Pista: Construye objetos con la estructura de la interfaz 'Pocion'.
+    this.pociones = [
+      {
+        id: 1, 
+        nombre: 'Poción Multijugos',
+        descripcion: 'Hace que te combiertas en las persona que quieras',
+        nivelPeligro: 8,
+        tiempoCoccionMinutos: 45,
+        tipoMagia: 'Transmutacion',
+        ingredientes: ['Pelo de la persona', 'Sanguijuelas', 'Crisopos'],
+        estable: false
+      },
+      {
+        id: 2, 
+        nombre: 'Felix Felicis',
+        descripcion: 'Si la bebes vas a tener buena suerte',
+        nivelPeligro: 3,
+        tiempoCoccionMinutos: 120,
+        tipoMagia: 'Curacion',
+        ingredientes: ['Tentáculo de Murtlap', 'Ruda', 'Raíz de jengibre'],
+        estable: true
+      },
+      {
+        id: 3,
+        nombre: 'Filtro de Muertos',
+        descripcion: 'Sumerge a quien la bebe en un sueño profundo.',
+        nivelPeligro: 10,
+        tiempoCoccionMinutos: 90,
+        tipoMagia: 'Prohibida',
+        ingredientes: ['Raíz de asfódelo', 'Infusión de ajenjo'],
+        estable: false
+      },
+      {
+        id: 4,
+        nombre: 'Crecehuesos',
+        descripcion: 'Hace crecer de nuevo los huesos rotos o perdidos',
+        nivelPeligro: 2,
+        tiempoCoccionMinutos: 60,
+        tipoMagia: 'Curacion',
+        ingredientes: ['Polvo de hueso', 'Agua de manantial'],
+        estable: true
+      },
+      {
+        id: 5,
+        nombre: 'Elixir de Luz Lunar',
+        descripcion: 'Ilumina los lugares oscuros con un resplandor plateado',
+        nivelPeligro: 4,
+        tiempoCoccionMinutos: 30,
+        tipoMagia: 'Luz',
+        ingredientes: ['Rocío de luna', 'Pétalos de lirio'],
+        estable: true
+      }
+    ];
     // =======================================================================
 
     // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
@@ -72,6 +125,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
+
   // -------------------------------------------------------------------------
   // MÉTODOS DEL RETO 3: PREPARAR NUEVA POCIÓN (DATA BINDING)
   // -------------------------------------------------------------------------
@@ -83,7 +137,13 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   esFormularioValido(): boolean {
     // TODO: Reto 3 - Reemplaza 'return false' por tus validaciones
-    return false;
+     const nombreLimpio = (this.nuevoNombre ?? '').trim();
+    return(
+      nombreLimpio.length >= 3 &&
+      Number(this.nuevoTiempoCoccion) > 0 &&
+      Number(this.nuevoNivelPeligro) >= 1 &&
+      Number(this.nuevoNivelPeligro) <= 10
+    );
   }
 
   // =========================================================================
@@ -98,6 +158,24 @@ export class CalderoComponent implements OnInit, OnDestroy {
     if (!this.esFormularioValido()) return;
 
     // TODO: Reto 3 - Construye el objeto Pocion, haz push a this.pociones y resetea las variables
+    const nuevaPocion: Pocion = {
+      id: Date.now(),
+      nombre: this.nuevoNombre.trim(),
+      descripcion: this.nuevaDescripcion.trim(),
+      nivelPeligro: Number(this.nuevoNivelPeligro),
+      tiempoCoccionMinutos: Number(this.nuevoTiempoCoccion),
+      tipoMagia: this.nuevoTipoMagia,
+      ingredientes: [],
+      estable: Number(this.nuevoNivelPeligro) < 5
+    };
+
+    this.pociones.push(nuevaPocion);
+    this.guardarEstadoGiratiempo();
+    this.nuevoNombre = '';
+    this.nuevaDescripcion = '';
+    this.nuevoNivelPeligro = 1;
+    this.nuevoTiempoCoccion = 10;
+    this.nuevoTipoMagia = 'Curacion';
   }
 
   eliminarPocion(id: number): void {
@@ -114,6 +192,10 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   ngOnDestroy(): void {
     // TODO: Reto 4 - Escribe aquí tu clearInterval
+    if (this.timerIntervalId !== null) {
+      clearInterval(this.timerIntervalId);
+      this.timerIntervalId = null;
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -129,7 +211,27 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   getPocionesFiltradas(): Pocion[] {
     // TODO: Reto 5 - Reemplaza este retorno simple por el algoritmo completo
-    return this.pociones;
+    const texto = this.filtroTexto.trim().toLowerCase();
+
+    const resultado = this.pociones.filter(p => {
+      const coincideTexto =
+        texto === '' ||
+        p.nombre.toLowerCase().includes(texto) ||
+        p.descripcion.toLowerCase().includes(texto);
+
+      const coincideTipo =
+        this.filtroTipoMagia === 'TODAS' || p.tipoMagia === this.filtroTipoMagia;
+
+      const coincidePeligro = !this.filtroSoloPeligrosas || p.nivelPeligro > 7;
+
+      return coincideTexto && coincideTipo && coincidePeligro;
+    });
+
+    return resultado.sort((a, b) =>
+      this.ordenAscendente
+        ? a.nivelPeligro - b.nivelPeligro
+        : b.nivelPeligro - a.nivelPeligro
+    );
   }
 
   // =========================================================================
@@ -140,6 +242,9 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
     // TODO: Reto 5 - Reemplaza este retorno por tu lógica de cálculo
+    const criticas = this.pociones.filter(p => p.nivelPeligro >= 8).length;
+    if (criticas >= 2) return 'CRÍTICO';
+    if (this.pociones.some(p => p.nivelPeligro >= 5)) return 'INESTABLE';
     return 'SEGURO';
   }
 
@@ -158,23 +263,39 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   guardarEstadoGiratiempo(): void {
     // TODO: Reto 6 - Implementar guardado inmutable en el historial
+    this.historialPasos = this.historialPasos.slice(0, this.indiceHistorial + 1);
+    this.historialPasos.push(this.clonarPociones(this.pociones));
+    this.indiceHistorial = this.historialPasos.length - 1;
+  }
+
+  private clonarPociones(lista: Pocion[]): Pocion[] {
+    return lista.map(p => ({
+      ...p,
+      ingredientes: [...p.ingredientes]
+    }));
   }
 
   puedeDeshacer(): boolean {
     // TODO: Reto 6 - Retornar si es posible retroceder
-    return false;
+    return this.indiceHistorial > 0;
   }
 
   puedeRehacer(): boolean {
     // TODO: Reto 6 - Retornar si es posible avanzar
-    return false;
+    return this.indiceHistorial < this.historialPasos.length - 1;
   }
 
   giratiempoDeshacer(): void {
     // TODO: Reto 6 - Revertir al estado anterior
+    if (!this.puedeDeshacer()) return;
+    this.indiceHistorial--;
+    this.pociones = this.clonarPociones(this.historialPasos[this.indiceHistorial]);
   }
 
   giratiempoRehacer(): void {
     // TODO: Reto 6 - Avanzar al estado siguiente
+    if (!this.puedeRehacer()) return;
+    this.indiceHistorial++;
+    this.pociones = this.clonarPociones(this.historialPasos[this.indiceHistorial]);
   }
 }
