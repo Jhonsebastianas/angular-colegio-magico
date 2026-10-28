@@ -138,9 +138,10 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // IMPLEMENTACIÓN DEL CICLO DE VIDA (RETO 4)
   // -------------------------------------------------------------------------
   ngOnDestroy(): void {
-    // TODO: Reto 4 - Limpiar el intervalo para evitar fugas
+    if (this.timerIntervalId) {
+      clearInterval(this.timerIntervalId);
+    }
   }
-
   // -------------------------------------------------------------------------
   // RETO 5 (IA CHALLENGE): MOTOR DE FILTRADO Y ESTABILIDAD
   // -------------------------------------------------------------------------
