@@ -145,14 +145,47 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // -------------------------------------------------------------------------
   // RETO 5 (IA CHALLENGE): MOTOR DE FILTRADO Y ESTABILIDAD
   // -------------------------------------------------------------------------
-  getPocionesFiltradas(): Pocion[] {
-    return this.pociones;
+    getPocionesFiltradas(): Pocion[] {
+    // Copia del arreglo: sort() muta, y no queremos alterar this.pociones
+    let resultado = [...this.pociones];
+
+    // 1. Texto (nombre o descripción), sin distinguir mayúsculas
+    const texto = (this.filtroTexto || '').trim().toLowerCase();
+    if (texto !== '') {
+      resultado = resultado.filter(
+        (p) =>
+          p.nombre.toLowerCase().includes(texto) ||
+          p.descripcion.toLowerCase().includes(texto)
+      );
+    }
+
+    // 2. Tipo de magia
+    if (this.filtroTipoMagia !== 'TODAS') {
+      resultado = resultado.filter((p) => p.tipoMagia === this.filtroTipoMagia);
+    }
+
+    // 3. Solo peligrosas (estrictamente mayor a 7)
+    if (this.filtroSoloPeligrosas) {
+      resultado = resultado.filter((p) => p.nivelPeligro > 7);
+    }
+
+    // 4. Orden por nivel de peligro
+    resultado.sort((a, b) =>
+      this.ordenAscendente ? a.nivelPeligro - b.nivelPeligro : b.nivelPeligro - a.nivelPeligro
+    );
+
+    return resultado;
   }
 
   calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
+    const criticas = this.pociones.filter((p) => p.nivelPeligro >= 8).length;
+    if (criticas >= 2) return 'CRÍTICO';
+
+    const moderadas = this.pociones.filter((p) => p.nivelPeligro >= 5).length;
+    if (moderadas >= 1) return 'INESTABLE';
+
     return 'SEGURO';
   }
-
   // -------------------------------------------------------------------------
   // RETO 6 (IA CHALLENGE): EL GIRATIEMPO (Historial Undo / Redo)
   // -------------------------------------------------------------------------
