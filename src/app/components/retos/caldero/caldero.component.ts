@@ -144,7 +144,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
     return 'SEGURO';
   }
 
-  // Reto 6: Giratiempo (Undo/Redo)
+  // Reto 6: Giratiempo: (Undo/Redo)
   guardarEstadoGiratiempo(): void {
     if (this.indiceHistorial < this.historialPasos.length - 1) {
       this.historialPasos = this.historialPasos.slice(0, this.indiceHistorial + 1);
