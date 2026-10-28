@@ -186,26 +186,40 @@ export class CalderoComponent implements OnInit, OnDestroy {
 
     return 'SEGURO';
   }
-  // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
   // RETO 6 (IA CHALLENGE): EL GIRATIEMPO (Historial Undo / Redo)
   // -------------------------------------------------------------------------
+
+  private clonarPociones(lista: Pocion[]): Pocion[] {
+    return lista.map((p) => ({ ...p, ingredientes: [...p.ingredientes] }));
+  }
+
   guardarEstadoGiratiempo(): void {
-    // TODO: Reto 6 - Implementar guardado inmutable en el historial
+    
+    this.historialPasos = this.historialPasos.slice(0, this.indiceHistorial + 1);
+
+    
+    this.historialPasos.push(this.clonarPociones(this.pociones));
+    this.indiceHistorial = this.historialPasos.length - 1;
   }
 
   puedeDeshacer(): boolean {
-    return false;
+    return this.indiceHistorial > 0;
   }
 
   puedeRehacer(): boolean {
-    return false;
+    return this.indiceHistorial < this.historialPasos.length - 1;
   }
 
   giratiempoDeshacer(): void {
-    // TODO: Reto 6 - Revertir al estado anterior
+    if (!this.puedeDeshacer()) return;
+    this.indiceHistorial--;
+    this.pociones = this.clonarPociones(this.historialPasos[this.indiceHistorial]);
   }
 
   giratiempoRehacer(): void {
-    // TODO: Reto 6 - Avanzar al estado siguiente
+    if (!this.puedeRehacer()) return;
+    this.indiceHistorial++;
+    this.pociones = this.clonarPociones(this.historialPasos[this.indiceHistorial]);
   }
 }
