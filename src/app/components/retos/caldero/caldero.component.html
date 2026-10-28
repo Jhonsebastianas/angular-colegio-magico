@@ -149,9 +149,14 @@
           class="input-magic input-search" 
           [(ngModel)]="filtroTexto" 
           placeholder="🔍 Buscar poción por nombre o efecto..."
+          aria-label="Buscar poción por nombre o efecto"
         />
 
-        <select class="input-magic select-tipo" [(ngModel)]="filtroTipoMagia">
+        <select 
+          class="input-magic select-tipo" 
+          [(ngModel)]="filtroTipoMagia"
+          aria-label="Filtrar por tipo de magia"
+        >
           <option value="TODAS">Todas las magias</option>
           <option value="Curacion">Curación</option>
           <option value="Transmutacion">Transmutación</option>
@@ -177,7 +182,7 @@
             [ngClass]="'borde-magia-' + pocion.tipoMagia.toLowerCase()"
           >
             <div class="pocion-top">
-              <span class="frasco-icon">
+              <span class="frasco-icon" aria-hidden="true">
                 @if (pocion.tipoMagia === 'Curacion') { 🧪 }
                 @if (pocion.tipoMagia === 'Transmutacion') { 🔮 }
                 @if (pocion.tipoMagia === 'Luz') { 🌟 }
@@ -190,9 +195,11 @@
                 </span>
               </div>
               <button 
+                type="button"
                 class="btn-eliminar-pocion" 
                 (click)="eliminarPocion(pocion.id)"
                 title="Desechar poción"
+                [attr.aria-label]="'Desechar poción ' + pocion.nombre"
               >
                 ✕
               </button>
@@ -202,7 +209,7 @@
 
             <!-- Alerta de Toxicidad Condicional (@if) -->
             @if (pocion.nivelPeligro > 7) {
-              <div class="toxic-warning">
+              <div class="toxic-warning" role="alert">
                 ⚠️ <strong>¡ALERTA DE TOXICIDAD!</strong> Peligro nivel {{ pocion.nivelPeligro }}/10. Requiere supervisión de un profesor.
               </div>
             }

@@ -1,168 +1,321 @@
-<div class="page-container">
-  <div class="page-breadcrumb">
-    <a href="/" class="back-link">← Volver al Gran Comedor</a>
-    <span class="sep">•</span>
-    <span class="current">Reto 7 • El Lienzo Creativo (30%)</span>
-  </div>
+<div class="lienzo">
+  <!-- ✨ Capa mágica: estrellas + estela de varita (solo decorativa) -->
+  <app-magia-visual />
 
-  <section class="section-card card-magic" [class.arena-oscura]="arenaOscura">
-  <div class="section-header">
-    <div class="section-badge creative-badge">RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)</div>
-    <h2>🎨 El Laboratorio de Artefactos Mágicos</h2>
-    <p class="section-subtitle">
-      Demuestra tu creatividad y maestría técnica. Aquí tienes la libertad de dar vida a un artefacto mágico asombroso siguiendo los lineamientos de la rúbrica.
-    </p>
-  </div>
+  <div class="contenedor">
 
-  <div class="callout-didactico">
-    <h4>📜 Rúbrica de Evaluación del Reto Creativo (30%)</h4>
-    <p>
-      1. <strong>Múltiples Estados:</strong> Debe manejar al menos 3 estados interactivos (ej: Preparación, En Curso, Victoria/Derrota).<br>
-      2. <strong>Control Flow:</strong> Uso justificado de <span class="callout-code">{{ '@if' }}</span> y <span class="callout-code">{{ '@for' }}</span>.<br>
-      3. <strong>Data Binding:</strong> Implementar <span class="callout-code">[(ngModel)]</span> y enlaces dinámicos.<br>
-      4. <strong>Ciclos de Vida:</strong> Al menos dos hooks (<span class="callout-code">ngOnInit</span> y otro más).<br>
-      5. <strong>Estética y UX:</strong> Diseño mágico inmersivo, animaciones sutiles y buena experiencia de usuario.
-    </p>
-  </div>
-
-  <!-- Arena de Duelo Mágico -->
-  <div class="arena-container">
-    <div class="arena-top-bar">
-      <div class="arena-title">
-        <span>⚔️ Club de Duelo de Hogwarts</span>
-        <span class="badge-magic">Turno #{{ numeroTurno }}</span>
-      </div>
-
-      <div class="arena-actions">
-        <button class="btn-magic btn-secondary" (click)="toggleArena()">
-          {{ arenaOscura ? '☀️ Arena Iluminada' : '🌑 Arena de Sombras' }}
-        </button>
-        <button class="btn-magic" (click)="iniciarDuelo()">
-          🔄 Reiniciar Duelo
-        </button>
-      </div>
+    <!-- Migas de pan -->
+    <div class="migas">
+      <a href="/" class="enlace-volver">← Volver al Gran Comedor</a>
+      <span class="sep">•</span>
+      <span>Reto 7 · El Lienzo Creativo</span>
     </div>
 
-    <!-- Escenario de Magos -->
-    <div class="duelo-combatientes">
-      <!-- Mago Jugador -->
-      <div class="combatiente-card mago-player">
-        <div class="combatiente-avatar">🧙‍♂️</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreMago }}</h3>
-          <input 
-            type="text" 
-            class="input-magic input-rename" 
-            [(ngModel)]="nombreMago" 
-            [disabled]="estadoDuelo === 'EN_CURSO'"
-            placeholder="Renombrar mago..."
-          />
-          <div class="stat-bar">
-            <span>Salud: {{ saludMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludMago"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Mágica: {{ energiaMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
-          </div>
-        </div>
+    <!-- ============ HERO ============ -->
+    <header class="hero">
+      <div class="marcas" aria-hidden="true">
+        <span class="marca m-azul">🏃</span>
+        <span class="marca m-coral">🦥</span>
+        <span class="marca m-amarillo">🍅</span>
+        <span class="marca m-cielo">💧</span>
+        <span class="marca m-azul">🎧</span>
       </div>
+      <span class="chispa c1" aria-hidden="true">✦</span>
+      <span class="chispa c2" aria-hidden="true">✧</span>
+      <span class="chispa c3" aria-hidden="true">✦</span>
 
-      <div class="vs-badge">VS</div>
+      <h1 class="titulo">
+        Termina tu lista antes de que la
+        <span class="pildora-hero">procrastinación</span>
+        te alcance.
+      </h1>
+      <p class="lede">
+        Deja de ser vago porque... ¡¡te va a coger Don Mañana!!
+      </p>
+    </header>
 
-      <!-- Mago Rival -->
-      <div class="combatiente-card mago-rival">
-        <div class="combatiente-avatar">🧙🐍</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreRival }}</h3>
-          <span class="rival-tag">Adversario de Slytherin</span>
-          <div class="stat-bar">
-            <span>Salud: {{ saludRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludRival"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Rival: {{ energiaRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaRival"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Panel de Estados del Duelo (@if) -->
+    <!-- ============ BANNER DE ESTADO ============ -->
     @if (estadoDuelo === 'PREPARACION') {
-      <div class="estado-banner preparacion">
-        <span class="banner-icon">⚔️</span>
-        <div>
-          <h4>Duelo en Espera</h4>
-          <p>Ajusta el nombre de tu mago arriba y haz clic en "Iniciar Duelo" para alzar varitas.</p>
+      <section class="banner b-preparacion" aria-label="Preparación del sprint">
+        <div class="banner-texto">
+          <span class="pastilla p-cielo">Preparación</span>
+          <h2>Prepara tu día</h2>
+          <p>Ponte un nombre, elige la dificultad y empieza a organizzzar tu día.</p>
         </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">¡Empezar Duelo!</button>
-      </div>
+        <div class="banner-controles">
+          <label class="campo">
+            <span>Tu nombre</span>
+            <input class="entrada" type="text" name="nombreMago" [(ngModel)]="nombreMago" maxlength="18" placeholder="¿Cómo te llamas?" />
+          </label>
+          <label class="campo">
+            <span>Ritmo de Don Mañana</span>
+            <select class="entrada" name="ritmo" [(ngModel)]="ritmo">
+              @for (r of ritmos; track r.valor) {
+                <option [value]="r.valor">{{ r.valor }}</option>
+              }
+            </select>
+          </label>
+          <div class="acciones">
+            <button class="btn btn-primario" (click)="iniciarDuelo()" [disabled]="!puedeIniciar">Empezar sprint</button>
+            <button class="btn btn-fantasma" (click)="cargarEjemplo()">Usar tareas de ejemplo</button>
+          </div>
+        </div>
+      </section>
+    }
+
+    @if (estadoDuelo === 'EN_CURSO') {
+      <section class="banner b-curso" aria-label="Sprint en curso">
+        <div class="banner-texto">
+          <span class="pastilla p-negra">Estado 2 · En curso</span>
+          <h2>{{ nombreMago || 'Aprendiz' }}, ¡a correr!</h2>
+        </div>
+        <div class="datos-curso">
+          <span class="dato"><strong>{{ tiempoFormateado }}</strong> tiempo</span>
+          <span class="dato"><strong>{{ completadas }}/{{ tareas.length }}</strong> tareas</span>
+          <span class="dato"><strong>{{ numeroTurno }}</strong> acciones</span>
+          <button class="btn btn-contorno" (click)="volverAPreparar()">Rendirme</button>
+        </div>
+      </section>
     }
 
     @if (estadoDuelo === 'VICTORIA') {
-      <div class="estado-banner victoria">
-        <span class="banner-icon">🏆 🦁</span>
-        <div>
-          <h4>¡VICTORIA ÉPICA!</h4>
-          <p>¡Has derrotado a {{ nombreRival }}! Has ganado 50 puntos para tu casa.</p>
+      <section class="banner b-victoria" aria-live="polite">
+        <div class="banner-texto">
+          <span class="pastilla p-blanca">Estado 3 · Victoria</span>
+          <h2>🏆 ¡Lista terminada, {{ nombreMago || 'Aprendiz' }}!</h2>
+          <p>Completaste {{ tareas.length }} tareas en {{ tiempoFormateado }} y Don Mañana se quedó dormido.</p>
         </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">Revancha</button>
-      </div>
+        <div class="acciones">
+          <button class="btn btn-primario" (click)="iniciarDuelo()">Otro sprint</button>
+          <button class="btn btn-fantasma" (click)="volverAPreparar()">Editar mi lista</button>
+        </div>
+      </section>
     }
 
     @if (estadoDuelo === 'DERROTA') {
-      <div class="estado-banner derrota">
-        <span class="banner-icon">💀 🐍</span>
-        <div>
-          <h4>¡HAS CAÍDO EN DUELO!</h4>
-          <p>Madame Pomfrey te espera en la enfermería. No te rindas y prueba otra táctica.</p>
+      <section class="banner b-derrota" aria-live="polite">
+        <div class="banner-texto">
+          <span class="pastilla p-blanca">Estado 4 · Derrota</span>
+          <h2>💤 Don Mañana te alcanzó</h2>
+          <p>Te faltaron {{ tareas.length - completadas }} tareas. Recarga estamina a tiempo y prueba otra estrategia.</p>
         </div>
-        <button class="btn-magic btn-danger" (click)="iniciarDuelo()">Intentar de Nuevo</button>
-      </div>
+        <div class="acciones">
+          <button class="btn btn-primario" (click)="iniciarDuelo()">Intentar de nuevo</button>
+          <button class="btn btn-fantasma" (click)="volverAPreparar()">Editar mi lista</button>
+        </div>
+      </section>
     }
 
-    <!-- Grimorio de Hechizos del Duelo (@for) -->
-    @if (estadoDuelo === 'EN_CURSO') {
-      <div class="spell-deck">
-        <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
-        <div class="spell-grid">
-          @for (h of hechizosDuelo; track h.id) {
-            <button 
-              class="spell-card" 
-              [disabled]="energiaMago < h.costoEnergia" 
-              (click)="lanzarHechizo(h)"
-            >
-              <div class="spell-top">
-                <strong>{{ h.nombre }}</strong>
-                <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
-              </div>
-              <p class="spell-desc">{{ h.descripcion }}</p>
-              <div class="spell-power">
-                <span>Efecto: <strong>+{{ h.poder }} {{ h.tipo }}</strong></span>
-              </div>
-            </button>
+    <!-- ============ TABLERO ============ -->
+    <div class="tablero">
+
+      <!-- Columna izquierda: tareas -->
+      <section class="tarjeta" aria-labelledby="titulo-tareas">
+        <div class="tarjeta-cabeza">
+          <h2 id="titulo-tareas">Lista de tareas</h2>
+          <span class="pastilla p-crema">{{ completadas }}/{{ tareas.length }}</span>
+        </div>
+
+        <div class="progreso" role="progressbar" aria-label="Progreso de la lista"
+             [attr.aria-valuenow]="progreso" aria-valuemin="0" aria-valuemax="100">
+          <div class="progreso-relleno" [style.width.%]="progreso"></div>
+        </div>
+
+        @if (estadoDuelo === 'PREPARACION') {
+          <form class="nueva-tarea" (ngSubmit)="agregarTarea()">
+            <input class="entrada" type="text" name="nuevaTarea" [(ngModel)]="nuevaTarea"
+                   placeholder="Escribe una tarea (mínimo 3 letras)…" maxlength="50" autocomplete="off" />
+            <select class="entrada" name="nuevoEsfuerzo" [(ngModel)]="nuevoEsfuerzo" aria-label="Esfuerzo de la tarea">
+              @for (e of esfuerzos; track e.valor) {
+                <option [value]="e.valor">{{ e.etiqueta }}</option>
+              }
+            </select>
+            <button class="btn btn-fantasma" type="submit" [disabled]="!puedeAgregar">Añadir</button>
+          </form>
+          @if (tareas.length >= 8) {
+            <p class="nota">Máximo 8 tareas por sprint.</p>
           }
-        </div>
-      </div>
-    }
-
-    <!-- Historial de Turnos (@for) -->
-    <div class="history-log">
-      <h4>📜 Bitácora de Encantamientos del Duelo</h4>
-      <div class="log-entries">
-        @for (entry of historialDuelo; track $index) {
-          <div class="log-row" [ngClass]="'entry-' + entry.tipo">
-            <span class="turn-num">T{{ entry.turno }}</span>
-            <span class="turn-actor">[{{ entry.emisor }}]:</span>
-            <span class="turn-spell">{{ entry.hechizo }}</span>
-            <span class="turn-effect">{{ entry.efecto }}</span>
-          </div>
-        } @empty {
-          <p class="empty-log">Aún no se han intercambiado hechizos en la arena.</p>
         }
+
+        <ul class="lista-tareas">
+          @for (t of tareas; track t.id) {
+            <li class="tarea" [class.hecha]="t.hecha">
+              <button class="casilla" type="button"
+                      [class.sin-energia]="estadoDuelo === 'EN_CURSO' && !t.hecha && saludMago < costoDe(t)"
+                      [disabled]="estadoDuelo !== 'EN_CURSO' || t.hecha"
+                      (click)="completarTarea(t)"
+                      [attr.aria-label]="'Completar tarea: ' + t.texto">
+                @if (t.hecha) { ✓ }
+              </button>
+              <div class="tarea-cuerpo">
+                <span class="tarea-texto">{{ t.texto }}</span>
+                <span class="pastilla" [ngClass]="'esf-' + t.esfuerzo">{{ t.esfuerzo === 'Rapida' ? 'Rápida' : t.esfuerzo }} · {{ costoDe(t) }}⚡</span>
+              </div>
+              @if (estadoDuelo === 'PREPARACION') {
+                <button class="quitar" type="button" (click)="eliminarTarea(t.id)" [attr.aria-label]="'Quitar tarea: ' + t.texto">×</button>
+              }
+            </li>
+          } @empty {
+            <li class="vacio">
+              <span class="vacio-emoji">📝</span>
+              Tu lista está vacía. Escribe tu primera tarea arriba, o usa las de ejemplo.
+            </li>
+          }
+        </ul>
+
+        @if (estadoDuelo === 'EN_CURSO' && estaminaBaja) {
+          <p class="aviso">⚠️ Estás agotado: Don Mañana se acerca más rápido. ¡Haz un ejercicio de recarga!</p>
+        }
+      </section>
+
+      <!-- Columna derecha: pista, estamina y técnicas -->
+      <div class="columna">
+
+        <!-- La persecución -->
+        <section class="tarjeta oscura pista" [class.peligro]="peligro" aria-labelledby="titulo-pista">
+          <div class="tarjeta-cabeza">
+            <h2 id="titulo-pista">La persecución</h2>
+            @if (estadoDuelo === 'EN_CURSO') {
+              @if (escudoSegundos > 0) {
+                <span class="pastilla p-azul">🎧 Enfocado · {{ escudoSegundos }}s</span>
+              } @else {
+                <span class="pastilla" [ngClass]="peligro ? 'p-coral' : 'p-amarilla'">{{ mensajePista }}</span>
+              }
+            }
+          </div>
+
+          <div class="carril" aria-live="polite">
+            <div class="linea-suelo"></div>
+
+            <div class="pereza" [style.left.%]="posicionPereza"
+                 [class.corriendo]="estadoDuelo === 'EN_CURSO' && escudoSegundos === 0 && saludRival > 0"
+                 [class.congelada]="escudoSegundos > 0"
+                 [class.dormida]="estadoDuelo === 'VICTORIA' || saludRival <= 0"
+                 [class.fx-retroceso]="efectoPereza === 'retroceso'"
+                 [class.fx-golpe]="efectoPereza === 'golpe'">
+              <span class="marca m-coral grande">🦥</span>
+              @if (estadoDuelo === 'VICTORIA' || saludRival <= 0) {
+                <span class="zzz">💤</span>
+              }
+              @if (escudoSegundos > 0) {
+                <span class="hielo">❄️</span>
+              }
+              <span class="etiqueta-corredor">{{ nombreRival }}</span>
+            </div>
+
+            <div class="heroe"
+                 [class.corriendo]="estadoDuelo === 'EN_CURSO'"
+                 [class.fx-salto]="efectoHeroe === 'salto'"
+                 [class.fx-brillo]="efectoHeroe === 'brillo'"
+                 [class.fx-golpe]="efectoHeroe === 'golpe'">
+              <span class="marca m-azul grande">{{ emojiHeroe }}</span>
+              <span class="etiqueta-corredor">{{ nombreMago || 'Aprendiz' }}</span>
+            </div>
+          </div>
+
+          <p class="pista-leyenda">
+            @if (estadoDuelo === 'EN_CURSO') {
+              Ventaja: <strong>{{ distanciaPereza | number:'1.0-0' }} m</strong> · Velocidad de la pereza: <strong>{{ velocidadPereza | number:'1.1-1' }} m/s</strong>
+            } @else if (estadoDuelo === 'PREPARACION') {
+              Ventaja inicial: 100 m. Cuando empiece el sprint, Don Mañana se pondrá en marcha.
+            } @else {
+              Sprint terminado. Revisa el diario para ver qué pasó.
+            }
+          </p>
+
+          <!-- Confeti de celebración -->
+          <div class="confeti-capa" aria-hidden="true">
+            @for (c of confeti; track c.id) {
+              <span class="confeti" [style.left.%]="c.x" [style.background]="c.color"
+                    [style.animation-delay.s]="c.retraso" [style.--giro]="c.giro + 'deg'"></span>
+            }
+          </div>
+        </section>
+
+        <!-- Medidores -->
+        <section class="tarjeta medidores" aria-label="Medidores">
+          <div class="medidor">
+            <div class="medidor-fila">
+              <span>⚡ Estamina</span>
+              <span class="pastilla" [ngClass]="saludMago >= 60 ? 'p-cielo' : saludMago >= 25 ? 'p-amarilla' : 'p-coral'">{{ etiquetaEstamina }} · {{ saludMago }}%</span>
+            </div>
+            <div class="barra" role="progressbar" aria-label="Estamina"
+                 [attr.aria-valuenow]="saludMago" aria-valuemin="0" aria-valuemax="100">
+              <div class="barra-relleno estamina" [class.baja]="estaminaBaja" [style.width.%]="saludMago"></div>
+            </div>
+          </div>
+          <div class="medidor">
+            <div class="medidor-fila">
+              <span>🦥 Fuerza de la procrastinación</span>
+              <span class="pastilla p-crema">{{ saludRival }}%</span>
+            </div>
+            <div class="barra" role="progressbar" aria-label="Fuerza de la procrastinación"
+                 [attr.aria-valuenow]="saludRival" aria-valuemin="0" aria-valuemax="100">
+              <div class="barra-relleno fuerza" [style.width.%]="saludRival"></div>
+            </div>
+          </div>
+        </section>
+
       </div>
     </div>
+
+    <!-- Técnicas -->
+    <section class="tarjeta tecnicas-ancho" aria-labelledby="titulo-tecnicas">
+      <div class="tarjeta-cabeza">
+        <h2 id="titulo-tecnicas">Tus técnicas</h2>
+        @if (estadoDuelo !== 'EN_CURSO') {
+          <span class="pastilla p-crema">Se activan al empezar</span>
+        }
+      </div>
+
+      <div class="grupos-horizontal">
+      @for (g of grupos; track g.tipo) {
+        <div class="grupo" [attr.data-grupo]="g.tipo">
+          <div class="grupo-cabeza">
+            <h3>{{ g.titulo }}</h3>
+            <span class="nota">{{ g.nota }}</span>
+          </div>
+          <div class="rejilla-tecnicas">
+            @for (h of tecnicasDe(g.tipo); track h.id) {
+              <button class="tecnica" type="button" [attr.data-tipo]="h.tipo"
+                      [disabled]="!puedeUsar(h)" (click)="lanzarHechizo(h)">
+                @if (enfriamientos[h.id] > 0) {
+                  <span class="enfria" [style.height.%]="(enfriamientos[h.id] / h.enfriamiento) * 100"></span>
+                  <span class="enfria-num">{{ enfriamientos[h.id] }}s</span>
+                }
+                <span class="tecnica-emoji">{{ h.emoji }}</span>
+                <span class="tecnica-info">
+                  <strong>{{ h.nombre }}</strong>
+                  <small>{{ h.descripcion }}</small>
+                  <em>{{ resumenEfecto(h) }}</em>
+                </span>
+              </button>
+            }
+          </div>
+        </div>
+      }
+      </div>
+    </section>
+
+
+    <!-- ============ DIARIO ============ -->
+    <section class="tarjeta diario" aria-labelledby="titulo-diario">
+      <div class="tarjeta-cabeza">
+        <h2 id="titulo-diario">📓 Diario</h2>
+      </div>
+      <div class="entradas">
+        @for (entry of historialDuelo; track $index) {
+          <div class="entrada-diario" [ngClass]="'e-' + entry.tipo">
+            <span class="pastilla p-negra">#{{ entry.turno }}</span>
+            <span class="d-actor">{{ entry.emisor }}</span>
+            <span class="d-hechizo">{{ entry.hechizo }}</span>
+            <span class="d-efecto">{{ entry.efecto }}</span>
+          </div>
+        } @empty {
+          <p class="vacio">Aún no pasa nada. Cuando empiece el sprint, aquí quedará anotado cada movimiento.</p>
+        }
+      </div>
+    </section>
+
   </div>
-</section>
 </div>

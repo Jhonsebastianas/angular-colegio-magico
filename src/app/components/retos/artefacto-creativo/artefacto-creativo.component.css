@@ -1,308 +1,1128 @@
-.section-card {
-  margin-bottom: 2rem;
-  transition: all 0.4s ease;
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;700&display=swap');
+/* ============================================================================
+   SPRINT CONTRA LA PROCRASTINACIÓN · estilo "papel de cuaderno" (DESIGN.md)
+   Lienzo cálido, tarjetas con borde fino (sin sombras), colores de acento
+   como notas adhesivas y animaciones con resorte.
+   ============================================================================ */
+
+:host {
+  display: block;
+  /* Variables del sistema de diseño (solo viven dentro de este componente) */
+  --azul: #0075de;
+  --papel: #f6f5f4;
+  --blanco: #ffffff;
+  --tinta: #000000;
+  --grafito: #615d59;
+  --cielo-tinte: #e6f3fe;
+  --calendula: #ffb110;
+  --coral: #f64932;
+  --azul-senal: #097fe8;
+  --cielo: #62aef0;
+  --medianoche: #02093a;
+  --durazno: #f6d5b8;
+  --borde: rgba(0, 0, 0, 0.08);
+  --resorte: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --fuente: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fuente);
+  line-height: 1.5;
 }
 
-.creative-badge {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fef08a;
-  border-color: #f59e0b;
+/* Anula los estilos globales oscuros del proyecto dentro de este componente */
+h1, h2, h3, h4 {
+  font-family: var(--fuente);
+  letter-spacing: normal;
+  background: none;
+  text-shadow: none;
+  color: var(--tinta);
+  -webkit-text-fill-color: currentColor;
 }
 
-.arena-container {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid var(--border-gold);
-  border-radius: 14px;
-  padding: 1.5rem;
-  margin-top: 1.25rem;
+button, input, select {
+  font-family: inherit;
 }
 
-.arena-oscura .arena-container {
-  background: rgba(3, 7, 18, 0.95);
-  border-color: rgba(168, 85, 247, 0.5);
-  box-shadow: 0 0 35px rgba(147, 51, 234, 0.25);
+.lienzo {
+  padding: 24px 16px 80px;
+  position: relative;
+  overflow: hidden;
 }
 
-.arena-top-bar {
+.contenedor {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+/* ============ MIGAS ============ */
+.migas {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 16px;
+}
+
+.enlace-volver {
+  color: rgba(0, 0, 0, 0.6);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 200ms ease;
+}
+
+.enlace-volver:hover {
+  color: var(--tinta);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 32px 0 40px;
+}
+
+.marcas {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+/* Avatar tipo "character mark": círculo con borde de 2px y fondo blanco */
+.marca {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  background: var(--blanco);
+  border: 2px solid var(--azul-senal);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.m-azul { border-color: var(--azul-senal); }
+.m-coral { border-color: var(--coral); }
+.m-amarillo { border-color: var(--calendula); }
+.m-cielo { border-color: var(--cielo); }
+
+.marca.grande {
+  width: 64px;
+  height: 64px;
+  font-size: 32px;
+}
+
+.marcas .marca {
+  animation: flotar 3.2s ease-in-out infinite;
+}
+.marcas .marca:nth-child(2) { animation-delay: 0.25s; }
+.marcas .marca:nth-child(3) { animation-delay: 0.5s; }
+.marcas .marca:nth-child(4) { animation-delay: 0.75s; }
+.marcas .marca:nth-child(5) { animation-delay: 1s; }
+
+.titulo {
+  font-size: clamp(34px, 6vw, 72px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  max-width: 980px;
+  margin: 0 auto 20px;
+}
+
+.pildora-hero {
+  display: inline-block;
+  background: var(--durazno);
+  border-radius: 9999px;
+  padding: 0 0.3em;
+  animation: latido-suave 4s var(--resorte) infinite;
+}
+
+.lede {
+  font-family: var(--fuente-serif);
+  font-size: 18px;
+  line-height: 1.56;
+  color: var(--grafito);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.chispa {
+  position: absolute;
+  color: var(--calendula);
+  font-size: 28px;
+  animation: titilar 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+.c1 { top: 18%; left: 12%; }
+.c2 { top: 55%; right: 10%; color: var(--coral); animation-delay: 0.8s; }
+.c3 { top: 8%; right: 22%; color: var(--azul-senal); font-size: 20px; animation-delay: 1.6s; }
+
+/* ============ BANNERS DE ESTADO ============ */
+.banner {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.85rem;
-  margin-bottom: 1.25rem;
-}
-
-.arena-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: var(--font-magic);
-  font-size: 1.05rem;
-  color: var(--gold-light);
-}
-
-.arena-actions {
-  display: flex;
-  gap: 0.6rem;
-}
-
-.duelo-combatientes {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.vs-badge {
-  font-family: var(--font-magic);
-  font-size: 1.4rem;
-  font-weight: 900;
-  color: #f59e0b;
-  text-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
-  padding: 0.5rem;
-}
-
-.combatiente-card {
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid var(--border-subtle);
+  gap: 24px;
+  padding: 24px;
   border-radius: 12px;
-  padding: 1.25rem;
+  margin-bottom: 24px;
+  animation: entrar 450ms var(--resorte);
+}
+
+.banner h2 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 8px 0 4px;
+}
+
+.banner p {
+  font-size: 16px;
+  max-width: 520px;
+  margin: 0;
+}
+
+.b-preparacion { background: var(--cielo-tinte); }
+.b-curso { background: var(--calendula); }
+.b-victoria { background: var(--calendula); }
+.b-derrota { background: var(--coral); }
+
+.banner-controles {
   display: flex;
-  gap: 1rem;
-  align-items: center;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.mago-player {
-  border-color: rgba(56, 189, 248, 0.4);
-}
-
-.mago-rival {
-  border-color: rgba(239, 68, 68, 0.4);
-}
-
-.combatiente-avatar {
-  font-size: 2.8rem;
-}
-
-.combatiente-datos {
-  flex: 1;
-}
-
-.combatiente-datos h3 {
-  font-size: 1.05rem;
-  color: var(--text-primary);
-  margin-bottom: 0.25rem;
-}
-
-.input-rename {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.8rem;
-  margin-bottom: 0.5rem;
-  width: 90%;
-}
-
-.rival-tag {
-  display: inline-block;
-  font-size: 0.75rem;
-  color: #fca5a5;
-  margin-bottom: 0.5rem;
-}
-
-.stat-bar {
-  font-size: 0.76rem;
-  color: var(--text-muted);
-  margin-bottom: 0.35rem;
-}
-
-.bar-bg {
-  width: 100%;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 3px;
-  margin-top: 0.2rem;
-  overflow: hidden;
-}
-
-.bar-fill {
-  height: 100%;
-  transition: width 0.3s ease;
-}
-
-.bar-fill.hp {
-  background: linear-gradient(90deg, #ef4444, #22c55e);
-}
-
-.bar-fill.mana {
-  background: linear-gradient(90deg, #3b82f6, #06b6d4);
-}
-
-.estado-banner {
+.acciones {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.datos-curso {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.1rem 1.4rem;
-  border-radius: 10px;
-  margin-bottom: 1.5rem;
+  gap: 8px;
 }
 
-.estado-banner .banner-icon {
-  font-size: 2rem;
+.dato {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 9999px;
+  padding: 4px 14px;
+  font-size: 14px;
 }
 
-.estado-banner.preparacion {
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  color: #bae6fd;
+.dato strong { font-weight: 700; }
+
+/* ============ CAMPOS Y BOTONES ============ */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
 }
 
-.estado-banner.victoria {
-  background: rgba(16, 185, 129, 0.2);
-  border: 1px solid rgba(16, 185, 129, 0.5);
-  color: #a7f3d0;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+.entrada {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: var(--blanco);
+  font-size: 14px;
+  color: var(--tinta);
+  transition: border-color 200ms ease, background 200ms ease;
 }
 
-.estado-banner.derrota {
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  color: #fecaca;
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
+.entrada:focus {
+  outline: 2px solid var(--azul);
+  outline-offset: 1px;
+  border-color: var(--azul);
 }
 
-.spell-deck {
-  margin-bottom: 1.5rem;
-}
-
-.spell-deck h4 {
-  font-size: 0.92rem;
-  color: var(--gold-light);
-  margin-bottom: 0.75rem;
-}
-
-.spell-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.9rem;
-}
-
-.spell-card {
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid var(--border-gold);
-  border-radius: 10px;
-  padding: 0.85rem;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 6px 15px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
-  color: var(--text-primary);
+  transition: all 200ms ease;
+  white-space: nowrap;
 }
 
-.spell-card:hover:not(:disabled) {
-  transform: translateY(-3px);
-  border-color: var(--gold-light);
-  box-shadow: 0 0 18px var(--gold-glow);
-  background: rgba(45, 55, 75, 0.9);
-}
+.btn:active:not(:disabled) { transform: scale(0.96); }
 
-.spell-card:disabled {
+.btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-.spell-top {
+.btn-primario {
+  background: var(--azul);
+  color: var(--blanco);
+}
+.btn-primario:hover:not(:disabled) { background: #005bab; }
+
+.btn-fantasma {
+  background: var(--cielo-tinte);
+  color: var(--azul);
+}
+.btn-fantasma:hover:not(:disabled) { background: #cfe8fc; }
+
+.btn-contorno {
+  background: transparent;
+  color: rgba(0, 0, 0, 0.9);
+  border-color: rgba(0, 0, 0, 0.9);
+  border-radius: 4px;
+  height: 32px;
+  padding: 5px 10px;
+}
+.btn-contorno:hover:not(:disabled) { background: rgba(0, 0, 0, 0.06); }
+
+/* ============ PASTILLAS ============ */
+.pastilla {
+  display: inline-block;
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: var(--tinta);
+  background: rgba(0, 0, 0, 0.06);
+  transition: background 200ms ease;
+}
+
+.p-cielo { background: var(--cielo); }
+.p-amarilla { background: var(--calendula); }
+.p-coral { background: var(--coral); }
+.p-azul { background: var(--azul-senal); color: var(--blanco); }
+.p-negra { background: var(--tinta); color: var(--blanco); }
+.p-blanca { background: var(--blanco); }
+.p-crema { background: var(--papel); border: 1px solid var(--borde); }
+
+.esf-Rapida { background: var(--cielo-tinte); }
+.esf-Media { background: #fde9b3; }
+.esf-Pesada { background: #fcc9c1; }
+
+/* ============ TABLERO ============ */
+.tablero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 980px) {
+  .tablero { grid-template-columns: 0.9fr 1.1fr; }
+}
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tarjeta {
+  position: relative;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.tarjeta.oscura {
+  background: var(--medianoche);
+  border-color: var(--medianoche);
+  color: var(--blanco);
+  overflow: hidden;
+}
+
+.tarjeta.oscura h2 { color: var(--blanco); }
+
+.tarjeta-cabeza {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.35rem;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-.spell-top strong {
-  font-size: 0.92rem;
-  color: var(--gold-light);
-}
-
-.cost-tag {
-  font-size: 0.75rem;
-  color: #38bdf8;
+.tarjeta-cabeza h2 {
+  font-size: 22px;
   font-weight: 700;
+  letter-spacing: -0.011em;
+  line-height: 1.27;
+  margin: 0;
 }
 
-.spell-desc {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  line-height: 1.3;
-  margin-bottom: 0.5rem;
+.nota {
+  font-size: 12px;
+  color: var(--grafito);
 }
 
-.spell-power {
-  font-size: 0.76rem;
-  color: #86efac;
+/* ============ TAREAS ============ */
+.progreso {
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--papel);
+  overflow: hidden;
+  margin-bottom: 16px;
 }
 
-.history-log {
-  background: rgba(11, 15, 25, 0.7);
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  padding: 1rem;
+.progreso-relleno {
+  height: 100%;
+  background: var(--azul-senal);
+  border-radius: 9999px;
+  transition: width 600ms var(--resorte);
 }
 
-.history-log h4 {
-  font-size: 0.86rem;
-  color: var(--gold-light);
-  margin-bottom: 0.6rem;
+.nueva-tarea {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.log-entries {
+.nueva-tarea input { flex: 1 1 180px; }
+
+.lista-tareas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  max-height: 180px;
+  gap: 8px;
+}
+
+.tarea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 8px 12px;
+  animation: entrar 400ms var(--resorte);
+  transition: background 200ms ease, opacity 200ms ease;
+}
+
+.tarea.hecha {
+  background: var(--papel);
+}
+
+.tarea.hecha .tarea-texto {
+  text-decoration: line-through;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.casilla {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  background: var(--blanco);
+  color: var(--blanco);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 250ms var(--resorte);
+}
+
+.casilla:hover:not(:disabled) {
+  border-color: var(--azul);
+  transform: scale(1.15);
+}
+
+.casilla:disabled {
+  cursor: default;
+}
+
+.tarea.hecha .casilla {
+  background: var(--azul-senal);
+  border-color: var(--azul-senal);
+  animation: pop 450ms var(--resorte);
+}
+
+.casilla.sin-energia {
+  border-color: var(--coral);
+}
+
+.tarea-cuerpo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.tarea-texto {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.quitar {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 20px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+.quitar:hover { background: rgba(0, 0, 0, 0.06); color: var(--tinta); }
+
+.vacio {
+  list-style: none;
+  text-align: center;
+  font-size: 14px;
+  color: var(--grafito);
+  padding: 24px 12px;
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.vacio-emoji {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.aviso {
+  margin-top: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #fde9b3;
+  font-size: 14px;
+  animation: entrar 400ms var(--resorte);
+}
+
+/* ============ PISTA DE PERSECUCIÓN ============ */
+.carril {
+  position: relative;
+  height: 120px;
+  margin: 8px 0 12px;
+}
+
+.linea-suelo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 28px;
+  height: 0;
+  border-bottom: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+.pereza,
+.heroe {
+  position: absolute;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.pereza {
+  transition: left 1s linear;
+}
+
+.heroe {
+  right: 0;
+}
+
+.etiqueta-corredor {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.heroe.corriendo .marca { animation: trote 0.5s ease-in-out infinite; }
+.pereza.corriendo .marca { animation: arrastrar 0.9s ease-in-out infinite; }
+
+.pereza.congelada .marca { border-color: var(--cielo); animation: none; }
+.pereza.dormida .marca { animation: respirar 2.4s ease-in-out infinite; filter: grayscale(0.6); }
+
+.pista.peligro .pereza .marca {
+  border-color: var(--coral);
+  animation: arrastrar 0.45s ease-in-out infinite, alerta 0.9s ease-in-out infinite;
+}
+
+.zzz,
+.hielo {
+  position: absolute;
+  top: -22px;
+  right: -6px;
+  font-size: 20px;
+}
+.zzz { animation: subir 2s ease-in-out infinite; }
+.hielo { animation: titilar 1.4s ease-in-out infinite; }
+
+.fx-salto .marca { animation: salto 650ms var(--resorte); }
+.fx-brillo .marca { animation: brillo 650ms var(--resorte); }
+.fx-golpe .marca { animation: golpe 450ms ease; }
+.pereza.fx-retroceso .marca { animation: golpe 450ms ease; }
+
+.pista-leyenda {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+.pista-leyenda strong { color: var(--blanco); font-weight: 600; }
+
+/* Confeti */
+.confeti-capa {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confeti {
+  position: absolute;
+  top: -12px;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: confeti-cae 1.5s ease-in forwards;
+}
+
+/* ============ MEDIDORES ============ */
+.medidores {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.medidor-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.barra {
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--papel);
+  overflow: hidden;
+}
+
+.barra-relleno {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 500ms var(--resorte), background 200ms ease;
+}
+
+.barra-relleno.estamina { background: var(--azul-senal); }
+.barra-relleno.estamina.baja { background: var(--coral); animation: alerta 0.9s ease-in-out infinite; }
+.barra-relleno.fuerza { background: var(--calendula); }
+
+/* ============ TÉCNICAS ============ */
+.grupo + .grupo { margin-top: 20px; }
+
+.grupo-cabeza {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-bottom: 8px;
+}
+
+.grupo-cabeza h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.rejilla-tecnicas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 8px;
+}
+
+.tecnica {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--tinta);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.tecnica[data-tipo='Sanacion'] { border-left: 4px solid var(--azul-senal); }
+.tecnica[data-tipo='Ataque'] { border-left: 4px solid var(--calendula); }
+.tecnica[data-tipo='Defensa'] { border-left: 4px solid var(--medianoche); }
+
+.tecnica:hover:not(:disabled) {
+  transform: translateY(-3px);
+  background: var(--papel);
+}
+
+.tecnica:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.tecnica:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tecnica-emoji {
+  font-size: 24px;
+  line-height: 1;
+  transition: transform 300ms var(--resorte);
+}
+.tecnica:hover:not(:disabled) .tecnica-emoji { transform: rotate(-10deg) scale(1.2); }
+
+.tecnica-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.tecnica-info strong { font-size: 14px; font-weight: 600; }
+.tecnica-info small { font-size: 12px; color: var(--grafito); line-height: 1.35; }
+.tecnica-info em { font-size: 12px; font-style: normal; font-weight: 500; color: var(--azul); }
+
+.enfria {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.07);
+  transition: height 1s linear;
+}
+
+.enfria-num {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--grafito);
+}
+
+/* ============ DIARIO ============ */
+.entradas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
   overflow-y: auto;
 }
 
-.log-row {
+.entrada-diario {
   display: flex;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-left-width: 4px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  animation: entrar 350ms var(--resorte);
 }
 
-.turn-num {
-  color: #64748b;
-  font-weight: 700;
+.e-damage { border-left-color: var(--calendula); }
+.e-shield { border-left-color: var(--medianoche); }
+.e-heal { border-left-color: var(--azul-senal); }
+.e-task { border-left-color: var(--cielo); background: var(--cielo-tinte); }
+.e-alert { border-left-color: var(--coral); }
+
+.d-actor { font-weight: 600; }
+.d-hechizo { font-weight: 500; color: var(--grafito); }
+.d-efecto { color: rgba(0, 0, 0, 0.7); flex: 1 1 220px; }
+
+/* ============ ANIMACIONES ============ */
+@keyframes flotar {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-8px) rotate(4deg); }
 }
 
-.turn-actor {
-  color: var(--gold-light);
-  font-weight: 600;
+@keyframes titilar {
+  0%, 100% { opacity: 0.35; transform: scale(0.8) rotate(0); }
+  50% { opacity: 1; transform: scale(1.15) rotate(20deg); }
 }
 
-.turn-spell {
-  font-weight: 700;
+@keyframes latido-suave {
+  0%, 85%, 100% { transform: scale(1); }
+  92% { transform: scale(1.05) rotate(-1deg); }
 }
 
-.entry-damage { background: rgba(239, 68, 68, 0.1); color: #fca5a5; }
-.entry-shield { background: rgba(56, 189, 248, 0.1); color: #bae6fd; }
-.entry-heal   { background: rgba(16, 185, 129, 0.1); color: #a7f3d0; }
-
-.empty-log {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  font-style: italic;
-  text-align: center;
-  padding: 1rem;
+@keyframes entrar {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@media (max-width: 860px) {
-  .duelo-combatientes {
-    grid-template-columns: 1fr;
-    text-align: center;
+@keyframes pop {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+@keyframes trote {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+@keyframes arrastrar {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-4px) rotate(5deg); }
+}
+
+@keyframes respirar {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes alerta {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+@keyframes subir {
+  0% { transform: translateY(6px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-14px); opacity: 0; }
+}
+
+@keyframes salto {
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-26px) scale(1.2) rotate(-8deg); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes brillo {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+@keyframes golpe {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+@keyframes confeti-cae {
+  0% { opacity: 1; transform: translateY(0) rotate(0); }
+  100% { opacity: 0; transform: translateY(320px) rotate(var(--giro, 180deg)); }
+}
+
+/* ============ RESPONSIVE Y ACCESIBILIDAD ============ */
+@media (max-width: 640px) {
+  .lienzo { padding: 16px 12px 64px; }
+  .tarjeta { padding: 16px; }
+  .banner { padding: 16px; }
+  .marca { width: 40px; height: 40px; font-size: 20px; }
+  .marca.grande { width: 52px; height: 52px; font-size: 26px; }
+  .chispa { display: none; }
+}
+
+/* Si la persona prefiere menos movimiento, se apagan las animaciones */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
-  .vs-badge {
-    margin: -0.5rem 0;
-  }
+}
+
+/* ============================================================================
+   VERSIÓN 2 · NAVIGATE — "paquete de stickers sobre una pizarra"
+   Fondo negro, tipografía enorme y compacta, todo en píldoras, un solo color
+   de acción (lima) y fichas de colores. Sin sombras ni degradados.
+   ============================================================================ */
+:host {
+  --nav-negro: #141414; --nav-crema: #fdf9f0; --nav-carbon: #232323; --nav-hueso: #eeeeee;
+  --nav-lima: #c7ff69; --nav-naranja: #ff6d38; --nav-violeta: #7a78ff; --nav-verde: #00a652;
+  --nav-cobalto: #478bff; --nav-amarillo: #ffc412; --nav-lila: #ccccff;
+  --fuente: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-display: 'Archivo Black', 'Arial Black', Impact, sans-serif;
+  background: var(--nav-negro);
+  color: var(--nav-crema);
+}
+.lienzo { background: var(--nav-negro); }
+.migas, .enlace-volver { color: rgba(253, 249, 240, 0.7); }
+.enlace-volver:hover { color: var(--nav-crema); background: rgba(253, 249, 240, 0.1); }
+
+/* Hero: titular gigante + 5 fichas de colores */
+.hero { padding: 56px 0 64px; }
+.chispa { display: none; }
+.marcas { gap: 14px; flex-wrap: wrap; margin-bottom: 44px; }
+.marca { border: none; border-radius: 25px; background: var(--nav-cobalto); }
+.marcas .marca { width: 96px; height: 96px; font-size: 44px; }
+.marcas .marca:nth-child(1) { background: var(--nav-violeta); }
+.marcas .marca:nth-child(2) { background: var(--nav-verde); }
+.marcas .marca:nth-child(3) { background: var(--nav-naranja); }
+.marcas .marca:nth-child(4) { background: var(--nav-amarillo); }
+.marcas .marca:nth-child(5) { background: var(--nav-cobalto); }
+.titulo {
+  font-family: var(--fuente-display); font-weight: 900; color: var(--nav-crema);
+  font-size: clamp(52px, 11vw, 135px); line-height: 0.85; letter-spacing: -0.04em; max-width: 1100px;
+}
+.pildora-hero { background: var(--nav-naranja); color: var(--nav-negro); border-radius: 1000px; padding: 0 0.2em; }
+.lede { font-family: var(--fuente); font-size: 18px; letter-spacing: -0.02em; color: rgba(253, 249, 240, 0.85); }
+
+/* Banners: bloques de color plano */
+.banner { border-radius: 25px; padding: 32px; color: var(--nav-negro); }
+.banner h2 { font-family: var(--fuente-display); font-weight: 900; font-size: clamp(34px, 5vw, 54px); line-height: 0.9; letter-spacing: -0.02em; margin: 12px 0 8px; color: var(--nav-negro); }
+.b-preparacion { background: var(--nav-lila); }
+.b-curso { background: var(--nav-amarillo); }
+.b-victoria { background: var(--nav-verde); }
+.b-derrota { background: var(--nav-naranja); }
+.dato { background: rgba(20, 20, 20, 0.12); }
+.campo { color: rgba(20, 20, 20, 0.7); }
+
+/* Botones: lima es el ÚNICO color de acción */
+.btn { border-radius: 1000px; height: 40px; padding: 9px 22px; letter-spacing: 0.01em; }
+.btn-primario { background: var(--nav-lima); color: var(--nav-negro); }
+.btn-primario:hover:not(:disabled) { background: #d8ff91; }
+.banner .btn-primario { border: 2px solid var(--nav-negro); }
+.btn-fantasma { background: transparent; color: var(--nav-negro); border: 2px solid var(--nav-negro); }
+.btn-fantasma:hover:not(:disabled) { background: rgba(20, 20, 20, 0.08); }
+.btn-contorno { border-radius: 1000px; border: 2px solid var(--nav-negro); height: 36px; padding: 5px 16px; }
+.entrada { border-radius: 1000px; height: 40px; padding: 0 18px; border: 2px solid var(--nav-negro); background: var(--nav-crema); }
+.entrada:focus { outline: 3px solid var(--nav-negro); outline-offset: 2px; border-color: var(--nav-negro); }
+
+/* Tarjetas */
+.tarjeta { background: var(--nav-crema); border: none; border-radius: 25px; padding: 28px; color: var(--nav-negro); }
+.tarjeta.oscura { background: var(--nav-carbon); color: var(--nav-crema); }
+.tarjeta-cabeza h2 { font-family: var(--fuente-display); font-weight: 900; font-size: 34px; line-height: 0.95; letter-spacing: -0.02em; }
+.tarjeta.oscura h2 { color: var(--nav-crema); }
+.grupo-cabeza h3 { font-weight: 700; }
+.nota { color: rgba(20, 20, 20, 0.65); }
+
+/* Pastillas */
+.pastilla { font-weight: 700; padding: 3px 12px; }
+.p-cielo { background: var(--nav-cobalto); }
+.p-amarilla { background: var(--nav-amarillo); }
+.p-coral { background: var(--nav-naranja); }
+.p-azul { background: var(--nav-violeta); color: var(--nav-negro); }
+.p-negra { background: var(--nav-negro); color: var(--nav-crema); }
+.p-blanca { background: var(--nav-crema); }
+.p-crema { background: var(--nav-hueso); border: none; }
+.esf-Rapida { background: var(--nav-lila); }
+.esf-Media { background: var(--nav-amarillo); }
+.esf-Pesada { background: var(--nav-naranja); }
+
+/* Barras */
+.progreso, .barra { background: var(--nav-hueso); }
+.progreso-relleno { background: var(--nav-cobalto); }
+.barra-relleno.estamina { background: var(--nav-cobalto); }
+.barra-relleno.estamina.baja { background: var(--nav-naranja); }
+.barra-relleno.fuerza { background: var(--nav-amarillo); }
+
+/* Tareas */
+.tarea { background: var(--nav-hueso); border: none; border-radius: 18px; padding: 10px 14px; }
+.tarea.hecha { background: rgba(0, 166, 82, 0.2); }
+.casilla { border: 2px solid var(--nav-negro); background: var(--nav-crema); }
+.casilla:hover:not(:disabled) { border-color: var(--nav-negro); background: var(--nav-lila); }
+.tarea.hecha .casilla { background: var(--nav-verde); border-color: var(--nav-negro); }
+.casilla.sin-energia { border-color: var(--nav-naranja); background: #ffd9c9; }
+.vacio { border-color: rgba(20, 20, 20, 0.3); border-radius: 18px; }
+.aviso { background: var(--nav-amarillo); border-radius: 18px; }
+
+/* Pista */
+.heroe .marca { background: var(--nav-cobalto); }
+.pereza .marca { background: var(--nav-naranja); }
+.pereza.congelada .marca { background: var(--nav-lila); }
+.pista.peligro .pereza .marca { border: none; outline: 4px solid var(--nav-crema); }
+.linea-suelo { border-bottom-color: rgba(253, 249, 240, 0.35); }
+
+/* Técnicas y diario */
+.tecnica { background: var(--nav-hueso); border: none; border-radius: 18px; }
+.tecnica[data-tipo='Sanacion'] { border-left: 8px solid var(--nav-cobalto); }
+.tecnica[data-tipo='Ataque'] { border-left: 8px solid var(--nav-amarillo); }
+.tecnica[data-tipo='Defensa'] { border-left: 8px solid var(--nav-violeta); }
+.tecnica:hover:not(:disabled) { background: var(--nav-lila); }
+.tecnica-info em { color: var(--nav-negro); font-weight: 700; }
+.tecnica-info small { color: rgba(20, 20, 20, 0.7); }
+.enfria { background: rgba(20, 20, 20, 0.12); }
+.entrada-diario { background: var(--nav-hueso); border: none; border-left: 8px solid var(--nav-negro); border-radius: 18px; }
+.e-damage { border-left-color: var(--nav-amarillo); }
+.e-shield { border-left-color: var(--nav-violeta); }
+.e-heal { border-left-color: var(--nav-cobalto); }
+.e-task { border-left-color: var(--nav-verde); background: rgba(0, 166, 82, 0.16); }
+.e-alert { border-left-color: var(--nav-naranja); }
+
+/* ============================================================================
+   TÉCNICAS EN HORIZONTAL: sección de ancho completo, con los tres grupos
+   (ejercicios, enfoque y escudos) uno al lado del otro.
+   ============================================================================ */
+.tecnicas-ancho { margin-bottom: 24px; }
+
+.grupos-horizontal {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.grupo + .grupo { margin-top: 0; }
+
+@media (min-width: 980px) {
+  .grupos-horizontal { grid-template-columns: 2fr 1fr 1fr; gap: 28px; }
+  .grupo[data-grupo='Sanacion'] .rejilla-tecnicas { grid-template-columns: repeat(2, 1fr); }
+  .grupo:not([data-grupo='Sanacion']) .rejilla-tecnicas { grid-template-columns: 1fr; }
+  .grupo-cabeza { flex-direction: column; align-items: flex-start; }
+}
+
+/* ============================================================================
+   ✨ VERSIÓN 3 · TOQUE MÁGICO (solo estilo visual, el juego no se toca)
+   Todo sigue las reglas del DESIGN.md: colores planos, sin sombras ni
+   degradados. La magia viene del movimiento, las estrellas y el cursor.
+   ============================================================================ */
+
+/* El contenido va por encima del cielo de estrellas */
+.contenedor { position: relative; z-index: 1; }
+
+/* ---- Cursor de varita (punta de estrella lima; amarilla sobre lo clicable) ---- */
+:host {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 28 L21 12' stroke='%23141414' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M5 28 L21 12' stroke='%23fdf9f0' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M24 1 L26 6 L31 8 L26 10 L24 15 L22 10 L17 8 L22 6 Z' fill='%23c7ff69' stroke='%23141414' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 24 8, auto;
+}
+
+.btn:not(:disabled),
+.casilla:not(:disabled),
+.tecnica:not(:disabled),
+.quitar,
+.enlace-volver,
+select.entrada {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 28 L21 12' stroke='%23141414' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M5 28 L21 12' stroke='%23fdf9f0' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M24 1 L26 6 L31 8 L26 10 L24 15 L22 10 L17 8 L22 6 Z' fill='%23ffc412' stroke='%23141414' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 24 8, pointer;
+}
+
+/* ---- Chispas del hero: ahora sí se ven, con colores del sistema ---- */
+.chispa { display: block; }
+.c1 { color: var(--nav-amarillo); }
+.c2 { color: var(--nav-lila); }
+.c3 { color: var(--nav-lima); }
+
+/* ---- Fichas del hero: se menean cuando pasas la varita ---- */
+.marcas .marca:hover { animation: trote 0.45s ease-in-out infinite; }
+
+/* ---- Destello en la palabra destacada del titular ---- */
+.pildora-hero { position: relative; }
+.pildora-hero::after,
+.pildora-hero::before {
+  position: absolute;
+  pointer-events: none;
+  animation: titilar 2.4s ease-in-out infinite;
+}
+.pildora-hero::after { content: '✦'; top: -0.05em; right: -0.18em; font-size: 0.32em; color: var(--nav-lima); }
+.pildora-hero::before { content: '✧'; bottom: 0.05em; left: -0.16em; font-size: 0.26em; color: var(--nav-lila); animation-delay: 1.1s; }
+
+/* ---- Abracadabra en los botones principales ---- */
+.btn-primario { position: relative; }
+.btn-primario::after,
+.btn-primario::before {
+  position: absolute;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--nav-negro);
+  opacity: 0;
+  transform: scale(0) rotate(-40deg);
+  transition: opacity 200ms ease, transform 350ms var(--resorte);
+  pointer-events: none;
+}
+.btn-primario::after { content: '✦'; top: -9px; right: 8px; }
+.btn-primario::before { content: '✧'; bottom: -7px; left: 10px; transition-delay: 60ms; }
+.btn-primario:hover:not(:disabled)::after,
+.btn-primario:hover:not(:disabled)::before { opacity: 1; transform: scale(1) rotate(0); }
+
+/* ---- Banners de estado: estrellitas que titilan en la esquina ---- */
+.banner { position: relative; }
+.banner::after {
+  content: '✦ ✧ ✦';
+  position: absolute;
+  top: 8px;
+  right: 22px;
+  font-size: 14px;
+  letter-spacing: 0.4em;
+  color: var(--nav-negro);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: titilar 2.8s ease-in-out infinite;
+}
+
+/* ---- Tarjetas: aparecen como "invocadas" ---- */
+.tarjeta { animation: entrar 600ms var(--resorte) backwards; }
+.tablero > .tarjeta { animation-delay: 80ms; }
+.columna > .tarjeta:nth-child(2) { animation-delay: 160ms; }
+
+/* ---- La pista (tarjeta oscura): mini cielo estrellado ---- */
+.pista::before {
+  content: '✦   ·   ✧      ·   ✦   ·      ✧   ·   ✦';
+  position: absolute;
+  top: 80px;
+  left: 24px;
+  right: 24px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--nav-crema);
+  opacity: 0.4;
+  pointer-events: none;
+  animation: titilar-suave 3.2s ease-in-out infinite;
+}
+
+@keyframes titilar-suave {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.55; }
+}
+
+/* ---- Técnicas disponibles: el emoji "chispea" al pasar la varita ---- */
+.tecnica:hover:not(:disabled) .tecnica-emoji { transform: rotate(-12deg) scale(1.3); }
+
+/* ---- Móvil: sin cursor personalizado ni adornos de más ---- */
+@media (hover: none) {
+  .pildora-hero::after, .pildora-hero::before { display: none; }
 }
