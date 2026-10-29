@@ -31,15 +31,21 @@
       <div class="arena-title">
         <span>⚔️ Club de Duelo de Hogwarts</span>
         <span class="badge-magic">Turno #{{ numeroTurno }}</span>
+        <span class="badge-magic">Acciones: {{ contadorHabilidades }}/{{ accionesParaUltis }}</span>
+        @if (turnoRivalPendiente) {
+          <span class="badge-magic">⚔️ Turno de {{ nombreRival }}…</span>
+        }
       </div>
 
       <div class="arena-actions">
         <button class="btn-magic btn-secondary" (click)="toggleArena()">
           {{ arenaOscura ? '☀️ Arena Iluminada' : '🌑 Arena de Sombras' }}
         </button>
-        <button class="btn-magic" (click)="iniciarDuelo()">
-          🔄 Reiniciar Duelo
-        </button>
+        @if (estadoDuelo === 'PREPARACION') {
+          <button class="btn-magic" (click)="iniciarDuelo()">🎮 Iniciar partida</button>
+        } @else {
+          <button class="btn-magic" (click)="iniciarDuelo()">🔄 Reiniciar duelo</button>
+        }
       </div>
     </div>
 
@@ -47,7 +53,14 @@
     <div class="duelo-combatientes">
       <!-- Mago Jugador -->
       <div class="combatiente-card mago-player">
-        <div class="combatiente-avatar">🧙‍♂️</div>
+        <div class="combatiente-visual">
+          <div class="combatiente-avatar">🧙‍♂️</div>
+          @for (efecto of efectosVisualesMago; track efecto.id) {
+            <div class="floating-effect" [ngClass]="'floating-' + efecto.tipo">
+              {{ efecto.texto }}
+            </div>
+          }
+        </div>
         <div class="combatiente-datos">
           <h3>{{ nombreMago }}</h3>
           <input 
@@ -65,6 +78,9 @@
             <span>Energía Mágica: {{ energiaMago }}%</span>
             <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
           </div>
+          @if (escudoSiguienteAtaque) {
+            <span class="shield-status">🛡️ Protego activo: bloqueará el próximo ataque</span>
+          }
         </div>
       </div>
 
@@ -72,10 +88,23 @@
 
       <!-- Mago Rival -->
       <div class="combatiente-card mago-rival">
-        <div class="combatiente-avatar">🧙🐍</div>
+        <div class="combatiente-visual">
+          <div class="combatiente-avatar">🧙🐍</div>
+          @for (efecto of efectosVisualesRival; track efecto.id) {
+            <div class="floating-effect" [ngClass]="'floating-' + efecto.tipo">
+              {{ efecto.texto }}
+            </div>
+          }
+        </div>
         <div class="combatiente-datos">
           <h3>{{ nombreRival }}</h3>
-          <span class="rival-tag">Adversario de Slytherin</span>
+          <input
+            type="text"
+            class="input-magic input-rename"
+            [(ngModel)]="nombreRival"
+            [disabled]="estadoDuelo === 'EN_CURSO'"
+            placeholder="Renombrar rival..."
+          />
           <div class="stat-bar">
             <span>Salud: {{ saludRival }}%</span>
             <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludRival"></div></div>
@@ -94,9 +123,8 @@
         <span class="banner-icon">⚔️</span>
         <div>
           <h4>Duelo en Espera</h4>
-          <p>Ajusta el nombre de tu mago arriba y haz clic en "Iniciar Duelo" para alzar varitas.</p>
+          <p>Ajusta los nombres de los duelistas y pulsa «Iniciar partida» para alzar varitas.</p>
         </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">¡Empezar Duelo!</button>
       </div>
     }
 
@@ -130,12 +158,18 @@
           @for (h of hechizosDuelo; track h.id) {
             <button 
               class="spell-card" 
-              [disabled]="energiaMago < h.costoEnergia" 
+              [disabled]="turnoRivalPendiente || energiaMago < h.costoEnergia || getCooldownRestante(h) > 0"
               (click)="lanzarHechizo(h)"
             >
               <div class="spell-top">
                 <strong>{{ h.nombre }}</strong>
-                <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
+                <span class="cost-tag">
+                  @if (getCooldownRestante(h) > 0) {
+                    {{ getCooldownRestante(h) }} turno(s)
+                  } @else {
+                    {{ h.costoEnergia }}⚡
+                  }
+                </span>
               </div>
               <p class="spell-desc">{{ h.descripcion }}</p>
               <div class="spell-power">
@@ -143,6 +177,113 @@
               </div>
             </button>
           }
+        </div>
+      </div>
+
+      <div class="spell-deck">
+        <h4>✨ Habilidades extra</h4>
+        <div class="spell-grid">
+          <button
+            class="spell-card"
+            [disabled]="turnoRivalPendiente || energiaMago >= energiaMaxima"
+            (click)="regenerarEnergia()"
+          >
+            <div class="spell-top">
+              <strong>Canalización de energía</strong>
+              <span class="cost-tag">+{{ recuperacionEnergia }}⚡</span>
+            </div>
+            <p class="spell-desc">
+              Recupera hasta {{ recuperacionEnergia }} de energía. Tu defensa se reduce un 5% hasta recibir el próximo ataque.
+            </p>
+            <div class="spell-power">
+              <span>
+                {{ defensaReducidaSiguienteAtaque ? 'Defensa reducida: próximo golpe +5%' : energiaMago >= energiaMaxima ? 'Energía al máximo' : 'Usar recuperación' }}
+              </span>
+            </div>
+          </button>
+          <button
+            class="spell-card"
+            [disabled]="turnoRivalPendiente || efectoActivo !== null"
+            (click)="lanzarAzarArcano()"
+          >
+            <div class="spell-top">
+              <strong>Azar arcano</strong>
+              <span class="cost-tag">2 turnos</span>
+            </div>
+            <p class="spell-desc">
+              Aplica un solo efecto aleatorio: uno de 3 buffs positivos o uno de 3 debuffs que te perjudican. Dura 2 turnos.
+            </p>
+            <div class="spell-power">
+              <span>{{ efectoActivo ? 'Espera a que termine el efecto activo' : 'Invocar efecto aleatorio' }}</span>
+            </div>
+          </button>
+        </div>
+        @if (efectoActivo) {
+          <div class="active-effects">
+            <p [class.active-buff]="efectoActivo.categoria === 'buff'" [class.active-debuff]="efectoActivo.categoria === 'debuff'">
+              {{ efectoActivo.categoria === 'buff' ? '✨ Buff' : '🌑 Debuff' }}:
+              {{ efectoActivo.nombre }} ({{ efectoActivo.turnosRestantes }} turnos): {{ efectoActivo.descripcion }}
+            </p>
+          </div>
+        }
+      </div>
+
+      <div class="spell-deck">
+        <h4>✨ Habilidades definitivas:</h4>
+        <p class="spell-desc">
+          {{ ultisDesbloqueadas ? '¡Ultis desbloqueadas!' : 'Se desbloquean al llegar a 6 acciones entre tú y el rival.' }}
+        </p>
+        <div class="spell-grid">
+          @for (ulti of habilidadesUlti; track ulti.id) {
+            <button
+              class="spell-card"
+              [disabled]="turnoRivalPendiente || !ultisDesbloqueadas || energiaMago < ulti.costoEnergia"
+              (click)="lanzarHabilidadUlti(ulti)"
+            >
+              <div class="spell-top">
+                <strong>{{ ulti.nombre }}</strong>
+                <span class="cost-tag">{{ ulti.costoEnergia }}⚡</span>
+              </div>
+              <p class="spell-desc">{{ ulti.descripcion }}</p>
+              <div class="spell-power">
+                <span>Efecto: <strong>+{{ ulti.poder }} {{ ulti.tipo }}</strong></span>
+              </div>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="spell-deck">
+        <h4>{{ habilidadSecretaDesbloqueada ? '🔥 Habilidad secreta desbloqueada' : '🔒 Habilidad secreta' }}</h4>
+        <div class="spell-grid">
+          <button
+            class="spell-card"
+            [disabled]="turnoRivalPendiente || !ultisDesbloqueadas || !habilidadSecretaDesbloqueada || habilidadSecretaUsada"
+            (click)="activarUltiSecreta()"
+          >
+            <div class="spell-top">
+              <strong>Despertar del Fénix</strong>
+              <span class="cost-tag">
+                {{ habilidadSecretaDesbloqueada ? (tipoDesbloqueoUlti === 'vida' ? '60%' : '40%') + ' daño' : 'Bloqueada' }}
+              </span>
+            </div>
+            <p class="spell-desc">
+              @if (habilidadSecretaUsada) {
+                Ya utilizaste la ulti secreta en este duelo.
+              } @else if (tipoDesbloqueoUlti === 'vida') {
+                Desbloqueada al quedar con 10% de vida o menos: causa 60% de daño.
+              } @else if (tipoDesbloqueoUlti === 'energia') {
+                Desbloqueada al quedar por debajo del costo de una habilidad: causa 40% de daño.
+              } @else {
+                Se desbloquea al bajar de 10% de vida o al no tener energía suficiente para una habilidad. Las ultis requieren {{ accionesParaUltis }} acciones.
+              }
+            </p>
+            <div class="spell-power">
+              <span>
+                {{ habilidadSecretaUsada ? 'Ulti utilizada' : habilidadSecretaDesbloqueada ? '¡Activa tu ulti secreta!' : 'Aún no desbloqueada' }}
+              </span>
+            </div>
+          </button>
         </div>
       </div>
     }

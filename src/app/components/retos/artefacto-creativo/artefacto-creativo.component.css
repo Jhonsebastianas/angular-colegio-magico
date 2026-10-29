@@ -66,6 +66,8 @@
 }
 
 .combatiente-card {
+  position: relative;
+  overflow: visible;
   background: rgba(30, 41, 59, 0.6);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
@@ -73,6 +75,59 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+}
+
+.combatiente-visual {
+  position: relative;
+  display: grid;
+  flex: 0 0 3.5rem;
+  place-items: center;
+  overflow: visible;
+}
+
+.floating-effect {
+  position: absolute;
+  z-index: 5;
+  bottom: 78%;
+  left: 50%;
+  max-width: 240px;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid color-mix(in srgb, currentColor 75%, white);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.94));
+  color: #fff;
+  font-family: var(--font-magic);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.025em;
+  text-align: center;
+  white-space: normal;
+  pointer-events: none;
+  text-shadow: 0 1px 3px #000;
+  box-shadow: 0 0 10px currentColor, inset 0 0 12px rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  animation: floating-spell 1s cubic-bezier(0.2, 0.75, 0.25, 1) forwards;
+}
+
+.floating-damage { color: #fca5a5; }
+.floating-heal { color: #86efac; }
+.floating-buff { color: #fde68a; }
+.floating-debuff { color: #c4b5fd; }
+.floating-shield { color: #7dd3fc; }
+
+@keyframes floating-spell {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 24px) scale(0.75);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -58px) scale(1.04);
+  }
 }
 
 .mago-player {
@@ -109,6 +164,18 @@
   font-size: 0.75rem;
   color: #fca5a5;
   margin-bottom: 0.5rem;
+}
+
+.shield-status {
+  display: inline-block;
+  margin-top: 0.25rem;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid rgba(125, 211, 252, 0.45);
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.14);
+  color: #bae6fd;
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 
 .stat-bar {
@@ -175,6 +242,31 @@
 
 .spell-deck {
   margin-bottom: 1.5rem;
+}
+
+.active-effects {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.active-effects p {
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: 7px;
+  font-size: 0.78rem;
+}
+
+.active-buff {
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.active-debuff {
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.3);
 }
 
 .spell-deck h4 {
@@ -304,5 +396,12 @@
   }
   .vs-badge {
     margin: -0.5rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-effect {
+    animation: none;
+    opacity: 1;
   }
 }
