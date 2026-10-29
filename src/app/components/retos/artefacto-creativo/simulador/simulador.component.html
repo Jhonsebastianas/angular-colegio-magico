@@ -1,0 +1,257 @@
+<section class="sim">
+  <div class="fondo" [style.backgroundImage]="'url(' + escenario + ')'"></div>
+  <div class="contenido">
+    <header class="top">
+      <h1>Simulador de combate · Mushoku Tensei</h1>
+      @if (vista !== 'inicio') {
+        <button type="button" class="link" (click)="ir('inicio')">← Inicio</button>
+      }
+    </header>
+
+    <!-- INICIO -->
+    @if (vista === 'inicio') {
+      <div class="menu">
+        <button type="button" class="tarjeta" (click)="modo = 'manual'; iniciar()">
+          <strong>⚡ Combate rápido</strong><span>Rudeus contra Orsted, con las habilidades por defecto. Un clic y a pelear.</span>
+        </button>
+        <button type="button" class="tarjeta" (click)="modo = 'manual'; ir('preparacion')">
+          <strong>⚔️ Duelo manual</strong><span>Tú eliges cada acción contra un oponente con IA.</span>
+        </button>
+        <button type="button" class="tarjeta" (click)="modo = 'auto'; ir('preparacion')">
+          <strong>🤖 Simulador automático</strong><span>Dos personajes combaten solos; reproduces la misma semilla cuando quieras.</span>
+        </button>
+        <button type="button" class="tarjeta" (click)="ir('personajes')">
+          <strong>🧙 Personajes</strong><span>Estadísticas, categoría de poder y habilidades de cada uno.</span>
+        </button>
+        <button type="button" class="tarjeta" (click)="ir('hechizos')">
+          <strong>📜 Hechizos</strong><span>{{ opCategorias.length }} categorías de magia del documento, con filtros y fichas.</span>
+        </button>
+      </div>
+      <p class="nota">
+        En preparación: combate por equipos, laboratorio de habilidades y desafíos. El motor ya admite varios combatientes por
+        bando; falta la interfaz.
+      </p>
+    }
+
+    <!-- PERSONAJES -->
+    @if (vista === 'personajes') {
+      <div class="grid-p">
+        @for (p of personajes; track p.id) {
+          <article class="carta-p">
+            <img [src]="retrato(p)" [alt]="p.nombre" (error)="alFallar($event)" />
+            <h3>{{ nombrePersonaje(p) }}</h3>
+            <p class="chips"><span class="chip">Poder {{ categoriaPoder(p) }} · {{ puntos(p) }}</span><span class="chip">{{ p.categoria }}</span></p>
+            <small>{{ p.estilo }}</small>
+            <button type="button" class="btn" (click)="fichaP = p">Ver perfil</button>
+          </article>
+        }
+      </div>
+      @if (fichaP) {
+        <div class="ficha">
+          <button type="button" class="link" (click)="fichaP = null">Cerrar</button>
+          <h2>{{ nombrePersonaje(fichaP) }} @if (fichaP.nombreAlterno) { <small>({{ fichaP.nombreAlterno }})</small> }</h2>
+          <p>{{ fichaP.descripcion }}</p>
+          <div class="attrs">
+            @for (a of atributos(fichaP); track a.n) {
+              <span><em>{{ a.n }}</em><b>{{ a.v }}</b></span>
+            }
+          </div>
+          <p><strong>Estilo de IA:</strong> {{ fichaP.ia }} · <strong>Debilidades:</strong> {{ fichaP.debilidades.join(', ') }}</p>
+          <p class="nota">
+            Los atributos son valores de balance inventados para el simulador, no datos oficiales. Habilidades permitidas:
+            {{ fichaP.habilidadesFuente === 'mixta' ? 'parte respaldada por el documento y parte interpretada' : 'interpretadas a partir de la historia' }}.
+          </p>
+          <p><strong>Habilidades ({{ fichaP.habilidades.length }}):</strong></p>
+          <p class="chips">
+            @for (h of habilidadesDe(fichaP); track h.id) {
+              <button type="button" class="chip pulsable" [class.eq]="fichaP.equipadas.includes(h.id)" (click)="ir('hechizos'); fichaH = h">{{ icono(h) }} {{ h.nombre }}</button>
+            }
+          </p>
+          <button type="button" class="btn-principal" (click)="prepararCon(fichaP.id)">Preparar un duelo con este personaje</button>
+        </div>
+      }
+    }
+
+    <!-- HECHIZOS -->
+    @if (vista === 'hechizos') {
+      <div class="filtros">
+        <input type="search" placeholder="Buscar hechizo…" [(ngModel)]="busqueda" />
+        <select [(ngModel)]="fElemento"><option value="">Elemento</option>@for (o of opElementos; track o) { <option [value]="o">{{ o }}</option> }</select>
+        <select [(ngModel)]="fCategoria"><option value="">Categoría</option>@for (o of opCategorias; track o) { <option [value]="o">{{ o }}</option> }</select>
+        <select [(ngModel)]="fRango"><option value="">Rango</option>@for (o of opRangos; track o) { <option [value]="o">{{ o }}</option> }</select>
+        <select [(ngModel)]="fFuncion"><option value="">Función</option>@for (o of opFunciones; track o) { <option [value]="o">{{ o }}</option> }</select>
+        <select [(ngModel)]="fPersonaje"><option value="">Personaje</option>@for (p of personajes; track p.id) { <option [value]="p.id">{{ nombrePersonaje(p) }}</option> }</select>
+        <label>Maná máx. <input type="number" min="0" step="5" [(ngModel)]="fManaMax" /></label>
+      </div>
+      <p class="nota">{{ hechizosFiltrados.length }} de {{ total }} habilidades.</p>
+      <div class="lista-h">
+        @for (h of hechizosFiltrados; track h.id) {
+          <button type="button" class="fila-h" [class.sel]="fichaH?.id === h.id" (click)="fichaH = h">
+            <span>{{ icono(h) }} <strong>{{ h.nombre }}</strong></span>
+            <small>{{ h.categoria }} · {{ h.rango }} · 🔷 {{ h.manaCost }}</small>
+          </button>
+        }
+      </div>
+      @if (fichaH) {
+        <div class="ficha">
+          <button type="button" class="link" (click)="fichaH = null">Cerrar</button>
+          <h2>{{ icono(fichaH) }} {{ fichaH.nombre }} @if (fichaH.nombreJp) { <small>{{ fichaH.nombreJp }}</small> }</h2>
+          <p>{{ fichaH.descripcion }}</p>
+          <p class="chips">
+            <span class="chip">{{ fichaH.categoria }}</span><span class="chip">Rango {{ fichaH.rango }}@if (fichaH.rangoFuente === 'balance') { (asignado por balance) }</span>
+            <span class="chip">{{ fichaH.funcion }}</span><span class="chip">Elemento {{ fichaH.elemento }}</span>
+          </p>
+          <div class="attrs">
+            <span><em>Coste de maná</em><b>{{ fichaH.manaCost }}</b></span>
+            <span><em>Enfriamiento</em><b>{{ fichaH.cooldown }}</b></span>
+            <span><em>Potencia</em><b>{{ fichaH.power }}</b></span>
+            <span><em>Precisión</em><b>{{ fichaH.accuracy }} %</b></span>
+          </div>
+          <p><strong>Efectos en el simulador:</strong></p>
+          <ul>
+            @for (e of fichaH.efectos; track $index) { <li>{{ efectoTexto(e) }}</li> }
+            @if (!fichaH.efectos.length) { <li>Sin efecto en combate.</li> }
+          </ul>
+          @if (fichaH.nota) { <p class="nota">{{ fichaH.nota }}</p> }
+          @if (!fichaH.jugable) { <p class="aviso">No disponible en combate: {{ fichaH.motivoNoJugable }}</p> }
+          @else if (!usuariosDe(fichaH).length) { <p class="aviso">Ningún personaje de esta versión puede usarla.</p> }
+          @else { <p><strong>Pueden usarla:</strong> {{ usuariosDe(fichaH).join(', ') }}</p> }
+          @if (fichaH.usuariosDoc.length) { <p class="nota">Según el documento la usan o aparecen con ella: {{ fichaH.usuariosDoc.join(', ') }}.</p> }
+          <p class="nota">
+            Nombre, rango y descripción vienen del documento. Los números (potencia, maná, enfriamiento) son de balance y los efectos
+            {{ fichaH.fuenteEfectos === 'documento' ? 'se basan en lo que dice el documento' : 'son una interpretación' }}; no son datos oficiales.
+          </p>
+        </div>
+      }
+    }
+
+    <!-- PREPARACIÓN -->
+    @if (vista === 'preparacion') {
+      <div class="prep">
+        <div>
+          <h2>{{ modo === 'manual' ? 'Duelo manual' : 'Simulador automático' }}</h2>
+          <h3>Tu personaje</h3>
+          <div class="cartas-mini">
+            @for (p of personajes; track p.id) {
+              <button type="button" class="mini" [class.sel]="p.id === idA" (click)="elegirA(p.id)">
+                <img [src]="retrato(p, p.id === idA && mk0)" [alt]="p.nombre" (error)="alFallar($event)" />
+                <span>{{ nombrePersonaje(p) }}</span><small>{{ categoriaPoder(p) }}</small>
+              </button>
+            }
+          </div>
+          <h3>Oponente</h3>
+          <select [(ngModel)]="idB">
+            @for (p of personajes; track p.id) { <option [value]="p.id">{{ nombrePersonaje(p) }} ({{ categoriaPoder(p) }})</option> }
+          </select>
+          <label class="fila">Estilo de IA del oponente
+            <select [(ngModel)]="iaB"><option value="">Por defecto</option>@for (e of estilos; track e) { <option [value]="e">{{ e }}</option> }</select>
+          </label>
+          @if (defA.puedeMK0) {
+            <label class="fila"><input type="checkbox" [(ngModel)]="mk0" /> Equipar la armadura mágica MK0 (más vida, maná, daño, defensa y velocidad)</label>
+          }
+          <label class="fila">Semilla <input type="text" [(ngModel)]="semillaTxt" maxlength="20" /></label>
+          <p class="nota">Misma semilla y misma configuración = mismo combate.</p>
+          <label class="fila">Velocidad de la IA <input type="range" min="0.5" max="4" step="0.5" [(ngModel)]="velocidad" /> ×{{ velocidad }}</label>
+          @if (idA === idB) { <p class="aviso">Elige un oponente distinto.</p> }
+          <button type="button" class="btn-principal" [disabled]="idA === idB || !equipadasA.length" (click)="iniciar()">Empezar combate</button>
+        </div>
+        <div>
+          <h3>Habilidades equipadas ({{ equipadasA.length }}/{{ maxEquipadas }})</h3>
+          <button type="button" class="link" (click)="restablecerEquipo()">Restablecer las del personaje</button>
+          <div class="equipo">
+            @for (h of permitidasA; track h.id) {
+              <button type="button" class="eq-h" [class.eq]="equipadasA.includes(h.id)"
+                [disabled]="!equipadasA.includes(h.id) && equipadasA.length >= maxEquipadas"
+                [title]="equipadasA.length >= maxEquipadas && !equipadasA.includes(h.id) ? 'Ya tienes ' + maxEquipadas + ' equipadas: retira una.' : h.descripcion"
+                (click)="alternarEquipo(h)">
+                {{ icono(h) }} {{ h.nombre }} <small>🔷{{ h.manaCost }}</small>
+              </button>
+            }
+          </div>
+          <p class="nota">Solo aparecen las habilidades que este personaje puede usar.</p>
+        </div>
+      </div>
+    }
+
+    <!-- COMBATE -->
+    @if (vista === 'combate' && motor) {
+      <div class="hud">
+        <span class="chip">Ronda {{ motor.ronda }}</span>
+        <span class="chip">{{ modo === 'manual' ? 'Manual' : 'Automático' }}</span>
+        @if (modo === 'auto') {
+          <button type="button" class="btn" (click)="alternarPausa()">{{ pausado ? '▶ Continuar' : '⏸ Pausar' }}</button>
+        }
+        <button type="button" class="btn" (click)="reiniciarCombate()">↻ Reiniciar</button>
+        <button type="button" class="btn" (click)="ir('preparacion')">Salir</button>
+      </div>
+
+      <div class="arena" [style.backgroundImage]="'url(' + escenario + ')'">
+        @for (c of motor.combatientes; track c.id) {
+          <div class="luchador" [class.activo]="actor?.id === c.id" [class.caido]="c.hp <= 0">
+            <img [src]="retrato(c.def, c.mk0)" [alt]="c.nombre" (error)="alFallar($event)" />
+            <h3>{{ c.nombre }} @if (c.mk0) { <span class="chip">MK0</span> }</h3>
+            <div class="barra vida"><div [style.width.%]="pct(c.hp, c.attr.hpMax)"></div></div>
+            <small>❤ {{ c.hp }} / {{ c.attr.hpMax }}</small>
+            <div class="barra mana"><div [style.width.%]="pct(c.mana, c.attr.manaMax)"></div></div>
+            <small>🔷 {{ c.mana | number: '1.0-0' }} / {{ c.attr.manaMax }}</small>
+            <div class="chips">
+              @for (e of estadosDe(c); track e.id) { <span class="chip" [title]="e.descripcion">{{ e.icono }} {{ e.nombre }} {{ e.turnos }}@if (e.pila > 1) { ×{{ e.pila }} }</span> }
+              @for (s of c.escudos; track $index) { <span class="chip">🛡️ Barrera {{ s.clase === 'mag' ? 'mágica' : 'física' }} {{ s.valor }}</span> }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="cols">
+        <div class="mando">
+          @if (esperaReaccion && motor.pendiente) {
+            <h3>{{ motor.get(motor.pendiente.actorId).nombre }} prepara {{ nombreHabilidad(motor.pendiente.habilidadId) }}</h3>
+            <p>¿Quieres interrumpirlo?</p>
+            @for (id of motor.pendiente.opciones; track id) {
+              <button type="button" class="btn-principal" (click)="reaccionar(id)">{{ nombreHabilidad(id) }} (probabilidad ≈ {{ probReaccion(id) }} %)</button>
+            }
+            <button type="button" class="btn" (click)="reaccionar(null)">Dejar que el hechizo continúe</button>
+          } @else if (acciones.length) {
+            <h3>Tu turno: {{ actor?.nombre }}</h3>
+            <div class="acciones">
+              @for (d of acciones; track d.etiqueta) {
+                <button type="button" class="accion" [class.no]="!d.usable" [attr.aria-disabled]="!d.usable" (click)="usar(d)">
+                  <strong>{{ d.etiqueta }}</strong>
+                  @if (d.habilidad) { <small>🔷 {{ d.habilidad.manaCost }} · {{ d.habilidad.categoria }}@if (actor && cooldown(actor, d.habilidad.id) > 0) { · ⏳{{ cooldown(actor, d.habilidad.id) }} }</small> }
+                  @if (d.usable) { <small>{{ estimado(d) }}</small> } @else { <small class="motivo">{{ d.motivo }}</small> }
+                </button>
+              }
+            </div>
+          } @else if (motor.fase !== 'terminado') {
+            <p class="espera">{{ pausado ? 'En pausa.' : 'Turno de ' + actor?.nombre + '…' }}</p>
+          } @else {
+            <p class="espera">El combate ha terminado.</p>
+          }
+        </div>
+        <aside class="registro">
+          <h3>Registro de combate</h3>
+          <ol>@for (e of registro; track e.n) { <li [ngClass]="'t-' + e.tipo">{{ e.msg }}</li> }</ol>
+        </aside>
+      </div>
+    }
+
+    <!-- RESULTADO -->
+    @if (vista === 'resultado' && motor) {
+      <div class="panel">
+        <h2>{{ ganadorTexto }}</h2>
+        <p>El combate duró {{ motor.ronda }} rondas. Semilla: {{ semillaTxt }}.</p>
+        <table>
+          <tr><th>Combatiente</th><th>Daño infligido</th><th>Daño recibido</th><th>Curación</th><th>Habilidades</th><th>Interrupciones</th></tr>
+          @for (c of motor.combatientes; track c.id) {
+            <tr><td>{{ c.nombre }}</td><td>{{ c.stats.danioInfligido }}</td><td>{{ c.stats.danioRecibido }}</td><td>{{ c.stats.curacion }}</td><td>{{ c.stats.hechizos }}</td><td>{{ c.stats.interrupciones }}</td></tr>
+          }
+        </table>
+        <div class="acciones-fin">
+          <button type="button" class="btn-principal" (click)="reiniciarCombate()">Revancha (misma semilla)</button>
+          <button type="button" class="btn" (click)="ir('preparacion')">Preparar otro combate</button>
+        </div>
+      </div>
+      <aside class="registro"><h3>Registro completo</h3><ol>@for (e of registro; track e.n) { <li [ngClass]="'t-' + e.tipo">{{ e.msg }}</li> }</ol></aside>
+    }
+  </div>
+</section>
