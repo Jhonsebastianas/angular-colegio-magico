@@ -49,7 +49,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
       {
         id: 2,
         nombre: 'Felix Felicis',
-        descripcion: 'Otorga suerte extraordinaria durante un tiempo limitado.',
+        descripcion: 'Otorga Suerte extraordinaria durante un tiempo limitado.',
         nivelPeligro: 3,
         tiempoCoccionMinutos: 120,
         tipoMagia: 'Curacion',
@@ -63,7 +63,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
         nivelPeligro: 10,
         tiempoCoccionMinutos: 90,
         tipoMagia: 'Prohibida',
-        ingredientes: ['Veneno de basilisco', 'Raíz Seca', 'Escama negra'],
+        ingredientes: ['Veneno de basilisco', 'Raíz seca', 'Escama negra'],
         estable: false
       }
     ];
