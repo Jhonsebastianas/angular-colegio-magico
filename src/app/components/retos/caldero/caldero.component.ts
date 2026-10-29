@@ -63,7 +63,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
         nivelPeligro: 10,
         tiempoCoccionMinutos: 90,
         tipoMagia: 'Prohibida',
-        ingredientes: ['Veneno de basilisco', 'Raíz seca', 'Escama negra'],
+        ingredientes: ['Veneno de basilisco', 'Raíz Seca', 'Escama negra'],
         estable: false
       }
     ];
