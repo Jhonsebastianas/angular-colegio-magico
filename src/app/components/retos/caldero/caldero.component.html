@@ -169,9 +169,11 @@
         </button>
       </div>
 
-      <!-- Grid de Pociones (Reto 2) -->
+            <!-- Grid de Pociones (Reto 2) -->
       <div class="pociones-grid">
+        <!-- 1. Itera con @for y trackea por id -->
         @for (pocion of getPocionesFiltradas(); track pocion.id) {
+          <!-- 2. Clase obligatoria pocion-card -->
           <div 
             class="pocion-card" 
             [ngClass]="'borde-magia-' + pocion.tipoMagia.toLowerCase()"
@@ -185,6 +187,7 @@
               </span>
               <div>
                 <h4 class="pocion-nombre">{{ pocion.nombre }}</h4>
+                <!-- 3. Clase dinámica con ngClass requerida por test 2.3 -->
                 <span class="badge-magic" [ngClass]="'badge-' + pocion.tipoMagia.toLowerCase()">
                   {{ pocion.tipoMagia }}
                 </span>
@@ -200,7 +203,7 @@
 
             <p class="pocion-desc">{{ pocion.descripcion }}</p>
 
-            <!-- Alerta de Toxicidad Condicional (@if) -->
+            <!-- 4. Alerta de toxicidad requerida por test 2.2 (estrictamente > 7) -->
             @if (pocion.nivelPeligro > 7) {
               <div class="toxic-warning">
                 ⚠️ <strong>¡ALERTA DE TOXICIDAD!</strong> Peligro nivel {{ pocion.nivelPeligro }}/10. Requiere supervisión de un profesor.
@@ -212,6 +215,7 @@
               <span>Peligro: <strong>{{ pocion.nivelPeligro }}/10</strong></span>
             </div>
           </div>
+        <!-- 5. Bloque vacío requerido por test 2.4 -->
         } @empty {
           <div class="empty-caldero">
             <span class="empty-icon">🥣 ✨</span>
@@ -219,14 +223,6 @@
             <p>
               El caldero arranca vacío para que pongas en práctica los retos.
             </p>
-            <div class="empty-instructions">
-              <p>👉 <strong>Paso 1:</strong> Abre <code>src/app/components/retos/caldero/caldero.component.ts</code> y resuelve el <strong>Reto 1</strong> en <code>ngOnInit()</code> para poblar las 3 pociones ancestrales.</p>
-              <p>👉 <strong>Paso 2:</strong> Ejecuta <code>npm test</code> en tu consola para que el Tribunal de Magia valide tus 42 encantamientos paso a paso.</p>
-            </div>
           </div>
         }
       </div>
-    </div>
-  </div>
-</section>
-</div>
