@@ -1,168 +1,478 @@
-<div class="page-container">
+<div class="page-container diario-page">
   <div class="page-breadcrumb">
     <a href="/" class="back-link">← Volver al Gran Comedor</a>
     <span class="sep">•</span>
-    <span class="current">Reto 7 • El Lienzo Creativo (30%)</span>
+    <span class="current">Reto 7 • El Diario de Tom Riddle</span>
   </div>
 
-  <section class="section-card card-magic" [class.arena-oscura]="arenaOscura">
-  <div class="section-header">
-    <div class="section-badge creative-badge">RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)</div>
-    <h2>🎨 El Laboratorio de Artefactos Mágicos</h2>
-    <p class="section-subtitle">
-      Demuestra tu creatividad y maestría técnica. Aquí tienes la libertad de dar vida a un artefacto mágico asombroso siguiendo los lineamientos de la rúbrica.
-    </p>
-  </div>
-
-  <div class="callout-didactico">
-    <h4>📜 Rúbrica de Evaluación del Reto Creativo (30%)</h4>
-    <p>
-      1. <strong>Múltiples Estados:</strong> Debe manejar al menos 3 estados interactivos (ej: Preparación, En Curso, Victoria/Derrota).<br>
-      2. <strong>Control Flow:</strong> Uso justificado de <span class="callout-code">{{ '@if' }}</span> y <span class="callout-code">{{ '@for' }}</span>.<br>
-      3. <strong>Data Binding:</strong> Implementar <span class="callout-code">[(ngModel)]</span> y enlaces dinámicos.<br>
-      4. <strong>Ciclos de Vida:</strong> Al menos dos hooks (<span class="callout-code">ngOnInit</span> y otro más).<br>
-      5. <strong>Estética y UX:</strong> Diseño mágico inmersivo, animaciones sutiles y buena experiencia de usuario.
-    </p>
-  </div>
-
-  <!-- Arena de Duelo Mágico -->
-  <div class="arena-container">
-    <div class="arena-top-bar">
-      <div class="arena-title">
-        <span>⚔️ Club de Duelo de Hogwarts</span>
-        <span class="badge-magic">Turno #{{ numeroTurno }}</span>
-      </div>
-
-      <div class="arena-actions">
-        <button class="btn-magic btn-secondary" (click)="toggleArena()">
-          {{ arenaOscura ? '☀️ Arena Iluminada' : '🌑 Arena de Sombras' }}
-        </button>
-        <button class="btn-magic" (click)="iniciarDuelo()">
-          🔄 Reiniciar Duelo
-        </button>
-      </div>
+  <section class="section-card card-magic diario-shell">
+    <div class="diario-particulas" aria-hidden="true">
+      <span class="particula p1"></span>
+      <span class="particula p2"></span>
+      <span class="particula p3"></span>
+      <span class="particula p4"></span>
+      <span class="particula p5"></span>
+      <span class="particula p6"></span>
     </div>
 
-    <!-- Escenario de Magos -->
-    <div class="duelo-combatientes">
-      <!-- Mago Jugador -->
-      <div class="combatiente-card mago-player">
-        <div class="combatiente-avatar">🧙‍♂️</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreMago }}</h3>
-          <input 
-            type="text" 
-            class="input-magic input-rename" 
-            [(ngModel)]="nombreMago" 
-            [disabled]="estadoDuelo === 'EN_CURSO'"
-            placeholder="Renombrar mago..."
-          />
-          <div class="stat-bar">
-            <span>Salud: {{ saludMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludMago"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Mágica: {{ energiaMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
-          </div>
-        </div>
+    <header class="diario-header">
+      <div>
+        <div class="section-badge creative-badge">RETO 7 • ARTEFACTO CREATIVO (30%)</div>
+        <h2>🐍 El Diario de Tom Riddle</h2>
+        <p class="section-subtitle">
+          Un cuaderno viejo apareció entre los libros prohibidos de la biblioteca. La primera
+          página está en blanco. La segunda ya tiene tu nombre.
+        </p>
       </div>
 
-      <div class="vs-badge">VS</div>
-
-      <!-- Mago Rival -->
-      <div class="combatiente-card mago-rival">
-        <div class="combatiente-avatar">🧙🐍</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreRival }}</h3>
-          <span class="rival-tag">Adversario de Slytherin</span>
-          <div class="stat-bar">
-            <span>Salud: {{ saludRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludRival"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Rival: {{ energiaRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaRival"></div></div>
-          </div>
-        </div>
+      <div class="diario-sello" aria-hidden="true">
+        <span class="sello-icono">🐍</span>
+        <span class="sello-texto">No lo<br />abras</span>
       </div>
-    </div>
+    </header>
 
-    <!-- Panel de Estados del Duelo (@if) -->
-    @if (estadoDuelo === 'PREPARACION') {
-      <div class="estado-banner preparacion">
-        <span class="banner-icon">⚔️</span>
-        <div>
-          <h4>Duelo en Espera</h4>
-          <p>Ajusta el nombre de tu mago arriba y haz clic en "Iniciar Duelo" para alzar varitas.</p>
+    <!-- ===================================================================== -->
+    <!-- PORTADA                                                                -->
+    <!-- ===================================================================== -->
+    @if (faseDiario === 'PORTADA') {
+      <section class="portada-diario">
+        <div class="cubierta-escena">
+          <div class="cubierta-halo" aria-hidden="true"></div>
+
+          <div class="diario-cerrado">
+            <div class="cubierta-esquinas" aria-hidden="true"></div>
+            <div class="cubierta-monograma">T. M. R.</div>
+            <div class="cubierta-linea" aria-hidden="true"></div>
+            <div class="cubierta-titulo">DIARIO</div>
+            <div class="cubierta-sello" aria-hidden="true">🐍</div>
+            <div class="cubierta-anio">1943</div>
+          </div>
+
+          <p class="cubierta-nota">
+            <span>«Este diario pertenece a T. M. R.»</span>
+            <small>Si lo encuentras, devuélvelo. Si te encuentra él a ti, corre.</small>
+          </p>
         </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">¡Empezar Duelo!</button>
-      </div>
+
+        <div class="portada-contenido">
+          <span class="portada-etiqueta">HOGWARTS · TERCER PISO · 1992</span>
+          <h3>La primera página está en blanco</h3>
+          <p>
+            El diario no tiene título en el lomo, pero la tinta de la portada parece moverse
+            cuando no la miras de frente. Alguien ha dejado una pluma abierta sobre la mesa.
+            Todavía está tibia.
+          </p>
+
+          <div class="portada-reglas" aria-label="Reglas del diario">
+            <span><strong>100</strong> voluntad</span>
+            <span><strong>4</strong> hechizos de tinta</span>
+            <span><strong>3</strong> recuerdos ocultos</span>
+          </div>
+
+          <div class="portada-form">
+            <label class="campo">
+              <span>¿Quién va a escribir?</span>
+              <input
+                class="input-magic"
+                type="text"
+                [(ngModel)]="nombreLector"
+                maxlength="24"
+                placeholder="Escribe tu nombre"
+              />
+            </label>
+
+            <label class="campo">
+              <span>Tu casa</span>
+              <select class="input-magic" [(ngModel)]="casaLector">
+                @for (casa of casas; track casa) {
+                  <option [value]="casa">{{ casa }}</option>
+                }
+              </select>
+            </label>
+          </div>
+
+          <div class="portada-identidad" [ngClass]="casaClase">
+            <span class="identidad-avatar">{{ casaEmoji }}</span>
+            <p>
+              <strong>{{ nombreLectorVisible }}</strong> de {{ casaLector }}. El diario ya sabe
+              dónde encontrarte.
+            </p>
+          </div>
+
+          <div class="advertencia-diario">
+            <span class="advertencia-icono" aria-hidden="true">⚠</span>
+            <p>
+              Tom empieza con el 100% de dominio. Cada hechizo gasta tinta. Si tu voluntad
+              llega a cero, el diario se queda contigo.
+            </p>
+          </div>
+
+          <button type="button" class="btn-magic portada-boton" (click)="iniciarDuelo()">
+            Abrir el diario y escribir <span aria-hidden="true">→</span>
+          </button>
+
+          <p class="portada-pie">
+            No puedes cerrarlo hasta que termines de leer. Eso también lo dijo él.
+          </p>
+        </div>
+      </section>
     }
 
-    @if (estadoDuelo === 'VICTORIA') {
-      <div class="estado-banner victoria">
-        <span class="banner-icon">🏆 🦁</span>
-        <div>
-          <h4>¡VICTORIA ÉPICA!</h4>
-          <p>¡Has derrotado a {{ nombreRival }}! Has ganado 50 puntos para tu casa.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">Revancha</button>
-      </div>
-    }
+    <!-- ===================================================================== -->
+    <!-- DIARIO ABIERTO                                                         -->
+    <!-- ===================================================================== -->
+    @else if (faseDiario === 'DIARIO') {
+      <section class="diario-escena">
+        <div class="diario-barra">
+          <div class="barra-lector" [ngClass]="casaClase">
+            <span class="barra-avatar">{{ casaEmoji }}</span>
+            <div class="barra-datos">
+              <span class="barra-etiqueta">Lector</span>
+              <strong>{{ nombreLectorVisible }}</strong>
+              <small>{{ casaLector }}</small>
+            </div>
+          </div>
 
-    @if (estadoDuelo === 'DERROTA') {
-      <div class="estado-banner derrota">
-        <span class="banner-icon">💀 🐍</span>
-        <div>
-          <h4>¡HAS CAÍDO EN DUELO!</h4>
-          <p>Madame Pomfrey te espera en la enfermería. No te rindas y prueba otra táctica.</p>
-        </div>
-        <button class="btn-magic btn-danger" (click)="iniciarDuelo()">Intentar de Nuevo</button>
-      </div>
-    }
+          <div class="barra-turno" aria-live="polite">
+            @if (turnoRivalPendiente) {
+              <span class="turno turno-tom">
+                <span class="punto-escritura" aria-hidden="true"></span>
+                Tom está escribiendo
+              </span>
+            } @else {
+              <span class="turno">Tu turno · {{ numeroTurno }}</span>
+            }
+          </div>
 
-    <!-- Grimorio de Hechizos del Duelo (@for) -->
-    @if (estadoDuelo === 'EN_CURSO') {
-      <div class="spell-deck">
-        <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
-        <div class="spell-grid">
-          @for (h of hechizosDuelo; track h.id) {
-            <button 
-              class="spell-card" 
-              [disabled]="energiaMago < h.costoEnergia" 
-              (click)="lanzarHechizo(h)"
-            >
-              <div class="spell-top">
-                <strong>{{ h.nombre }}</strong>
-                <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
+          <button type="button" class="btn-cerrar" (click)="reiniciarDiario()">
+            Cerrar y reiniciar
+          </button>
+        </div>
+
+        <div class="diario-abierto">
+          <article class="pagina pagina-izquierda">
+            <div class="pagina-cabecera">
+              <span class="pagina-numero">I</span>
+              <span>La letra de Tom</span>
+            </div>
+
+            @if (respuestaTom) {
+              <p class="letra-tom">{{ respuestaTom }}</p>
+            } @else {
+              <p class="letra-tom letra-tenue">La página está en silencio. Por ahora.</p>
+            }
+
+            <div class="separador-tinta" aria-hidden="true"></div>
+
+            <div class="conversacion" role="log" aria-live="polite">
+              @for (registro of historialDuelo; track registro.id) {
+                <article
+                  class="registro"
+                  [ngClass]="'registro-' + registro.tipo"
+                  [class.bando-tom]="registro.bando === 'TOM'"
+                  [class.bando-lector]="registro.bando === 'LECTOR'"
+                  [class.bando-diario]="registro.bando === 'DIARIO'"
+                >
+                  <div class="registro-cabecera">
+                    <span class="registro-emisor">{{ registro.emisor }}</span>
+                    <span class="registro-turno">T{{ registro.turno }}</span>
+                  </div>
+                  <span class="registro-hechizo">{{ registro.hechizo }}</span>
+                  <p>{{ registro.efecto }}</p>
+                </article>
+              }
+            </div>
+
+            @if (turnoRivalPendiente) {
+              <div class="escribiendo-tom" aria-live="polite">
+                <span class="punto-escritura"></span>
+                <span class="punto-escritura"></span>
+                <span class="punto-escritura"></span>
+                <span>Tom está escribiendo...</span>
               </div>
-              <p class="spell-desc">{{ h.descripcion }}</p>
-              <div class="spell-power">
-                <span>Efecto: <strong>+{{ h.poder }} {{ h.tipo }}</strong></span>
+            }
+
+            <p class="pagina-pie">
+              «Las palabras son la forma más antigua de magia.» — T. M. R.
+            </p>
+          </article>
+
+          <article class="pagina pagina-derecha">
+            <div class="pagina-cabecera">
+              <span class="pagina-numero">II</span>
+              <span>Tu pluma</span>
+            </div>
+
+            <div class="estado">
+              <div class="estado-item">
+                <div class="estado-fila">
+                  <span>Voluntad</span>
+                  <strong [class.texto-peligro]="voluntadBaja">{{ saludMago }}%</strong>
+                </div>
+                <div class="barra-bg">
+                  <span
+                    class="barra-fill voluntad"
+                    [class.barra-peligro]="voluntadBaja"
+                    [style.width.%]="saludMago"
+                  ></span>
+                </div>
               </div>
-            </button>
+
+              <div class="estado-item">
+                <div class="estado-fila">
+                  <span>Tinta</span>
+                  <strong [class.texto-peligro]="tintaBaja">{{ energiaMago }}%</strong>
+                </div>
+                <div class="barra-bg">
+                  <span
+                    class="barra-fill tinta"
+                    [class.barra-peligro]="tintaBaja"
+                    [style.width.%]="energiaMago"
+                  ></span>
+                </div>
+              </div>
+
+              <div class="estado-item">
+                <div class="estado-fila">
+                  <span>Dominio de {{ nombreRival }}</span>
+                  <strong [class.texto-peligro]="dominioBajo">{{ saludRival }}%</strong>
+                </div>
+                <div class="barra-bg">
+                  <span class="barra-fill dominio" [style.width.%]="saludRival"></span>
+                </div>
+              </div>
+
+              <p class="sombra-rival">
+                Sombra de Tom: {{ energiaRival }}% · Turno {{ numeroTurno }}
+              </p>
+            </div>
+
+            @if (mensajeCombate) {
+              <p class="mensaje-combate" role="status" aria-live="polite">
+                <span aria-hidden="true">✦</span> {{ mensajeCombate }}
+              </p>
+            }
+
+            <div class="bloque-acciones">
+              <div class="bloque-titulo">
+                <h4>Hechizos de tinta</h4>
+                <span>{{ hechizosDuelo.length }} disponibles</span>
+              </div>
+
+              <div class="hechizos">
+                @for (hechizo of hechizosDuelo; track hechizo.id) {
+                  <button
+                    type="button"
+                    class="hechizo-card"
+                    [ngClass]="'tipo-' + hechizo.tipo.toLowerCase()"
+                    [disabled]="!puedeActuar || energiaMago < hechizo.costoEnergia"
+                    (click)="lanzarHechizo(hechizo)"
+                  >
+                    <span class="hechizo-icono" aria-hidden="true">{{ hechizo.icono }}</span>
+                    <span class="hechizo-cuerpo">
+                      <span class="hechizo-nombre">{{ hechizo.nombre }}</span>
+                      <span class="hechizo-tipo">{{ hechizo.tipo }}</span>
+                      <span class="hechizo-descripcion">{{ hechizo.descripcion }}</span>
+                      <span class="hechizo-costo">
+                        {{ hechizo.costoEnergia }} de tinta
+                        @if (energiaMago < hechizo.costoEnergia) {
+                          <em> · sin tinta</em>
+                        }
+                      </span>
+                    </span>
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="acciones-secundarias">
+              <button
+                type="button"
+                class="accion-secundaria"
+                [disabled]="!puedeActuar || recuerdosRestantes <= 0 || saludMago >= 100"
+                (click)="usarRecuerdoFeliz()"
+              >
+                <span class="accion-icono" aria-hidden="true">✨</span>
+                <span>
+                  <strong>Aferrarte a un recuerdo</strong>
+                  <small>+30 voluntad · {{ recuerdosRestantes }} restantes</small>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                class="accion-secundaria"
+                [disabled]="!puedeActuar || energiaMago >= 100"
+                (click)="recuperarTinta()"
+              >
+                <span class="accion-icono" aria-hidden="true">🪶</span>
+                <span>
+                  <strong>Recuperar tinta</strong>
+                  <small>+35 tinta · cedes el turno</small>
+                </span>
+              </button>
+            </div>
+
+            <div class="escribir">
+              <div class="bloque-titulo">
+                <h4>Escribe tu respuesta</h4>
+                <span>Tom siempre contesta</span>
+              </div>
+
+              <textarea
+                class="input-magic texto-diario"
+                rows="2"
+                maxlength="220"
+                [(ngModel)]="mensajeEscrito"
+                [disabled]="!puedeActuar"
+                placeholder="Escribe algo en la página..."
+              ></textarea>
+
+              <div class="sugerencias" aria-label="Sugerencias para escribir">
+                @for (sugerencia of sugerencias; track sugerencia) {
+                  <button
+                    type="button"
+                    class="sugerencia"
+                    [disabled]="!puedeActuar"
+                    (click)="usarSugerencia(sugerencia)"
+                  >
+                    “{{ sugerencia }}”
+                  </button>
+                }
+              </div>
+
+              <button
+                type="button"
+                class="btn-enviar"
+                [disabled]="!puedeActuar || !mensajeEscrito.trim()"
+                (click)="enviarMensaje()"
+              >
+                Enviar al diario <span aria-hidden="true">🪶</span>
+              </button>
+
+              <p class="pista-nombre">
+                Prueba a escribir su nombre completo. El diario no espera que lo recuerdes.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <section class="recuerdos" aria-label="Recuerdos del diario">
+          <div class="recuerdos-cabecera">
+            <div>
+              <span class="portada-etiqueta">PÁGINAS ARRANCADAS</span>
+              <h4>Recuerdos ocultos</h4>
+            </div>
+            <div class="recuerdos-progreso">
+              <span>{{ recuerdosRevelados }} / {{ recuerdos.length }}</span>
+              <div class="barra-bg">
+                <span class="barra-fill progreso" [style.width.%]="progresoRecuerdos"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="recuerdos-grid">
+            @for (recuerdo of recuerdos; track recuerdo.id) {
+              <article class="recuerdo-card" [class.recuerdo-revelado]="recuerdo.revelado">
+                @if (recuerdo.revelado) {
+                  <span class="recuerdo-icono" aria-hidden="true">{{ recuerdo.icono }}</span>
+                  <div>
+                    <span class="recuerdo-anio">{{ recuerdo.anio }}</span>
+                    <h5>{{ recuerdo.titulo }}</h5>
+                    <p>{{ recuerdo.texto }}</p>
+                  </div>
+                } @else {
+                  <span class="recuerdo-icono" aria-hidden="true">🔒</span>
+                  <div>
+                    <span class="recuerdo-anio">Recuerdo bloqueado</span>
+                    <h5>???</h5>
+                    <p>{{ recuerdo.pista }}</p>
+                  </div>
+                }
+              </article>
+            }
+          </div>
+        </section>
+      </section>
+    }
+
+    <!-- ===================================================================== -->
+    <!-- FINAL                                                                  -->
+    <!-- ===================================================================== -->
+    @else {
+      <section class="final-escena" [ngClass]="esVictoria ? 'final-victoria' : 'final-derrota'">
+        <div class="final-halo" aria-hidden="true"></div>
+
+        <article class="final-pagina">
+          <span class="final-sello" aria-hidden="true">
+            @if (esVictoria) { ✦ } @else { 🐍 }
+          </span>
+          <span class="portada-etiqueta">EL DIARIO SE CIERRA</span>
+          <h3>{{ tituloFinal }}</h3>
+          <p class="final-mensaje">{{ mensajeFinal }}</p>
+
+          <p class="final-cita">
+            @if (esVictoria) {
+              «No... todavía no...»
+            } @else {
+              «Gracias por tu nombre, {{ nombreLectorVisible }}.»
+            }
+          </p>
+
+          <div class="final-datos">
+            <div>
+              <span>Recuerdos</span>
+              <strong>{{ recuerdosRevelados }} / {{ recuerdos.length }}</strong>
+            </div>
+            <div>
+              <span>Voluntad</span>
+              <strong>{{ saludMago }}%</strong>
+            </div>
+            <div>
+              <span>Dominio final</span>
+              <strong>{{ saludRival }}%</strong>
+            </div>
+            <div>
+              <span>Turnos</span>
+              <strong>{{ numeroTurno }}</strong>
+            </div>
+          </div>
+
+          <div class="final-lista">
+            @for (recuerdo of recuerdos; track recuerdo.id) {
+              @if (recuerdo.revelado) {
+                <div class="final-recuerdo">
+                  <span aria-hidden="true">{{ recuerdo.icono }}</span>
+                  <div>
+                    <strong>{{ recuerdo.titulo }}</strong>
+                    <small>{{ recuerdo.anio }} · {{ recuerdo.texto }}</small>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+
+          @if (esVictoria) {
+            <p class="final-nota">
+              Has cerrado el diario. Por ahora. En algún lugar de Hogwarts, otra página en
+              blanco espera a que alguien escriba la primera palabra.
+            </p>
+          } @else {
+            <p class="final-nota">
+              El diario sigue abierto sobre la mesa. La tinta ya tiene tu letra.
+            </p>
           }
-        </div>
-      </div>
-    }
 
-    <!-- Historial de Turnos (@for) -->
-    <div class="history-log">
-      <h4>📜 Bitácora de Encantamientos del Duelo</h4>
-      <div class="log-entries">
-        @for (entry of historialDuelo; track $index) {
-          <div class="log-row" [ngClass]="'entry-' + entry.tipo">
-            <span class="turn-num">T{{ entry.turno }}</span>
-            <span class="turn-actor">[{{ entry.emisor }}]:</span>
-            <span class="turn-spell">{{ entry.hechizo }}</span>
-            <span class="turn-effect">{{ entry.efecto }}</span>
+          <div class="final-acciones">
+            <button type="button" class="btn-magic" (click)="iniciarDuelo()">
+              Volver a abrir el diario
+            </button>
+            <button type="button" class="btn-magic btn-secundario" (click)="reiniciarDiario()">
+              Volver a la portada
+            </button>
           </div>
-        } @empty {
-          <p class="empty-log">Aún no se han intercambiado hechizos en la arena.</p>
-        }
-      </div>
-    </div>
-  </div>
-</section>
+        </article>
+      </section>
+    }
+  </section>
 </div>

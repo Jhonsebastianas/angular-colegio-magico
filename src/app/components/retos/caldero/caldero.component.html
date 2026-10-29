@@ -192,6 +192,7 @@
               <button 
                 class="btn-eliminar-pocion" 
                 (click)="eliminarPocion(pocion.id)"
+                [attr.aria-label]="'Desechar la poción ' + pocion.nombre"
                 title="Desechar poción"
               >
                 ✕
@@ -202,7 +203,7 @@
 
             <!-- Alerta de Toxicidad Condicional (@if) -->
             @if (pocion.nivelPeligro > 7) {
-              <div class="toxic-warning">
+              <div class="toxic-warning" role="alert">
                 ⚠️ <strong>¡ALERTA DE TOXICIDAD!</strong> Peligro nivel {{ pocion.nivelPeligro }}/10. Requiere supervisión de un profesor.
               </div>
             }
