@@ -211,10 +211,45 @@ esFormularioValido(): boolean {
   // 3. Filtro peligro (filtroSoloPeligrosas): Si es true, solo incluir pociones con nivelPeligro > 7.
   // 4. Ordenamiento: Si ordenAscendente es true, menor a mayor peligro; si false, mayor a menor.
   // =========================================================================
+  
   getPocionesFiltradas(): Pocion[] {
-    // TODO: Reto 5 - Reemplaza este retorno simple por el algoritmo completo
-    return this.pociones;
+    let pocionesFiltradas = [...this.pociones];
+
+    // Filtrar por nombre o descripción
+    const texto = this.filtroTexto.trim().toLowerCase();
+
+    if (texto !== '') {
+      pocionesFiltradas = pocionesFiltradas.filter(p =>
+        p.nombre.toLowerCase().includes(texto) ||
+        p.descripcion.toLowerCase().includes(texto)
+      );
+    }
+
+    // Filtrar por tipo de magia
+    if (this.filtroTipoMagia !== 'TODAS') {
+      pocionesFiltradas = pocionesFiltradas.filter(
+        p => p.tipoMagia === this.filtroTipoMagia
+      );
+    }
+
+    // Mostrar pociones peligrosas
+    if (this.filtroSoloPeligrosas) {
+      pocionesFiltradas = pocionesFiltradas.filter(
+        p => p.nivelPeligro > 7
+      );
+    }
+   
+    pocionesFiltradas.sort((a, b) => {
+      if (this.ordenAscendente) {
+        return a.nivelPeligro - b.nivelPeligro;
+      }
+
+      return b.nivelPeligro - a.nivelPeligro;
+    });
+
+    return pocionesFiltradas;
   }
+
 
   // =========================================================================
   // TODO: Reto 5 - Calcular Estabilidad General del Caldero:
@@ -222,10 +257,28 @@ esFormularioValido(): boolean {
   // - Si hay al menos 1 poción con nivelPeligro >= 5 (y menos de 2 críticas) -> Retornar 'INESTABLE'
   // - De lo contrario -> Retornar 'SEGURO'
   // =========================================================================
+
   calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
     // TODO: Reto 5 - Reemplaza este retorno por tu lógica de cálculo
+    const pocionesCriticas = this.pociones.filter(
+      p => p.nivelPeligro >= 8
+    ).length;
+
+    if (pocionesCriticas >= 2) {
+      return 'CRÍTICO';
+    }
+
+    const hayPocionesPeligrosas = this.pociones.some(
+      p => p.nivelPeligro >= 5
+    );
+
+    if (hayPocionesPeligrosas) {
+      return 'INESTABLE';
+    }
+
     return 'SEGURO';
   }
+
 
   // -------------------------------------------------------------------------
   // RETO 6 (IA CHALLENGE): EL GIRATIEMPO (Historial Undo / Redo)
