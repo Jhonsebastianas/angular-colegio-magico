@@ -145,7 +145,7 @@ esFormularioValido(): boolean {
   
 
    // TODO: Reto 3 - Construye el objeto Pocion, haz push a this.pociones y resetea las variables
-   
+
   prepararPocion(): void {
     if (!this.esFormularioValido()) return;
 
@@ -190,7 +190,14 @@ esFormularioValido(): boolean {
   // usando clearInterval() para evitar fugas de memoria o maldiciones residuales.
   // =========================================================================
   ngOnDestroy(): void {
+
     // TODO: Reto 4 - Escribe aquí tu clearInterval
+
+    if (this.timerIntervalId !== null) {
+    window.clearInterval(this.timerIntervalId);
+    
+    this.timerIntervalId = null;
+  }
   }
 
   // -------------------------------------------------------------------------
