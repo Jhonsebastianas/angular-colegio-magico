@@ -6,163 +6,259 @@
   </div>
 
   <section class="section-card card-magic" [class.arena-oscura]="arenaOscura">
-  <div class="section-header">
-    <div class="section-badge creative-badge">RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)</div>
-    <h2>🎨 El Laboratorio de Artefactos Mágicos</h2>
-    <p class="section-subtitle">
-      Demuestra tu creatividad y maestría técnica. Aquí tienes la libertad de dar vida a un artefacto mágico asombroso siguiendo los lineamientos de la rúbrica.
-    </p>
-  </div>
 
-  <div class="callout-didactico">
-    <h4>📜 Rúbrica de Evaluación del Reto Creativo (30%)</h4>
-    <p>
-      1. <strong>Múltiples Estados:</strong> Debe manejar al menos 3 estados interactivos (ej: Preparación, En Curso, Victoria/Derrota).<br>
-      2. <strong>Control Flow:</strong> Uso justificado de <span class="callout-code">{{ '@if' }}</span> y <span class="callout-code">{{ '@for' }}</span>.<br>
-      3. <strong>Data Binding:</strong> Implementar <span class="callout-code">[(ngModel)]</span> y enlaces dinámicos.<br>
-      4. <strong>Ciclos de Vida:</strong> Al menos dos hooks (<span class="callout-code">ngOnInit</span> y otro más).<br>
-      5. <strong>Estética y UX:</strong> Diseño mágico inmersivo, animaciones sutiles y buena experiencia de usuario.
-    </p>
-  </div>
-
-  <!-- Arena de Duelo Mágico -->
-  <div class="arena-container">
-    <div class="arena-top-bar">
-      <div class="arena-title">
-        <span>⚔️ Club de Duelo de Hogwarts</span>
-        <span class="badge-magic">Turno #{{ numeroTurno }}</span>
+    <div class="section-header">
+      <div class="section-badge creative-badge">
+        RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)
       </div>
 
-      <div class="arena-actions">
-        <button class="btn-magic btn-secondary" (click)="toggleArena()">
-          {{ arenaOscura ? '☀️ Arena Iluminada' : '🌑 Arena de Sombras' }}
-        </button>
-        <button class="btn-magic" (click)="iniciarDuelo()">
-          🔄 Reiniciar Duelo
-        </button>
-      </div>
+      <h2>⚔️ Arena de Duelos Mágicos</h2>
+
+      <p class="section-subtitle">
+        Entra al club de duelo, prepara tu varita y demuestra tu dominio de las artes mágicas.
+        Cada decisión puede acercarte a la victoria.
+      </p>
     </div>
 
-    <!-- Escenario de Magos -->
-    <div class="duelo-combatientes">
-      <!-- Mago Jugador -->
-      <div class="combatiente-card mago-player">
-        <div class="combatiente-avatar">🧙‍♂️</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreMago }}</h3>
-          <input 
-            type="text" 
-            class="input-magic input-rename" 
-            [(ngModel)]="nombreMago" 
-            [disabled]="estadoDuelo === 'EN_CURSO'"
-            placeholder="Renombrar mago..."
-          />
-          <div class="stat-bar">
-            <span>Salud: {{ saludMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludMago"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Mágica: {{ energiaMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
-          </div>
+    <div class="callout-didactico">
+      <h4>📜 Reglamento del Club de Duelo</h4>
+      <p>
+        <strong>1.</strong> Elige el nombre de tu mago antes de comenzar.<br>
+        <strong>2.</strong> Cada hechizo consume una cantidad de energía.<br>
+        <strong>3.</strong> Los hechizos de ataque dañan al rival, los de sanación recuperan salud y los de defensa activan un escudo.<br>
+        <strong>4.</strong> Gana el duelo reduciendo la salud del rival a cero.
+      </p>
+    </div>
+
+    <div class="arena-container">
+
+      <!-- Encabezado de la arena -->
+      <div class="arena-top-bar">
+        <div class="arena-title">
+          <span>🏰 Club de Duelo de Hogwarts</span>
+          <span class="badge-magic">Turno #{{ numeroTurno }}</span>
+        </div>
+
+        <div class="arena-actions">
+          <button
+            type="button"
+            class="btn-magic btn-secondary"
+            (click)="toggleArena()"
+          >
+            {{ arenaOscura ? '☀️ Iluminar arena' : '🌑 Activar sombras' }}
+          </button>
+
+          <button
+            type="button"
+            class="btn-magic"
+            (click)="iniciarDuelo()"
+          >
+            🔄 Nuevo duelo
+          </button>
         </div>
       </div>
 
-      <div class="vs-badge">VS</div>
-
-      <!-- Mago Rival -->
-      <div class="combatiente-card mago-rival">
-        <div class="combatiente-avatar">🧙🐍</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreRival }}</h3>
-          <span class="rival-tag">Adversario de Slytherin</span>
-          <div class="stat-bar">
-            <span>Salud: {{ saludRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludRival"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Rival: {{ energiaRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaRival"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Panel de Estados del Duelo (@if) -->
-    @if (estadoDuelo === 'PREPARACION') {
+      <!-- Estado del combate -->
       <div class="estado-banner preparacion">
-        <span class="banner-icon">⚔️</span>
+        <span class="banner-icon">✨</span>
         <div>
-          <h4>Duelo en Espera</h4>
-          <p>Ajusta el nombre de tu mago arriba y haz clic en "Iniciar Duelo" para alzar varitas.</p>
+          <h4>
+            {{ estadoDuelo === 'PREPARACION' ? 'Preparación del duelo' :
+               estadoDuelo === 'EN_CURSO' ? 'Duelo en curso' :
+               estadoDuelo === 'VICTORIA' ? 'Victoria mágica' : 'Duelo finalizado' }}
+          </h4>
+          <p>{{ mensajeArena }}</p>
         </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">¡Empezar Duelo!</button>
       </div>
-    }
 
-    @if (estadoDuelo === 'VICTORIA') {
-      <div class="estado-banner victoria">
-        <span class="banner-icon">🏆 🦁</span>
-        <div>
-          <h4>¡VICTORIA ÉPICA!</h4>
-          <p>¡Has derrotado a {{ nombreRival }}! Has ganado 50 puntos para tu casa.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">Revancha</button>
-      </div>
-    }
+      <!-- Escenario de combate -->
+      <div class="duelo-combatientes">
 
-    @if (estadoDuelo === 'DERROTA') {
-      <div class="estado-banner derrota">
-        <span class="banner-icon">💀 🐍</span>
-        <div>
-          <h4>¡HAS CAÍDO EN DUELO!</h4>
-          <p>Madame Pomfrey te espera en la enfermería. No te rindas y prueba otra táctica.</p>
-        </div>
-        <button class="btn-magic btn-danger" (click)="iniciarDuelo()">Intentar de Nuevo</button>
-      </div>
-    }
+        <div class="combatiente-card mago-player">
+          <div class="combatiente-avatar">🧙‍♀️</div>
 
-    <!-- Grimorio de Hechizos del Duelo (@for) -->
-    @if (estadoDuelo === 'EN_CURSO') {
-      <div class="spell-deck">
-        <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
-        <div class="spell-grid">
-          @for (h of hechizosDuelo; track h.id) {
-            <button 
-              class="spell-card" 
-              [disabled]="energiaMago < h.costoEnergia" 
-              (click)="lanzarHechizo(h)"
-            >
-              <div class="spell-top">
-                <strong>{{ h.nombre }}</strong>
-                <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
+          <div class="combatiente-datos">
+            <h3>{{ nombreMago || 'Mago sin nombre' }}</h3>
+
+            <input
+              type="text"
+              class="input-magic input-rename"
+              [(ngModel)]="nombreMago"
+              [disabled]="estadoDuelo === 'EN_CURSO'"
+              maxlength="25"
+              placeholder="Escribe tu nombre mágico..."
+              aria-label="Nombre de tu mago"
+            />
+
+            <div class="stat-bar">
+              <span>❤️ Salud: {{ saludMago }} / 100</span>
+              <div
+                class="bar-bg"
+                role="progressbar"
+                aria-label="Salud de tu mago"
+                [attr.aria-valuenow]="saludMago"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <div class="bar-fill hp" [style.width.%]="saludMago"></div>
               </div>
-              <p class="spell-desc">{{ h.descripcion }}</p>
-              <div class="spell-power">
-                <span>Efecto: <strong>+{{ h.poder }} {{ h.tipo }}</strong></span>
+            </div>
+
+            <div class="stat-bar">
+              <span>⚡ Energía: {{ energiaMago }} / 100</span>
+              <div
+                class="bar-bg"
+                role="progressbar"
+                aria-label="Energía de tu mago"
+                [attr.aria-valuenow]="energiaMago"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <div class="bar-fill mana" [style.width.%]="energiaMago"></div>
               </div>
-            </button>
+            </div>
+
+            @if (escudoActivo) {
+              <span class="rival-tag">🛡️ Escudo mágico activo</span>
+            }
+          </div>
+        </div>
+
+        <div class="vs-badge">VS</div>
+
+        <div class="combatiente-card mago-rival">
+          <div class="combatiente-avatar">🧙🐍</div>
+
+          <div class="combatiente-datos">
+            <h3>{{ nombreRival }}</h3>
+            <span class="rival-tag">Adversario de Slytherin</span>
+
+            <div class="stat-bar">
+              <span>❤️ Salud: {{ saludRival }} / 100</span>
+              <div
+                class="bar-bg"
+                role="progressbar"
+                aria-label="Salud del rival"
+                [attr.aria-valuenow]="saludRival"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <div class="bar-fill hp" [style.width.%]="saludRival"></div>
+              </div>
+            </div>
+
+            <div class="stat-bar">
+              <span>⚡ Energía: {{ energiaRival }} / 100</span>
+              <div
+                class="bar-bg"
+                role="progressbar"
+                aria-label="Energía del rival"
+                [attr.aria-valuenow]="energiaRival"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <div class="bar-fill mana" [style.width.%]="energiaRival"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Preparación -->
+      @if (estadoDuelo === 'PREPARACION') {
+        <div class="estado-banner preparacion">
+          <span class="banner-icon">🪄</span>
+          <div>
+            <h4>¿Listo para combatir?</h4>
+            <p>Prepara tu nombre y pulsa el botón para comenzar el enfrentamiento.</p>
+          </div>
+          <button type="button" class="btn-magic" (click)="iniciarDuelo()">
+            ¡Comenzar!
+          </button>
+        </div>
+      }
+
+      <!-- Victoria -->
+      @if (estadoDuelo === 'VICTORIA') {
+        <div class="estado-banner victoria">
+          <span class="banner-icon">🏆</span>
+          <div>
+            <h4>¡Victoria épica!</h4>
+            <p>Has derrotado a {{ nombreRival }}. ¡La arena reconoce tu poder!</p>
+          </div>
+          <button type="button" class="btn-magic" (click)="iniciarDuelo()">
+            Revancha
+          </button>
+        </div>
+      }
+
+      <!-- Derrota -->
+      @if (estadoDuelo === 'DERROTA') {
+        <div class="estado-banner derrota">
+          <span class="banner-icon">💀</span>
+          <div>
+            <h4>El duelo ha terminado</h4>
+            <p>Esta vez ganó tu rival. Recupera fuerzas y vuelve a intentarlo.</p>
+          </div>
+          <button type="button" class="btn-magic btn-danger" (click)="iniciarDuelo()">
+            Intentar de nuevo
+          </button>
+        </div>
+      }
+
+      <!-- Hechizos -->
+      @if (estadoDuelo === 'EN_CURSO') {
+        <div class="spell-deck">
+          <h4>🪄 Grimorio de hechizos</h4>
+
+          <div class="spell-grid">
+            @for (h of hechizosDuelo; track h.id) {
+              <button
+                type="button"
+                class="spell-card"
+                [disabled]="energiaMago < h.costoEnergia || estadoDuelo !== 'EN_CURSO'"
+                (click)="lanzarHechizo(h)"
+              >
+                <div class="spell-top">
+                  <strong>{{ h.nombre }}</strong>
+                  <span class="cost-tag">⚡ {{ h.costoEnergia }}</span>
+                </div>
+
+                <p class="spell-desc">{{ h.descripcion }}</p>
+
+                <div class="spell-power">
+                  Tipo: <strong>{{ h.tipo }}</strong>
+                  <span> · Poder: {{ h.poder }}</span>
+                </div>
+              </button>
+            } @empty {
+              <p class="empty-log">No hay hechizos disponibles en este momento.</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Historial de combate -->
+      <div class="history-log">
+        <h4>📜 Bitácora del duelo</h4>
+
+        <div class="log-entries">
+          @for (entry of historialDuelo; track $index) {
+            <div class="log-row" [ngClass]="'entry-' + entry.tipo">
+              <span class="turn-num">T{{ entry.turno }}</span>
+              <span class="turn-actor">{{ entry.emisor }}:</span>
+              <span class="turn-spell">{{ entry.hechizo }}</span>
+              <span class="turn-effect">{{ entry.efecto }}</span>
+            </div>
+          } @empty {
+            <p class="empty-log">
+              Aún no hay movimientos. ¡Inicia el duelo para escribir tu historia!
+            </p>
           }
         </div>
       </div>
-    }
 
-    <!-- Historial de Turnos (@for) -->
-    <div class="history-log">
-      <h4>📜 Bitácora de Encantamientos del Duelo</h4>
-      <div class="log-entries">
-        @for (entry of historialDuelo; track $index) {
-          <div class="log-row" [ngClass]="'entry-' + entry.tipo">
-            <span class="turn-num">T{{ entry.turno }}</span>
-            <span class="turn-actor">[{{ entry.emisor }}]:</span>
-            <span class="turn-spell">{{ entry.hechizo }}</span>
-            <span class="turn-effect">{{ entry.efecto }}</span>
-          </div>
-        } @empty {
-          <p class="empty-log">Aún no se han intercambiado hechizos en la arena.</p>
-        }
-      </div>
     </div>
-  </div>
-</section>
+  </section>
 </div>
