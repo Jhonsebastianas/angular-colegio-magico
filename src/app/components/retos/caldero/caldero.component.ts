@@ -59,7 +59,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
       {
         id: 3,
         nombre: 'Filtro de Muertos',
-        descripcion: 'Preparación prohibida asociada a artes oscuras.',
+        descripcion: 'Preparación Prohibida Asociada a artes oscuras.',
         nivelPeligro: 10,
         tiempoCoccionMinutos: 90,
         tipoMagia: 'Prohibida',
