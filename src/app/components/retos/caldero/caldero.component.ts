@@ -293,25 +293,49 @@ esFormularioValido(): boolean {
   // - giratiempoDeshacer(): Retrocede el índice y restaura una copia de ese estado.
   // - giratiempoRehacer(): Avanza el índice y restaura una copia de ese estado.
   // =========================================================================
+  
   guardarEstadoGiratiempo(): void {
-    // TODO: Reto 6 - Implementar guardado inmutable en el historial
+    // Si se deshizo una acción, descartar los estados futuros
+    this.historialPasos = this.historialPasos.slice(
+      0,
+      this.indiceHistorial + 1
+    );
+
+    // Guardar una copia profunda de las pociones
+    const copiaPociones = JSON.parse(JSON.stringify(this.pociones));
+
+    this.historialPasos.push(copiaPociones);
+
+    // Actualizar el índice al último estado guardado
+    this.indiceHistorial = this.historialPasos.length - 1;
   }
 
   puedeDeshacer(): boolean {
-    // TODO: Reto 6 - Retornar si es posible retroceder
-    return false;
+    return this.indiceHistorial > 0;
   }
 
   puedeRehacer(): boolean {
-    // TODO: Reto 6 - Retornar si es posible avanzar
-    return false;
+    return this.indiceHistorial < this.historialPasos.length - 1;
   }
 
   giratiempoDeshacer(): void {
-    // TODO: Reto 6 - Revertir al estado anterior
+    if (this.puedeDeshacer()) {
+      this.indiceHistorial--;
+
+      this.pociones = JSON.parse(
+        JSON.stringify(this.historialPasos[this.indiceHistorial])
+      );
+    }
   }
 
   giratiempoRehacer(): void {
-    // TODO: Reto 6 - Avanzar al estado siguiente
+    if (this.puedeRehacer()) {
+      this.indiceHistorial++;
+
+      this.pociones = JSON.parse(
+        JSON.stringify(this.historialPasos[this.indiceHistorial])
+      );
+    }
   }
+
 }
