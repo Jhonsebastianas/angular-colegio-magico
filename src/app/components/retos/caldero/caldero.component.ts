@@ -1,3 +1,4 @@
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -61,6 +62,39 @@ export class CalderoComponent implements OnInit, OnDestroy {
     //
     // Pista: Construye objetos con la estructura de la interfaz 'Pocion'.
     // =======================================================================
+
+    this.pociones = [
+      {
+        id: 1,
+        nombre: 'Poción Multijugos',
+        descripcion: 'Permite cambiar temporalmente la apariencia física.',
+        nivelPeligro: 8,
+        tiempoCoccionMinutos: 45,
+        tipoMagia: 'Transmutacion',
+        ingredientes: ['Piel de serpiente', 'Moscas crisopas', 'Sanguijuelas'],
+        estable: false
+      },
+      {
+        id: 2,
+        nombre: 'Felix Felicis',
+        descripcion: 'Poción de la suerte que favorece el éxito.',
+        nivelPeligro: 3,
+        tiempoCoccionMinutos: 120,
+        tipoMagia: 'Curacion',
+        ingredientes: ['Ashwinder', 'Rábano', 'Tomillo'],
+        estable: true
+      },
+      {
+        id: 3,
+        nombre: 'Filtro de Muertos',
+        descripcion: 'Poción prohibida extremadamente peligrosa.',
+        nivelPeligro: 10,
+        tiempoCoccionMinutos: 90,
+        tipoMagia: 'Prohibida',
+        ingredientes: ['Artemisia', 'Acónito', 'Mandrágora'],
+        estable: false
+      }
+    ];
 
     // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
     this.guardarEstadoGiratiempo();
