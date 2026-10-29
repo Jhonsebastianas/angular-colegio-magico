@@ -39,7 +39,7 @@ export class CalderoComponent implements OnInit, OnDestroy {
       {
         id: 1,
         nombre: 'Poción Multijugos',
-        descripcion: 'Permite adoptar la apariencia de otra persona.',
+        descripcion: 'Permite Adoptar la apariencia de otra persona.',
         nivelPeligro: 8,
         tiempoCoccionMinutos: 45,
         tipoMagia: 'Transmutacion',
