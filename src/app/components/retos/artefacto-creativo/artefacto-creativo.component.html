@@ -1,168 +1,265 @@
-<div class="page-container">
-  <div class="page-breadcrumb">
-    <a href="/" class="back-link">← Volver al Gran Comedor</a>
-    <span class="sep">•</span>
-    <span class="current">Reto 7 • El Lienzo Creativo (30%)</span>
-  </div>
+<section class="duelo" [ngClass]="'estado-' + estadoDuelo">
+  <div class="fondo" [style.backgroundImage]="'url(' + escenarioImg + ')'"></div>
+  <div class="contenido">
+    <header class="titulo">
+      <h1>Duelo de magia</h1>
+      <p>Rudeus, Sylphy, Roxy, Eris y Orsted frente a frente</p>
+    </header>
 
-  <section class="section-card card-magic" [class.arena-oscura]="arenaOscura">
-  <div class="section-header">
-    <div class="section-badge creative-badge">RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)</div>
-    <h2>🎨 El Laboratorio de Artefactos Mágicos</h2>
-    <p class="section-subtitle">
-      Demuestra tu creatividad y maestría técnica. Aquí tienes la libertad de dar vida a un artefacto mágico asombroso siguiendo los lineamientos de la rúbrica.
-    </p>
-  </div>
-
-  <div class="callout-didactico">
-    <h4>📜 Rúbrica de Evaluación del Reto Creativo (30%)</h4>
-    <p>
-      1. <strong>Múltiples Estados:</strong> Debe manejar al menos 3 estados interactivos (ej: Preparación, En Curso, Victoria/Derrota).<br>
-      2. <strong>Control Flow:</strong> Uso justificado de <span class="callout-code">{{ '@if' }}</span> y <span class="callout-code">{{ '@for' }}</span>.<br>
-      3. <strong>Data Binding:</strong> Implementar <span class="callout-code">[(ngModel)]</span> y enlaces dinámicos.<br>
-      4. <strong>Ciclos de Vida:</strong> Al menos dos hooks (<span class="callout-code">ngOnInit</span> y otro más).<br>
-      5. <strong>Estética y UX:</strong> Diseño mágico inmersivo, animaciones sutiles y buena experiencia de usuario.
-    </p>
-  </div>
-
-  <!-- Arena de Duelo Mágico -->
-  <div class="arena-container">
-    <div class="arena-top-bar">
-      <div class="arena-title">
-        <span>⚔️ Club de Duelo de Hogwarts</span>
-        <span class="badge-magic">Turno #{{ numeroTurno }}</span>
-      </div>
-
-      <div class="arena-actions">
-        <button class="btn-magic btn-secondary" (click)="toggleArena()">
-          {{ arenaOscura ? '☀️ Arena Iluminada' : '🌑 Arena de Sombras' }}
-        </button>
-        <button class="btn-magic" (click)="iniciarDuelo()">
-          🔄 Reiniciar Duelo
-        </button>
-      </div>
+    <div class="cambio-modo">
+      <button type="button" class="btn-sec" (click)="verSimulador = !verSimulador">
+        {{ verSimulador ? '← Volver al duelo rápido' : 'Abrir el simulador avanzado' }}
+      </button>
     </div>
 
-    <!-- Escenario de Magos -->
-    <div class="duelo-combatientes">
-      <!-- Mago Jugador -->
-      <div class="combatiente-card mago-player">
-        <div class="combatiente-avatar">🧙‍♂️</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreMago }}</h3>
-          <input 
-            type="text" 
-            class="input-magic input-rename" 
-            [(ngModel)]="nombreMago" 
-            [disabled]="estadoDuelo === 'EN_CURSO'"
-            placeholder="Renombrar mago..."
-          />
-          <div class="stat-bar">
-            <span>Salud: {{ saludMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludMago"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Mágica: {{ energiaMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
-          </div>
-        </div>
-      </div>
+    @if (verSimulador) {
+      <app-simulador />
+    } @else {
 
-      <div class="vs-badge">VS</div>
-
-      <!-- Mago Rival -->
-      <div class="combatiente-card mago-rival">
-        <div class="combatiente-avatar">🧙🐍</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreRival }}</h3>
-          <span class="rival-tag">Adversario de Slytherin</span>
-          <div class="stat-bar">
-            <span>Salud: {{ saludRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludRival"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Rival: {{ energiaRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaRival"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Panel de Estados del Duelo (@if) -->
+    <!-- ESTADO 1: PREPARACION (RÚBRICA a) -->
     @if (estadoDuelo === 'PREPARACION') {
-      <div class="estado-banner preparacion">
-        <span class="banner-icon">⚔️</span>
-        <div>
-          <h4>Duelo en Espera</h4>
-          <p>Ajusta el nombre de tu mago arriba y haz clic en "Iniciar Duelo" para alzar varitas.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">¡Empezar Duelo!</button>
-      </div>
-    }
+      <div class="panel seleccion">
+        <label class="campo">
+          Tu nombre
+          <input type="text" [(ngModel)]="nombreJugador" maxlength="16" />
+        </label>
 
-    @if (estadoDuelo === 'VICTORIA') {
-      <div class="estado-banner victoria">
-        <span class="banner-icon">🏆 🦁</span>
-        <div>
-          <h4>¡VICTORIA ÉPICA!</h4>
-          <p>¡Has derrotado a {{ nombreRival }}! Has ganado 50 puntos para tu casa.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">Revancha</button>
-      </div>
-    }
-
-    @if (estadoDuelo === 'DERROTA') {
-      <div class="estado-banner derrota">
-        <span class="banner-icon">💀 🐍</span>
-        <div>
-          <h4>¡HAS CAÍDO EN DUELO!</h4>
-          <p>Madame Pomfrey te espera en la enfermería. No te rindas y prueba otra táctica.</p>
-        </div>
-        <button class="btn-magic btn-danger" (click)="iniciarDuelo()">Intentar de Nuevo</button>
-      </div>
-    }
-
-    <!-- Grimorio de Hechizos del Duelo (@for) -->
-    @if (estadoDuelo === 'EN_CURSO') {
-      <div class="spell-deck">
-        <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
-        <div class="spell-grid">
-          @for (h of hechizosDuelo; track h.id) {
-            <button 
-              class="spell-card" 
-              [disabled]="energiaMago < h.costoEnergia" 
-              (click)="lanzarHechizo(h)"
-            >
-              <div class="spell-top">
-                <strong>{{ h.nombre }}</strong>
-                <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
-              </div>
-              <p class="spell-desc">{{ h.descripcion }}</p>
-              <div class="spell-power">
-                <span>Efecto: <strong>+{{ h.poder }} {{ h.tipo }}</strong></span>
-              </div>
+        <h2>Elige tu mago</h2>
+        <div class="cartas">
+          @for (p of personajes; track p.id) {
+            <button type="button" class="carta" [ngClass]="'el-' + p.elementoPrincipal"
+              [class.elegida]="p.id === idJugador" (click)="idJugador = p.id">
+              <img [src]="imagenCarta(p)" [alt]="p.nombre" [style.objectFit]="p.ajuste" />
+              <strong>{{ p.nombre }}</strong>
+              <small>{{ p.titulo }}</small>
+              <span class="stats">
+                @for (e of estadisticas(p); track e.nombre) {
+                  <span class="stat" [title]="e.nombre + ': ' + e.valor">
+                    <em>{{ e.nombre }}</em>
+                    <span class="stat-barra"><span [style.width.%]="e.pct"></span></span>
+                    <b>{{ e.valor }}</b>
+                  </span>
+                }
+              </span>
             </button>
           }
         </div>
+
+        @if (previewJugador.habilidad) {
+          <p class="habilidad">✨ {{ previewJugador.habilidad }}</p>
+        }
+        @if (idJugador === 'rudeus') {
+          <label class="mk0">
+            <input type="checkbox" [(ngModel)]="armaduraMK0" />
+            Equipar la armadura mágica MK0: más vida, maná, daño, defensa y hechizos más rápidos.
+          </label>
+        }
+
+        <label class="campo">
+          Rival
+          <select [(ngModel)]="idRival">
+            @for (p of personajes; track p.id) {
+              <option [value]="p.id">{{ p.nombre }}</option>
+            }
+          </select>
+        </label>
+        @if (idJugador === idRival) {
+          <p class="aviso">Elige un rival distinto a tu mago.</p>
+        }
+        <button type="button" class="btn-principal" [disabled]="idJugador === idRival" (click)="iniciarDuelo()">
+          Entrar al duelo
+        </button>
       </div>
     }
 
-    <!-- Historial de Turnos (@for) -->
-    <div class="history-log">
-      <h4>📜 Bitácora de Encantamientos del Duelo</h4>
-      <div class="log-entries">
-        @for (entry of historialDuelo; track $index) {
-          <div class="log-row" [ngClass]="'entry-' + entry.tipo">
-            <span class="turn-num">T{{ entry.turno }}</span>
-            <span class="turn-actor">[{{ entry.emisor }}]:</span>
-            <span class="turn-spell">{{ entry.hechizo }}</span>
-            <span class="turn-effect">{{ entry.efecto }}</span>
-          </div>
-        } @empty {
-          <p class="empty-log">Aún no se han intercambiado hechizos en la arena.</p>
+    <!-- ESTADO 2: EN_CURSO y ESTADO 3: FINALIZADO comparten el escenario -->
+    @if (estadoDuelo !== 'PREPARACION') {
+      <div class="hud-info">
+        <span class="pill">Ronda {{ ronda }}</span>
+        <span class="pill">⏱ {{ segundos }} s</span>
+        @if (ronda === 1 && estadoDuelo === 'EN_CURSO') {
+          <span class="pill">Ronda de apertura: sin contrarresto</span>
+        }
+        @if (hayOrsted && ronda % 2 === 0) {
+          <span class="pill ranma">🌀 Ran Ma activo</span>
+        }
+        @if (ojoActivo) {
+          <span class="pill ojo">👁️ Ojo de la clarividencia</span>
         }
       </div>
-    </div>
+
+      <div class="escenario" [class.temblor]="temblor" [style.backgroundImage]="'url(' + escenarioImg + ')'">
+        <div class="nieve">
+          @for (c of copos; track $index) {
+            <i class="copo" [style.left.%]="c.x" [style.width.px]="c.tam" [style.height.px]="c.tam"
+              [style.animation-duration.s]="c.dur" [style.animation-delay.s]="c.ret"></i>
+          }
+        </div>
+
+        @for (f of combatientes; track f.lado) {
+          <div class="placa" [ngClass]="['p-' + f.lado, 'el-' + f.c.datos.elementoPrincipal]">
+            <strong>{{ f.nombre }}</strong>
+            <div class="barra vida"><div class="relleno" [style.width.%]="(f.c.hpVisible / f.c.hpMax) * 100"></div></div>
+            <div class="barra mana"><div class="relleno" [style.width.%]="(f.c.manaVisible / f.c.manaMax) * 100"></div></div>
+            <small>❤ {{ f.c.hpVisible }} / {{ f.c.hpMax }} · 🔷 {{ f.c.manaVisible }}</small>
+          </div>
+
+          <div class="figura" [ngClass]="['fig-' + f.lado, 'el-' + f.c.datos.elementoPrincipal]"
+            [class.lanzando]="corte?.lado === f.lado"
+            [class.golpeado]="efecto?.tipo === 'golpe' && efecto?.lado === f.lado"
+            [class.caido]="f.c.hpVisible <= 0"
+            [class.espejo]="espeja(f.c, f.lado)">
+            <span class="aro"></span>
+            <img [src]="img(f.c.imagen)" [alt]="f.c.datos.nombre" [ngClass]="'mezcla-' + f.c.mezcla"
+              [style.objectFit]="f.c.datos.ajuste" />
+            @if (f.c.mk0) {
+              <span class="mk0-tag">MK0</span>
+            }
+            <span class="sombra"></span>
+            @if (flotante?.lado === f.lado) {
+              <span class="num" [ngClass]="'num-' + flotante?.tipo">{{ flotante?.texto }}</span>
+            }
+          </div>
+        }
+
+        <!-- Proyectiles de cada elemento -->
+        @if (anim) {
+          <div class="proy" [ngClass]="claseProyectil(anim)" [style.--dur]="anim.dur + 's'">
+            <i class="nucleo"></i>
+            @for (n of estela; track n) {
+              <i class="estela" [style.--n]="n"></i>
+            }
+          </div>
+          @if (anim.contra) {
+            <div class="proy" [ngClass]="claseContra(anim)" [style.--dur]="anim.dur + 's'">
+              <i class="nucleo"></i>
+              @for (n of estela; track n) {
+                <i class="estela" [style.--n]="n"></i>
+              }
+            </div>
+          }
+        }
+
+        <!-- Impacto, choque, Ran Ma y curación -->
+        @if (efecto) {
+          <div class="flash" [ngClass]="'ef-' + efecto.elemento + ' ef-' + efecto.tipo"></div>
+          <div class="efecto" [ngClass]="['ef-' + efecto.tipo, 'ef-' + efecto.elemento, 'pos-' + efecto.lado]">
+            <i class="onda"></i>
+            <i class="onda o2"></i>
+            @for (c of chispas; track c) {
+              <i class="chispa" [style.--a]="c"></i>
+            }
+            <i class="pico p1"></i><i class="pico p2"></i><i class="pico p3"></i>
+            <i class="tajo t1"></i><i class="tajo t2"></i>
+          </div>
+        }
+
+        <!-- Nombre del hechizo, estilo anime -->
+        @if (corte) {
+          <div class="corte" [ngClass]="'ec-' + corte.elemento">
+            <span class="lineas"></span>
+            <strong>{{ corte.nombre }}</strong>
+          </div>
+        }
+
+        <!-- Presentación del duelo -->
+        @if (intro) {
+          <div class="intro">
+            <div class="cine arriba"></div>
+            <div class="cine abajo"></div>
+            @for (f of combatientes; track f.lado) {
+              <div class="intro-lado" [ngClass]="'il-' + f.lado">
+                <img [src]="img(f.c.imagen)" [alt]="f.c.datos.nombre" [ngClass]="'mezcla-' + f.c.mezcla" />
+                <strong>{{ f.c.datos.nombre }}</strong>
+              </div>
+            }
+            <div class="vs">VS</div>
+          </div>
+        }
+      </div>
+
+      <!-- Controles (solo en combate) -->
+      @if (estadoDuelo === 'EN_CURSO') {
+        <div class="mando">
+          @if (turno === 'jugador') {
+            <h3>Tu turno</h3>
+            @if (ojoActivo && ataqueRival) {
+              <p class="ojo-info">
+                👁️ {{ rival.datos.nombre }} lanzará {{ ataqueRival.nombre }} {{ icono(ataqueRival.elemento) }}. Para
+                contrarrestarlo necesitas {{ icono(opuesto(ataqueRival.elemento)) }}.
+              </p>
+            }
+            <div class="hechizos">
+              @for (hz of hechizosDuelo; track hz.nombre) {
+                <button type="button" class="hechizo" [ngClass]="'el-' + hz.elemento"
+                  [disabled]="intro || hz.costo > jugador.mana" (click)="lanzarHechizo(hz)"
+                  (mouseenter)="hechizoVista = hz" (focus)="hechizoVista = hz">
+                  <span>{{ icono(hz.elemento) }} {{ hz.nombre }}</span>
+                  <small>{{ hz.tipo === 'Ataque' ? 'Daño ' + hz.poder : 'Cura ' + hz.poder + '%' }} · 🔷 {{ hz.costo }}</small>
+                </button>
+              }
+            </div>
+            <button type="button" class="btn-sec" [disabled]="intro" (click)="meditar()">
+              🧘 Meditar (+10% de vida, +20 de maná)
+            </button>
+          }
+
+          @if (turno === 'defensa' && ataqueRival) {
+            <h3>{{ rival.datos.nombre }} lanza {{ ataqueRival.nombre }} {{ icono(ataqueRival.elemento) }}</h3>
+            @if (ronda === 1) {
+              <p>Es la ronda de apertura: este golpe no se puede contrarrestar.</p>
+            } @else {
+              <p>Solo {{ icono(opuesto(ataqueRival.elemento)) }} {{ opuesto(ataqueRival.elemento) }} lo contrarresta.</p>
+            }
+            <div class="hechizos">
+              @for (hz of hechizosDuelo; track hz.nombre) {
+                <button type="button" class="hechizo" [ngClass]="'el-' + hz.elemento"
+                  [disabled]="!puedeContrarrestar(hz)" (click)="responder(hz)" (mouseenter)="hechizoVista = hz">
+                  <span>{{ icono(hz.elemento) }} {{ hz.nombre }}</span>
+                  <small>🔷 {{ hz.costo }}</small>
+                </button>
+              }
+            </div>
+            <button type="button" class="btn-sec" (click)="responder(null)">Recibir el golpe</button>
+          }
+
+          @if (turno === 'animando') {
+            <p class="espera">Los hechizos están en el aire…</p>
+          }
+
+          @if (hechizoVista) {
+            <div class="detalle" [ngClass]="'el-' + hechizoVista.elemento">
+              <strong>{{ icono(hechizoVista.elemento) }} {{ hechizoVista.nombre }}</strong>
+              <span>{{ hechizoVista.descripcion }}</span>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- ESTADO 3: FINALIZADO -->
+      @if (estadoDuelo === 'FINALIZADO' && vencedor) {
+        <div class="panel resultado">
+          <img [src]="img(vencedor.imagen)" [alt]="vencedor.datos.nombre" [ngClass]="'mezcla-' + vencedor.mezcla" />
+          <div>
+            <h2>Victoria de {{ vencedor.datos.nombre }}</h2>
+            <p>El duelo duró {{ ronda }} rondas y {{ segundos }} segundos.</p>
+            <div class="acciones">
+              <button type="button" class="btn-principal" (click)="iniciarDuelo()">Revancha</button>
+              <button type="button" class="btn-sec" (click)="reiniciar()">Elegir otros magos</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <aside class="registro">
+        <h3>Bitácora del duelo</h3>
+        <ol>
+          @for (linea of historialDuelo; track $index) {
+            <li>{{ linea }}</li>
+          }
+        </ol>
+      </aside>
+    }
+    }
   </div>
 </section>
-</div>
