@@ -185,8 +185,23 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // 4. Ordenamiento: Si ordenAscendente es true, menor a mayor peligro; si false, mayor a menor.
   // =========================================================================
   getPocionesFiltradas(): Pocion[] {
-    // TODO: Reto 5 - Reemplaza este retorno simple por el algoritmo completo
-    return this.pociones;
+    let resultado = [...this.pociones];
+    if (this.filtroTexto && this.filtroTexto.trim() !== '') {
+      const textoBuscado = this.filtroTexto.toLowerCase().trim();
+      resultado = resultado.filter(p => p.nombre.toLowerCase().includes(textoBuscado) || p.descripcion.toLowerCase().includes(textoBuscado)
+    );
+    }
+    if (this.filtroTipoMagia && this.filtroTipoMagia !== 'TODAS') {
+      resultado = resultado.filter(p => p.tipoMagia === this.filtroTipoMagia);
+    }
+    if (this.filtroSoloPeligrosas) {
+      resultado = resultado.filter(p => p.nivelPeligro > 7);
+    }
+      resultado.sort((a, b) => {
+        return this.ordenAscendente ? a.nivelPeligro - b.nivelPeligro : b.nivelPeligro - a.nivelPeligro;
+      });
+    return resultado;
+
   }
 
   // =========================================================================
@@ -196,8 +211,16 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // - De lo contrario -> Retornar 'SEGURO'
   // =========================================================================
   calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
+    const pocionesCriticas = this.pociones.filter(p => p.nivelPeligro >= 8).length;
+    const pocionesPeligrosas = this.pociones.filter(p => p.nivelPeligro >= 5).length;
     // TODO: Reto 5 - Reemplaza este retorno por tu lógica de cálculo
-    return 'SEGURO';
+    if (pocionesCriticas >= 2) {
+      return 'CRÍTICO';
+    } else if (pocionesPeligrosas >= 1) {
+      return 'INESTABLE';
+    } else {
+      return 'SEGURO';
+    }
   }
 
   // -------------------------------------------------------------------------
