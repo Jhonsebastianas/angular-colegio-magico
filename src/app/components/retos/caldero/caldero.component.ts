@@ -167,6 +167,9 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // usando clearInterval() para evitar fugas de memoria o maldiciones residuales.
   // =========================================================================
   ngOnDestroy(): void {
+    if (this.timerIntervalId) {
+      clearInterval(this.timerIntervalId);
+    }
     // TODO: Reto 4 - Escribe aquí tu clearInterval
   }
 
