@@ -1,168 +1,195 @@
-<div class="page-container">
-  <div class="page-breadcrumb">
-    <a href="/" class="back-link">← Volver al Gran Comedor</a>
-    <span class="sep">•</span>
-    <span class="current">Reto 7 • El Lienzo Creativo (30%)</span>
-  </div>
 
-  <section class="section-card card-magic" [class.arena-oscura]="arenaOscura">
-  <div class="section-header">
-    <div class="section-badge creative-badge">RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)</div>
-    <h2>🎨 El Laboratorio de Artefactos Mágicos</h2>
-    <p class="section-subtitle">
-      Demuestra tu creatividad y maestría técnica. Aquí tienes la libertad de dar vida a un artefacto mágico asombroso siguiendo los lineamientos de la rúbrica.
-    </p>
-  </div>
+<div class="laboratorio" [class.modo-oscuro]="arenaOscura">
 
-  <div class="callout-didactico">
-    <h4>📜 Rúbrica de Evaluación del Reto Creativo (30%)</h4>
-    <p>
-      1. <strong>Múltiples Estados:</strong> Debe manejar al menos 3 estados interactivos (ej: Preparación, En Curso, Victoria/Derrota).<br>
-      2. <strong>Control Flow:</strong> Uso justificado de <span class="callout-code">{{ '@if' }}</span> y <span class="callout-code">{{ '@for' }}</span>.<br>
-      3. <strong>Data Binding:</strong> Implementar <span class="callout-code">[(ngModel)]</span> y enlaces dinámicos.<br>
-      4. <strong>Ciclos de Vida:</strong> Al menos dos hooks (<span class="callout-code">ngOnInit</span> y otro más).<br>
-      5. <strong>Estética y UX:</strong> Diseño mágico inmersivo, animaciones sutiles y buena experiencia de usuario.
-    </p>
-  </div>
+  <header class="encabezado">
+    <div class="encabezado-icono">🧪</div>
+    <div class="encabezado-texto">
+      <span class="etiqueta">RETO 7 · LABORATORIO MÁGICO</span>
+      <h1>Laboratorio de Pociones</h1>
+      <p>Mezcla ingredientes, descubre recetas y crea magia.</p>
+    </div>
+    <button class="boton-tema" (click)="toggleArena()">
+      {{ arenaOscura ? '☀️ Modo claro' : '🌙 Modo oscuro' }}
+    </button>
+  </header>
 
-  <!-- Arena de Duelo Mágico -->
-  <div class="arena-container">
-    <div class="arena-top-bar">
-      <div class="arena-title">
-        <span>⚔️ Club de Duelo de Hogwarts</span>
-        <span class="badge-magic">Turno #{{ numeroTurno }}</span>
-      </div>
-
-      <div class="arena-actions">
-        <button class="btn-magic btn-secondary" (click)="toggleArena()">
-          {{ arenaOscura ? '☀️ Arena Iluminada' : '🌑 Arena de Sombras' }}
-        </button>
-        <button class="btn-magic" (click)="iniciarDuelo()">
-          🔄 Reiniciar Duelo
-        </button>
+  <section class="bienvenida">
+    <div class="bienvenida-texto">
+      <span class="pequeno-titulo">ESCUELA DE MAGIA</span>
+      <h2>¡Bienvenido, aprendiz!</h2>
+      <p>
+        Elige los ingredientes que quieras mezclar. Algunas combinaciones
+        esconden recetas especiales y otras crearán pociones misteriosas.
+      </p>
+      <div class="indicadores">
+        <span>🌿 {{ ingredientesDisponibles.length }} ingredientes</span>
+        <span>🧪 {{ pocionesPreparadas.length }} pociones creadas</span>
       </div>
     </div>
+    <div class="caldero-decoracion">⚗️</div>
+  </section>
 
-    <!-- Escenario de Magos -->
-    <div class="duelo-combatientes">
-      <!-- Mago Jugador -->
-      <div class="combatiente-card mago-player">
-        <div class="combatiente-avatar">🧙‍♂️</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreMago }}</h3>
-          <input 
-            type="text" 
-            class="input-magic input-rename" 
-            [(ngModel)]="nombreMago" 
-            [disabled]="estadoDuelo === 'EN_CURSO'"
-            placeholder="Renombrar mago..."
-          />
-          <div class="stat-bar">
-            <span>Salud: {{ saludMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludMago"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Mágica: {{ energiaMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
-          </div>
-        </div>
-      </div>
+  <main class="contenido-laboratorio">
 
-      <div class="vs-badge">VS</div>
-
-      <!-- Mago Rival -->
-      <div class="combatiente-card mago-rival">
-        <div class="combatiente-avatar">🧙🐍</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreRival }}</h3>
-          <span class="rival-tag">Adversario de Slytherin</span>
-          <div class="stat-bar">
-            <span>Salud: {{ saludRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludRival"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Rival: {{ energiaRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaRival"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Panel de Estados del Duelo (@if) -->
-    @if (estadoDuelo === 'PREPARACION') {
-      <div class="estado-banner preparacion">
-        <span class="banner-icon">⚔️</span>
+    <section class="panel ingredientes-panel">
+      <div class="titulo-panel">
         <div>
-          <h4>Duelo en Espera</h4>
-          <p>Ajusta el nombre de tu mago arriba y haz clic en "Iniciar Duelo" para alzar varitas.</p>
+          <span class="numero-seccion">01 · RECOLECCIÓN</span>
+          <h2>Ingredientes mágicos</h2>
         </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">¡Empezar Duelo!</button>
+        <span class="contador">
+          {{ ingredientesSeleccionados.length }} seleccionados
+        </span>
       </div>
-    }
 
-    @if (estadoDuelo === 'VICTORIA') {
-      <div class="estado-banner victoria">
-        <span class="banner-icon">🏆 🦁</span>
-        <div>
-          <h4>¡VICTORIA ÉPICA!</h4>
-          <p>¡Has derrotado a {{ nombreRival }}! Has ganado 50 puntos para tu casa.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">Revancha</button>
-      </div>
-    }
+      <p class="texto-ayuda">
+        Pulsa sobre los ingredientes para agregarlos o quitarlos de tu mezcla.
+      </p>
 
-    @if (estadoDuelo === 'DERROTA') {
-      <div class="estado-banner derrota">
-        <span class="banner-icon">💀 🐍</span>
-        <div>
-          <h4>¡HAS CAÍDO EN DUELO!</h4>
-          <p>Madame Pomfrey te espera en la enfermería. No te rindas y prueba otra táctica.</p>
-        </div>
-        <button class="btn-magic btn-danger" (click)="iniciarDuelo()">Intentar de Nuevo</button>
-      </div>
-    }
+      <div class="ingredientes-grid">
+        @for (ingrediente of ingredientesDisponibles; track ingrediente.id) {
+          <button
+            type="button"
+            class="ingrediente-card"
+            [class.seleccionado]="ingredientesSeleccionados.includes(ingrediente.id)"
+            [disabled]="preparandoPocion"
+            [attr.aria-pressed]="ingredientesSeleccionados.includes(ingrediente.id)"
+            (click)="seleccionarIngrediente(ingrediente.id)">
 
-    <!-- Grimorio de Hechizos del Duelo (@for) -->
-    @if (estadoDuelo === 'EN_CURSO') {
-      <div class="spell-deck">
-        <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
-        <div class="spell-grid">
-          @for (h of hechizosDuelo; track h.id) {
-            <button 
-              class="spell-card" 
-              [disabled]="energiaMago < h.costoEnergia" 
-              (click)="lanzarHechizo(h)"
-            >
-              <div class="spell-top">
-                <strong>{{ h.nombre }}</strong>
-                <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
-              </div>
-              <p class="spell-desc">{{ h.descripcion }}</p>
-              <div class="spell-power">
-                <span>Efecto: <strong>+{{ h.poder }} {{ h.tipo }}</strong></span>
-              </div>
-            </button>
-          }
-        </div>
-      </div>
-    }
+            <span class="ingrediente-emoji">{{ ingrediente.emoji }}</span>
+            <span class="ingrediente-nombre">{{ ingrediente.nombre }}</span>
+            <span class="ingrediente-descripcion">
+              {{ ingrediente.descripcion }}
+            </span>
 
-    <!-- Historial de Turnos (@for) -->
-    <div class="history-log">
-      <h4>📜 Bitácora de Encantamientos del Duelo</h4>
-      <div class="log-entries">
-        @for (entry of historialDuelo; track $index) {
-          <div class="log-row" [ngClass]="'entry-' + entry.tipo">
-            <span class="turn-num">T{{ entry.turno }}</span>
-            <span class="turn-actor">[{{ entry.emisor }}]:</span>
-            <span class="turn-spell">{{ entry.hechizo }}</span>
-            <span class="turn-effect">{{ entry.efecto }}</span>
-          </div>
-        } @empty {
-          <p class="empty-log">Aún no se han intercambiado hechizos en la arena.</p>
+            @if (ingredientesSeleccionados.includes(ingrediente.id)) {
+              <span class="marca-seleccion">✓ Seleccionado</span>
+            } @else {
+              <span class="marca-seleccion marca-inactiva">+ Agregar</span>
+            }
+          </button>
         }
       </div>
+
+      <div class="seleccion-resumen">
+        <span>🧺 Ingredientes en tu mezcla</span>
+
+        @if (ingredientesSeleccionados.length === 0) {
+          <p class="texto-vacio">Todavía no has elegido ingredientes.</p>
+        } @else {
+          <div class="ingredientes-elegidos">
+            @for (id of ingredientesSeleccionados; track id) {
+              @for (ingrediente of ingredientesDisponibles; track ingrediente.id) {
+                @if (ingrediente.id === id) {
+                  <span class="etiqueta-ingrediente">
+                    {{ ingrediente.emoji }} {{ ingrediente.nombre }}
+                  </span>
+                }
+              }
+            }
+          </div>
+        }
+      </div>
+
+      <div class="acciones">
+        <button
+          type="button"
+          class="boton-principal"
+          [disabled]="preparandoPocion"
+          (click)="prepararPocion()">
+          ⚗️ Preparar poción
+        </button>
+
+        <button
+          type="button"
+          class="boton-secundario"
+          (click)="limpiarLaboratorio()">
+          ↻ Limpiar
+        </button>
+      </div>
+
+      <p class="mensaje-laboratorio" role="status" aria-live="polite">
+        ✨ {{ mensajeLaboratorio }}
+      </p>
+    </section>
+
+    <section class="panel resultado-panel">
+      <div class="titulo-panel">
+        <div>
+          <span class="numero-seccion">02 · DESCUBRIMIENTO</span>
+          <h2>Tu creación</h2>
+        </div>
+        <span class="icono-panel">🔮</span>
+      </div>
+
+      @if (resultadoPocion) {
+        <div class="resultado-pocion">
+          <div class="pocion-brillo">
+            <span class="pocion-emoji">{{ resultadoPocion.emoji }}</span>
+          </div>
+
+          <span class="sello-exito">✦ MEZCLA COMPLETADA ✦</span>
+          <h3>{{ resultadoPocion.nombre }}</h3>
+          <p>{{ resultadoPocion.efecto }}</p>
+
+          <div class="receta-resultado">
+            <h4>Ingredientes utilizados</h4>
+            @for (ingrediente of resultadoPocion.ingredientes; track ingrediente) {
+              <span class="ingrediente-resultado">🌿 {{ ingrediente }}</span>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="resultado-vacio">
+          <div class="caldero-vacio">⚗️</div>
+          <h3>Tu poción aparecerá aquí</h3>
+          <p>
+            Selecciona al menos dos ingredientes y pulsa
+            <strong>Preparar poción</strong> para descubrir el resultado.
+          </p>
+          <div class="estrellas">✦　✧　✦</div>
+        </div>
+      }
+    </section>
+
+  </main>
+
+  <section class="panel historial-panel">
+    <div class="titulo-panel">
+      <div>
+        <span class="numero-seccion">03 · LIBRO DE DESCUBRIMIENTOS</span>
+        <h2>Historial de pociones</h2>
+      </div>
+      <span class="contador">{{ pocionesPreparadas.length }} registros</span>
     </div>
-  </div>
-</section>
+
+    @if (pocionesPreparadas.length === 0) {
+      <div class="historial-vacio">
+        <span>📖</span>
+        <p>Aún no tienes pociones registradas. ¡Tu primera receta te espera!</p>
+      </div>
+    } @else {
+      <div class="historial-grid">
+        @for (pocion of pocionesPreparadas; track pocion.id) {
+          <article class="historial-card">
+            <span class="historial-emoji">{{ pocion.emoji }}</span>
+            <div class="historial-info">
+              <h3>{{ pocion.nombre }}</h3>
+              <p>{{ pocion.efecto }}</p>
+              <span class="historial-ingredientes">
+                {{ pocion.ingredientes.join(' · ') }}
+              </span>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+
+  <footer class="pie-laboratorio">
+    <span>⚗️</span>
+    <p>Laboratorio de Pociones Mágicas</p>
+    <span>✦ Experimenta, aprende y crea ✦</span>
+  </footer>
+
 </div>

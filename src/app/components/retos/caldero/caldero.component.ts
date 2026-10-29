@@ -61,6 +61,38 @@ export class CalderoComponent implements OnInit, OnDestroy {
     //
     // Pista: Construye objetos con la estructura de la interfaz 'Pocion'.
     // =======================================================================
+    this.pociones = [
+      {
+        id: 101,
+        nombre: 'Poción Multijugos',
+        descripcion: 'Permite cambiar temporalmente la apariencia de quien la bebe.',
+        nivelPeligro: 8,
+        tiempoCoccionMinutos: 45,
+        tipoMagia: 'Transmutacion',
+        ingredientes: ['Moscas secas', 'Sanguijuelas', 'Piel de serpiente'],
+        estable: false
+      },
+      {
+        id: 102,
+        nombre: 'Felix Felicis',
+        descripcion: 'Poción de la suerte que ayuda a tener éxito durante un tiempo.',
+        nivelPeligro: 3,
+        tiempoCoccionMinutos: 120,
+        tipoMagia: 'Curacion',
+        ingredientes: ['Ashwinder', 'Rábano'],
+        estable: true
+      },
+      {
+        id: 103,
+        nombre: 'Filtro de Muertos',
+        descripcion: 'Somnífero tan poderoso que induce un sueño idéntico a la muerte.',
+        nivelPeligro: 10,
+        tiempoCoccionMinutos: 90,
+        tipoMagia: 'Prohibida',
+        ingredientes: ['Ajenjo', 'Raíz de Asfódelo'],
+        estable: false
+      }
+    ];
 
     // Guardar estado inicial en el Giratiempo (se usa en el Reto 6)
     this.guardarEstadoGiratiempo();
@@ -83,7 +115,14 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   esFormularioValido(): boolean {
     // TODO: Reto 3 - Reemplaza 'return false' por tus validaciones
-    return false;
+    return (
+      this.nuevoNombre.trim().length >= 3 &&
+      Number.isFinite(Number(this.nuevoTiempoCoccion)) &&
+      Number(this.nuevoTiempoCoccion) > 0 &&
+      Number.isFinite(Number(this.nuevoNivelPeligro)) &&
+      Number(this.nuevoNivelPeligro) >= 1 &&
+      Number(this.nuevoNivelPeligro) <= 10
+    );
   }
 
   // =========================================================================
@@ -98,6 +137,25 @@ export class CalderoComponent implements OnInit, OnDestroy {
     if (!this.esFormularioValido()) return;
 
     // TODO: Reto 3 - Construye el objeto Pocion, haz push a this.pociones y resetea las variables
+    const nuevaPocion: Pocion = {
+      id: Date.now(),
+      nombre: this.nuevoNombre.trim(),
+      descripcion: this.nuevaDescripcion.trim(),
+      nivelPeligro: Number(this.nuevoNivelPeligro),
+      tiempoCoccionMinutos: Number(this.nuevoTiempoCoccion),
+      tipoMagia: this.nuevoTipoMagia,
+      ingredientes: [],
+      estable: Number(this.nuevoNivelPeligro) < 5
+    };
+
+    this.pociones.push(nuevaPocion);
+    this.guardarEstadoGiratiempo();
+
+    this.nuevoNombre = '';
+    this.nuevaDescripcion = '';
+    this.nuevoNivelPeligro = 1;
+    this.nuevoTiempoCoccion = 10;
+    this.nuevoTipoMagia = 'Curacion';
   }
 
   eliminarPocion(id: number): void {
@@ -114,6 +172,10 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   ngOnDestroy(): void {
     // TODO: Reto 4 - Escribe aquí tu clearInterval
+    if (this.timerIntervalId !== null) {
+      clearInterval(this.timerIntervalId);
+      this.timerIntervalId = null;
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -129,7 +191,28 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   getPocionesFiltradas(): Pocion[] {
     // TODO: Reto 5 - Reemplaza este retorno simple por el algoritmo completo
-    return this.pociones;
+    const texto = this.filtroTexto.trim().toLowerCase();
+
+    return this.pociones
+      .filter(pocion => {
+        const coincideTexto =
+          pocion.nombre.toLowerCase().includes(texto) ||
+          pocion.descripcion.toLowerCase().includes(texto);
+
+        const coincideTipo =
+          this.filtroTipoMagia === 'TODAS' ||
+          pocion.tipoMagia === this.filtroTipoMagia;
+
+        const coincidePeligro =
+          !this.filtroSoloPeligrosas || pocion.nivelPeligro > 7;
+
+        return coincideTexto && coincideTipo && coincidePeligro;
+      })
+      .sort((a, b) =>
+        this.ordenAscendente
+          ? a.nivelPeligro - b.nivelPeligro
+          : b.nivelPeligro - a.nivelPeligro
+      );
   }
 
   // =========================================================================
@@ -140,6 +223,22 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   calcularEstabilidadCaldero(): 'SEGURO' | 'INESTABLE' | 'CRÍTICO' {
     // TODO: Reto 5 - Reemplaza este retorno por tu lógica de cálculo
+    const pocionesCriticas = this.pociones.filter(
+      pocion => pocion.nivelPeligro >= 8
+    ).length;
+
+    if (pocionesCriticas >= 2) {
+      return 'CRÍTICO';
+    }
+
+    const hayPeligro = this.pociones.some(
+      pocion => pocion.nivelPeligro >= 5
+    );
+
+    if (hayPeligro) {
+      return 'INESTABLE';
+    }
+
     return 'SEGURO';
   }
 
@@ -158,23 +257,48 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // =========================================================================
   guardarEstadoGiratiempo(): void {
     // TODO: Reto 6 - Implementar guardado inmutable en el historial
+    this.historialPasos = this.historialPasos.slice(
+      0,
+      this.indiceHistorial + 1
+    );
+
+    const copiaPociones: Pocion[] = JSON.parse(
+      JSON.stringify(this.pociones)
+    );
+
+    this.historialPasos.push(copiaPociones);
+    this.indiceHistorial = this.historialPasos.length - 1;
   }
 
   puedeDeshacer(): boolean {
     // TODO: Reto 6 - Retornar si es posible retroceder
-    return false;
+    return this.indiceHistorial > 0;
   }
 
   puedeRehacer(): boolean {
     // TODO: Reto 6 - Retornar si es posible avanzar
-    return false;
+    return this.indiceHistorial < this.historialPasos.length - 1;
   }
 
   giratiempoDeshacer(): void {
     // TODO: Reto 6 - Revertir al estado anterior
+    if (this.puedeDeshacer()) {
+      this.indiceHistorial--;
+
+      this.pociones = JSON.parse(
+        JSON.stringify(this.historialPasos[this.indiceHistorial])
+      );
+    }
   }
 
   giratiempoRehacer(): void {
     // TODO: Reto 6 - Avanzar al estado siguiente
+    if (this.puedeRehacer()) {
+      this.indiceHistorial++;
+
+      this.pociones = JSON.parse(
+        JSON.stringify(this.historialPasos[this.indiceHistorial])
+      );
+    }
   }
 }
