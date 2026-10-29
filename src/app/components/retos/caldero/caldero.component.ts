@@ -51,6 +51,38 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // -------------------------------------------------------------------------
   ngOnInit(): void {
     // Inicia el fuego del caldero (utilizado en el Reto 4)
+    this.pociones = [
+      {
+        id: 1,
+        nombre: 'Poción Multijugos',
+        descripcion: 'Permite adoptar la apariencia de otra persona.',
+        nivelPeligro: 8,
+        tiempoCoccionMinutos: 45,
+        tipoMagia: 'Transmutacion',
+        ingredientes: ['Agua', 'Hierbas', 'Esencia de Persona'],
+        estable: false
+      },
+      {
+        id: 2,
+        nombre: 'Felix Felicis',
+        descripcion: 'Otorga buena suerte temporalmente.',
+        nivelPeligro: 3,
+        tiempoCoccionMinutos: 120,
+        tipoMagia: 'Curacion',
+        ingredientes: ['Raíz de mandrágora', 'Polvo de hada'],
+        estable: true
+      },
+      {
+        id: 3,
+        nombre: 'Filtro de Muertos',
+        descripcion: 'Permite comunicarse con los muertos',
+        nivelPeligro: 10,
+        tiempoCoccionMinutos: 90,
+        tipoMagia: 'Prohibida',
+        ingredientes: ['Huesos de vampiro', 'Lágrimas de fantasma'],
+        estable: false
+      }
+    ];
     this.iniciarFuegoCaldero();
 
     // =======================================================================
