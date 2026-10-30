@@ -5,7 +5,7 @@
 
 ---
 
-## 🧙‍♂️ Datos del Aprendiz
+## 🧙‍♂️ Datos del Aprendiz Graudao
 * **Nombre del Estudiante:** Nicolas Montoya castro
 * **Usuario de GitHub:** montoya-nmc
 * **Herramientas de IA utilizadas:** [ ChatGPT-GPT6, GitHub Copilot]
@@ -87,16 +87,19 @@ Conserva los nombres de los metodos y las variables existentes y explica breveme
 ---
 
 ## 🎨 Resumen del Reto Creativo (Reto 7 - 30%)
-* **Nombre de tu Artefacto Mágico:** [Ej: El Mapa del Merodeador, Tienda de Varitas Ollivander, etc.]
+* **Nombre de tu Artefacto Mágico:** [REGEN]
+
 * **¿Qué hace tu artefacto y cómo interactúa el usuario?**
-  - [Descripción de funcionalidades]
+  - [REGEN es un simulador donde el usuario debe recuperar ecosistemas afectados por problemas ambientales. Puede iniciar diferentes misiones, analizar indicadores como la calidad del agua, la vegetación y la biodiversidad, administrar recursos y realizar acciones como reforestar, limpiar ríos y gestionar residuos. Cada decisión modifica el estado del ecosistema y afecta el resultado de la misión la cual se completa si el objetivo ambiental es alcanzado si pasa lo contrario tendra que hacer otra mision.]
+
 * **¿Qué hooks de ciclo de vida implementaste?**
-  - [Ej: ngOnInit para cargar datos, ngOnDestroy para limpiar timers]
+  - [Implementé ngOnInit para inicializar los datos y preparar la simulación, y ngOnDestroy para limpiar los temporizadores y evitar que sigan ejecutándose cuando se destruye el componente.]
+
 * **¿Qué directivas y enlaces utilizaste?**
-  - [Ej: @if para estados de victoria, @for para hechizos, [(ngModel)] para renombrar]
+  - [Utilicé @if para mostrar diferentes estados de la misión, @for para recorrer los indicadores, acciones y registros, [(ngModel)] para enlazar datos con los controles y enlaces de eventos como (click) para ejecutar acciones del jugador. También utilicé enlaces de propiedades como [ngClass] para cambiar estilos según el estado del ecosistema.]
 
 ---
 
 ## 💡 Reflexión Crítica del Aprendiz
 *¿En qué momentos sentiste que la IA te ahorró tiempo y en qué momentos una mala respuesta te retrasó?*
-- [Tu reflexión honesta con tus propias palabras]
+- [La IA me ahorró tiempo al ayudarme a organizar las ideas, proponer funcionalidades y encontrar soluciones funcionales que si me sirvieron para realizar los retos, aparte que me ayudo a aterrizar la idea que tenia sobre REGEN en el reto 7 ya que aunque sabia lo que queria no sabia muy bien por donde empezar, entonces me ayudo mucho como primeros pasos para ir aterrizando mejor la idea. pero tambien hubieron momentos que la IA me daba algunas respuestas que no se ajustaban completamente a lo que necesitaba o proponia soluciones demasiado complejas que no entendia, entonces me tocaba o volver a iniciar o volver a darle instrucciones. La verdad me sirvio para potenciar mis habilidades y conocimientos para hacer prompts.]
