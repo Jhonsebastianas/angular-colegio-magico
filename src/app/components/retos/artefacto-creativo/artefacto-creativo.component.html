@@ -1,168 +1,89 @@
-<div class="page-container">
-  <div class="page-breadcrumb">
-    <a href="/" class="back-link">← Volver al Gran Comedor</a>
-    <span class="sep">•</span>
-    <span class="current">Reto 7 • El Lienzo Creativo (30%)</span>
-  </div>
-
-  <section class="section-card card-magic" [class.arena-oscura]="arenaOscura">
-  <div class="section-header">
-    <div class="section-badge creative-badge">RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)</div>
-    <h2>🎨 El Laboratorio de Artefactos Mágicos</h2>
-    <p class="section-subtitle">
-      Demuestra tu creatividad y maestría técnica. Aquí tienes la libertad de dar vida a un artefacto mágico asombroso siguiendo los lineamientos de la rúbrica.
-    </p>
-  </div>
-
-  <div class="callout-didactico">
-    <h4>📜 Rúbrica de Evaluación del Reto Creativo (30%)</h4>
-    <p>
-      1. <strong>Múltiples Estados:</strong> Debe manejar al menos 3 estados interactivos (ej: Preparación, En Curso, Victoria/Derrota).<br>
-      2. <strong>Control Flow:</strong> Uso justificado de <span class="callout-code">{{ '@if' }}</span> y <span class="callout-code">{{ '@for' }}</span>.<br>
-      3. <strong>Data Binding:</strong> Implementar <span class="callout-code">[(ngModel)]</span> y enlaces dinámicos.<br>
-      4. <strong>Ciclos de Vida:</strong> Al menos dos hooks (<span class="callout-code">ngOnInit</span> y otro más).<br>
-      5. <strong>Estética y UX:</strong> Diseño mágico inmersivo, animaciones sutiles y buena experiencia de usuario.
-    </p>
-  </div>
-
-  <!-- Arena de Duelo Mágico -->
-  <div class="arena-container">
-    <div class="arena-top-bar">
-      <div class="arena-title">
-        <span>⚔️ Club de Duelo de Hogwarts</span>
-        <span class="badge-magic">Turno #{{ numeroTurno }}</span>
-      </div>
-
-      <div class="arena-actions">
-        <button class="btn-magic btn-secondary" (click)="toggleArena()">
-          {{ arenaOscura ? '☀️ Arena Iluminada' : '🌑 Arena de Sombras' }}
-        </button>
-        <button class="btn-magic" (click)="iniciarDuelo()">
-          🔄 Reiniciar Duelo
-        </button>
-      </div>
-    </div>
-
-    <!-- Escenario de Magos -->
-    <div class="duelo-combatientes">
-      <!-- Mago Jugador -->
-      <div class="combatiente-card mago-player">
-        <div class="combatiente-avatar">🧙‍♂️</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreMago }}</h3>
-          <input 
-            type="text" 
-            class="input-magic input-rename" 
-            [(ngModel)]="nombreMago" 
-            [disabled]="estadoDuelo === 'EN_CURSO'"
-            placeholder="Renombrar mago..."
-          />
-          <div class="stat-bar">
-            <span>Salud: {{ saludMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludMago"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Mágica: {{ energiaMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
-          </div>
+<div class="regen-shell">
+  @if (estado === 'INICIO') {
+    <main class="intro-screen">
+      <div class="intro-copy">
+        <div class="eyebrow"><span class="pulse-dot"></span> Simulador de gestión ambiental</div>
+        <h1>RE<span>G</span>EN</h1>
+        <p class="intro-subtitle">Ecosystem Recovery Simulator</p>
+        <p class="intro-description">Administra un territorio herido, toma decisiones con recursos limitados y observa cómo tus acciones transforman un ecosistema vivo.</p>
+        <div class="mission-brief">
+          <span class="brief-icon">◎</span>
+          <div><strong>{{ mision.nombre }} · Dificultad {{ mision.dificultad }}</strong><small>{{ mision.descripcion }}</small><small class="mission-objective">Objetivo: {{ mision.objetivo }}</small></div>
         </div>
+        <div class="mission-problems"><strong>Problemas detectados</strong><span>@for (problema of mision.problemas; track problema) {<em>{{ problema }}</em>}</span></div>
+        <section class="how-to how-to-intro">
+          <div class="how-to-heading"><div><span class="section-kicker">GUÍA DE CAMPO</span><h2>¿Cómo jugar?</h2></div><span class="help-badge">Tu misión</span></div>
+          <p>Recupera el ecosistema en 12 meses tomando decisiones estratégicas y observando sus consecuencias.</p>
+          <ol><li><strong>Analiza los indicadores.</strong> Agua, vegetación, biodiversidad, suelo, residuos y aire muestran la salud del territorio.</li><li><strong>Administra los recursos.</strong> Presupuesto, agua, energía y materiales son limitados.</li><li><strong>Realiza acciones ambientales.</strong> Planta árboles, limpia ríos, recupera suelos, gestiona residuos y protege la fauna.</li><li><strong>Avanza los meses.</strong> Después de actuar, avanza el tiempo para aplicar efectos progresivos y enfrentar eventos.</li><li><strong>Completa la misión.</strong> Alcanza el objetivo específico antes de que termine el tiempo.</li></ol>
+        </section>
+        <button class="primary-button large-button" (click)="iniciarMision()">Comenzar misión <span>→</span></button>
       </div>
-
-      <div class="vs-badge">VS</div>
-
-      <!-- Mago Rival -->
-      <div class="combatiente-card mago-rival">
-        <div class="combatiente-avatar">🧙🐍</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreRival }}</h3>
-          <span class="rival-tag">Adversario de Slytherin</span>
-          <div class="stat-bar">
-            <span>Salud: {{ saludRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludRival"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Rival: {{ energiaRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaRival"></div></div>
-          </div>
-        </div>
+      <div class="intro-landscape" [ngClass]="escenarioClase">
+        <div class="sun">☼</div><div class="cloud cloud-a">☁</div><div class="cloud cloud-b">☁</div>
+        <div class="mountain mountain-a"></div><div class="mountain mountain-b"></div>
+        <div class="intro-river"></div><div class="intro-ground"></div>
+        <div class="intro-trees"><span>♣</span><span>♣</span><span>♣</span><span>♣</span><span>♣</span></div>
+        <div class="landscape-label"><span>VALLE ESMERALDA</span><small>Estado inicial · Ecosistema vulnerable</small></div>
       </div>
-    </div>
+    </main>
+  } @else {
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">✦</div><div><strong>REGEN</strong><small>ECOSYSTEM RECOVERY SIMULATOR</small></div></div>
+      <div class="mission-progress"><div class="progress-label"><span>Progreso de misión</span><strong>Mes {{ mesActual }} / {{ totalMeses }}</strong></div><div class="progress-track"><div class="progress-value" [style.width.%]="progresoMision"></div></div></div>
+      <div class="top-status"><span class="status-light" [ngClass]="estado.toLowerCase()"></span>{{ estado === 'EN_CURSO' ? 'EN CURSO' : estado }}</div>
+    </header>
 
-    <!-- Panel de Estados del Duelo (@if) -->
-    @if (estadoDuelo === 'PREPARACION') {
-      <div class="estado-banner preparacion">
-        <span class="banner-icon">⚔️</span>
-        <div>
-          <h4>Duelo en Espera</h4>
-          <p>Ajusta el nombre de tu mago arriba y haz clic en "Iniciar Duelo" para alzar varitas.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">¡Empezar Duelo!</button>
-      </div>
-    }
+    <main class="dashboard">
+      <section class="dashboard-heading">
+        <div><div class="eyebrow">CENTRO DE CONTROL · {{ mision.nombre }}</div><h1>Recupera el equilibrio natural.</h1><p>{{ mision.descripcion }}</p></div>
+        <div class="time-controls"><div class="month-readout"><span>MES ACTUAL</span><strong>{{ mesActual | number:'2.0-0' }}</strong><small>{{ mesesRestantes }} meses restantes</small></div><button class="secondary-button" (click)="alternarPausa()" [disabled]="estado === 'VICTORIA' || estado === 'DERROTA'">{{ estado === 'PAUSADO' ? '▶ Reanudar' : 'Ⅱ Pausar' }}</button><button class="primary-button" (click)="avanzarMes()" [disabled]="estado !== 'EN_CURSO'">Avanzar mes <span>→</span></button></div>
+      </section>
 
-    @if (estadoDuelo === 'VICTORIA') {
-      <div class="estado-banner victoria">
-        <span class="banner-icon">🏆 🦁</span>
-        <div>
-          <h4>¡VICTORIA ÉPICA!</h4>
-          <p>¡Has derrotado a {{ nombreRival }}! Has ganado 50 puntos para tu casa.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">Revancha</button>
-      </div>
-    }
+      <section class="how-to how-to-dashboard">
+        <div class="how-to-heading"><div><span class="section-kicker">GUÍA DE CAMPO</span><h2>¿Cómo jugar?</h2></div><button class="text-button" (click)="alternarAyuda()">{{ mostrarAyuda ? 'Ocultar guía' : 'Mostrar guía' }} {{ mostrarAyuda ? '↑' : '↓' }}</button></div>
+        @if (mostrarAyuda) {
+          <div class="how-to-content"><p><strong>Tu objetivo:</strong> {{ mision.objetivo }}</p><div class="how-to-grid"><div><b>◉ Analiza</b><span>Agua, vegetación, biodiversidad, suelo, residuos y aire. Las barras muestran qué está crítico, estable o saludable.</span></div><div><b>◈ Administra</b><span>Usa presupuesto, agua, energía y materiales sin permitir que lleguen a cero.</span></div><div><b>✦ Interviene</b><span>Las acciones mejoran indicadores al instante o durante los meses siguientes; los eventos pueden deteriorarlos.</span></div><div><b>→ Avanza</b><span>Ejecuta tus acciones y avanza el mes para ver cómo responde el ecosistema.</span></div></div></div>
+        }
+      </section>
 
-    @if (estadoDuelo === 'DERROTA') {
-      <div class="estado-banner derrota">
-        <span class="banner-icon">💀 🐍</span>
-        <div>
-          <h4>¡HAS CAÍDO EN DUELO!</h4>
-          <p>Madame Pomfrey te espera en la enfermería. No te rindas y prueba otra táctica.</p>
-        </div>
-        <button class="btn-magic btn-danger" (click)="iniciarDuelo()">Intentar de Nuevo</button>
-      </div>
-    }
-
-    <!-- Grimorio de Hechizos del Duelo (@for) -->
-    @if (estadoDuelo === 'EN_CURSO') {
-      <div class="spell-deck">
-        <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
-        <div class="spell-grid">
-          @for (h of hechizosDuelo; track h.id) {
-            <button 
-              class="spell-card" 
-              [disabled]="energiaMago < h.costoEnergia" 
-              (click)="lanzarHechizo(h)"
-            >
-              <div class="spell-top">
-                <strong>{{ h.nombre }}</strong>
-                <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
-              </div>
-              <p class="spell-desc">{{ h.descripcion }}</p>
-              <div class="spell-power">
-                <span>Efecto: <strong>+{{ h.poder }} {{ h.tipo }}</strong></span>
-              </div>
-            </button>
+      @if (notificaciones.length > 0) {
+        <div class="notification-stack">
+          @for (notificacion of notificaciones; track notificacion.id) {
+            <div class="notification" [ngClass]="'notification-' + notificacion.tipo"><span class="notification-icon">{{ notificacion.tipo === 'success' ? '✓' : notificacion.tipo === 'danger' ? '!' : 'i' }}</span><div><strong>{{ notificacion.titulo }}</strong><p>{{ notificacion.mensaje }}</p></div><button (click)="cerrarNotificacion(notificacion.id)" aria-label="Cerrar">×</button></div>
           }
         </div>
-      </div>
-    }
+      }
 
-    <!-- Historial de Turnos (@for) -->
-    <div class="history-log">
-      <h4>📜 Bitácora de Encantamientos del Duelo</h4>
-      <div class="log-entries">
-        @for (entry of historialDuelo; track $index) {
-          <div class="log-row" [ngClass]="'entry-' + entry.tipo">
-            <span class="turn-num">T{{ entry.turno }}</span>
-            <span class="turn-actor">[{{ entry.emisor }}]:</span>
-            <span class="turn-spell">{{ entry.hechizo }}</span>
-            <span class="turn-effect">{{ entry.efecto }}</span>
-          </div>
-        } @empty {
-          <p class="empty-log">Aún no se han intercambiado hechizos en la arena.</p>
-        }
-      </div>
-    </div>
-  </div>
-</section>
+      <section class="overview-grid">
+        <div class="health-card"><div class="card-heading"><span>Salud general</span><span class="health-tag" [ngClass]="claseIndicador(saludGeneral)">{{ etiquetaIndicador(saludGeneral) }}</span></div><div class="health-value">{{ saludGeneral }}<small>/100</small></div><div class="health-bar"><div [ngClass]="claseIndicador(saludGeneral)" [style.width.%]="saludGeneral"></div></div><p>Promedio de los seis indicadores ambientales.</p></div>
+        <div class="resource-card"><div class="card-heading"><span>Recursos disponibles</span><span class="resource-note">Suministros de campo</span></div><div class="resource-grid"><div><span class="resource-icon water">◒</span><small>AGUA</small><strong>{{ recursos.agua }} <em>u</em></strong></div><div><span class="resource-icon energy">ϟ</span><small>ENERGÍA</small><strong>{{ recursos.energia }} <em>u</em></strong></div><div><span class="resource-icon budget">$</span><small>PRESUPUESTO</small><strong>{{ recursos.presupuesto | number }} <em>cr</em></strong></div><div><span class="resource-icon material">◆</span><small>MATERIALES</small><strong>{{ recursos.materiales }} <em>u</em></strong></div></div></div>
+      </section>
+
+      <section class="main-grid">
+        <div class="left-column">
+          <section class="panel ecosystem-panel">
+            <div class="panel-title"><div><span class="section-kicker">01 · VISUALIZACIÓN</span><h2>Territorio vivo</h2></div><span class="live-badge"><i></i> SIMULACIÓN ACTIVA</span></div>
+            <div class="ecosystem-scene" [ngClass]="escenarioClase">
+              <div class="scene-sun">☼</div><div class="scene-cloud cloud-a">☁</div><div class="scene-cloud cloud-b">☁</div><div class="scene-mountain mountain-a"></div><div class="scene-mountain mountain-b"></div><div class="scene-river"></div><div class="scene-ground"></div><div class="scene-pollution pollution-a">◌</div><div class="scene-pollution pollution-b">◌</div>
+              <div class="scene-trees"><span>♣</span><span>♣</span><span>♣</span><span>♣</span><span>♣</span><span>♣</span><span>♣</span></div><div class="scene-fauna">@for (i of [].constructor(faunaVisible); track $index) { <span>{{ $index % 2 === 0 ? '●' : '◆' }}</span> }</div>
+              <div class="scene-caption"><strong>{{ escenarioClase === 'escenario-saludable' ? 'Ecosistema saludable' : escenarioClase === 'escenario-recuperacion' ? 'Ecosistema en recuperación' : 'Ecosistema deteriorado' }}</strong><small>La escena responde a tus decisiones</small></div>
+            </div>
+          </section>
+
+          <section class="panel indicators-panel"><div class="panel-title"><div><span class="section-kicker">02 · MONITOREO</span><h2>Indicadores ambientales</h2></div><span class="legend"><i class="dot-critical"></i>Crítico <i class="dot-stable"></i>Estable <i class="dot-good"></i>Saludable</span></div><div class="indicator-list">@for (indicador of indicadores; track indicador.id) {<div class="indicator-row"><div class="indicator-label"><span class="indicator-icon">{{ indicador.icono }}</span><div><strong>{{ indicador.nombre }}</strong><small>{{ indicador.descripcion }}</small></div></div><div class="indicator-meter"><div class="meter-track"><div [ngClass]="claseIndicador(indicador.valor)" [style.width.%]="indicador.valor"></div></div></div><div class="indicator-score" [ngClass]="claseIndicador(indicador.valor)"><strong>{{ indicador.valor }}</strong><small>{{ etiquetaIndicador(indicador.valor) }}</small></div></div>}</div></section>
+
+          <section class="panel charts-panel"><div class="panel-title"><div><span class="section-kicker">03 · EVOLUCIÓN</span><h2>Lecturas de la misión</h2></div><span class="chart-legend"><i></i> Salud general</span></div><div class="charts-grid"><div class="chart"><h3>Salud del ecosistema</h3><div class="bar-chart">@for (punto of historialSalud; track punto.mes) {<div class="chart-bar-wrap"><div class="chart-bar" [style.height.%]="(punto.salud / maximoHistorial('salud')) * 100" [title]="'Mes ' + punto.mes + ': ' + punto.salud"></div><small>{{ punto.mes === 0 ? 'Inicio' : 'M' + punto.mes }}</small></div>}</div></div><div class="chart"><h3>Indicadores clave</h3><div class="comparison-bars"><div><span>Agua</span><div><i class="water-bar" [style.width.%]="valorIndicador('aguaCalidad')"></i></div><b>{{ valorIndicador('aguaCalidad') }}</b></div><div><span>Vegetación</span><div><i class="green-bar" [style.width.%]="valorIndicador('vegetacion')"></i></div><b>{{ valorIndicador('vegetacion') }}</b></div><div><span>Biodiversidad</span><div><i class="purple-bar" [style.width.%]="valorIndicador('biodiversidad')"></i></div><b>{{ valorIndicador('biodiversidad') }}</b></div><div><span>Contaminación</span><div><i class="red-bar" [style.width.%]="contaminacion"></i></div><b>{{ contaminacion }}</b></div></div></div></div></section>
+        </div>
+
+        <aside class="right-column">
+          <section class="panel actions-panel"><div class="panel-title"><div><span class="section-kicker">04 · INTERVENCIÓN</span><h2>Acciones ambientales</h2></div></div><div class="action-list">@for (accion of acciones; track accion.id) {<article class="action-card"><div class="action-icon">{{ accion.icono }}</div><div class="action-info"><div class="action-top"><h3>{{ accion.nombre }}</h3><span>{{ accion.categoria }}</span></div><p>{{ accion.descripcion }}</p><small class="action-effect">↗ {{ accion.efecto }}</small><div class="action-footer"><div class="cost-list">@if (accion.costos.presupuesto) {<span>◈ {{ accion.costos.presupuesto }} cr</span>} @if (accion.costos.agua) {<span>◒ {{ accion.costos.agua }} agua</span>} @if (accion.costos.energia) {<span>ϟ {{ accion.costos.energia }} energía</span>} @if (accion.costos.materiales) {<span>◆ {{ accion.costos.materiales }} mat.</span>}</div><button class="action-button" (click)="ejecutarAccion(accion)" [disabled]="estado !== 'EN_CURSO'">Ejecutar</button></div></div></article>}</div></section>
+          <section class="panel history-panel"><div class="panel-title"><div><span class="section-kicker">05 · BITÁCORA</span><h2>Actividad reciente</h2></div><span class="record-count">{{ historial.length }} registros</span></div><div class="history-list">@for (registro of historial | slice:0:8; track $index) {<div class="history-item" [ngClass]="'history-' + registro.tipo"><span class="history-marker"></span><div><div class="history-meta"><b>MES {{ registro.mes }}</b><span>{{ registro.tipo }}</span></div><strong>{{ registro.titulo }}</strong><p>{{ registro.descripcion }}</p></div></div>} @empty {<div class="empty-state">La bitácora se activará al comenzar la misión.</div>}</div></section>
+        </aside>
+      </section>
+
+      @if (estado === 'VICTORIA' || estado === 'DERROTA') {
+        <section class="result-overlay"><div class="result-card" [ngClass]="estado === 'VICTORIA' ? 'result-win' : 'result-loss'"><span class="result-symbol">{{ estado === 'VICTORIA' ? '✦' : '!' }}</span><span class="section-kicker">MISIÓN FINALIZADA · MES {{ mesActual }}</span><h2>{{ estado === 'VICTORIA' ? 'El valle vuelve a respirar.' : 'El ecosistema necesita otra oportunidad.' }}</h2><p>{{ estado === 'VICTORIA' ? 'Tu estrategia logró recuperar el equilibrio natural del Valle Esmeralda.' : 'Las presiones acumuladas superaron la capacidad de recuperación del territorio.' }}</p><div class="final-stats"><div><strong>{{ saludGeneral }}</strong><small>Salud final</small></div><div><strong>{{ accionesRealizadas }}</strong><small>Acciones</small></div><div><strong>{{ eventosEnfrentados }}</strong><small>Eventos</small></div></div><button class="primary-button" (click)="prepararNuevaMision()">Nueva misión <span>↻</span></button></div></section>
+      }
+    </main>
+  }
 </div>
