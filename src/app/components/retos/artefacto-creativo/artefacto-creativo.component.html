@@ -4,7 +4,7 @@
     <span class="sep">•</span>
     <span class="current">Reto 7 • El Lienzo Creativo (30%)</span>
   </div>
-
+ 
   <section class="section-card card-magic" [class.arena-oscura]="arenaOscura">
   <div class="section-header">
     <div class="section-badge creative-badge">RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)</div>
@@ -30,6 +30,7 @@
     <div class="arena-top-bar">
       <div class="arena-title">
         <span>⚔️ Club de Duelo de Hogwarts</span>
+        <span class="badge-magic">🏆 Rachas: {{ victoriasConsecutivas }}</span>
         <span class="badge-magic">Turno #{{ numeroTurno }}</span>
       </div>
 
@@ -40,23 +41,70 @@
         <button class="btn-magic" (click)="iniciarDuelo()">
           🔄 Reiniciar Duelo
         </button>
+
+        <!-- Alerta Emergente Modo Peligro -->
+    @if (saludMago < 30 && mostrarAlertaPeligro) {
+      <div class="modal-alerta-grande peligro-modal">
+        <div class="modal-contenido-magico">
+          <span class="icono-alerta">⚠️</span>
+          <h3>¡ALERTA MÁGICA: ZONA DE PELIGRO!</h3>
+          <p>
+            Tu salud ha decaído críticamente por debajo del 30%. El campo de batalla se ha vuelto inestable y rojo debido a la pérdida masiva de energía vital. 
+            <strong>¡Te recomendamos encarecidamente utilizar la "Huida Épica" antes de que tu mago colapse por completo!</strong>
+          </p>
+          <button class="btn-magic btn-danger" (click)="huirDuelo()">🏳️ Huida Épica Inmediata</button>
+          <button class="btn-cerrar-modal" (click)="cerrarAlertaPeligro(); $event.stopPropagation()">Entendido (Ocultar)</button>
+        </div>
+      </div>
+    }
+
+    <!-- Alerta Emergente Racha de Victoria -->
+    @if (estadoDuelo === 'VICTORIA' && mostrarAlertaVictoria) {
+      <div class="modal-alerta-grande victoria-modal">
+        <div class="modal-contenido-magico">
+          <span class="icono-alerta">🏆</span>
+          <h3>¡TRIUNFO MAGNÍFICO!</h3>
+          <p>
+            Has demostrado tu poder en la arena. Tu racha actual de triunfos ha ascendido a:
+            <strong class="texto-racha-resaltado">¡{{ victoriasConsecutivas }} Victorias Consecutivas!</strong>
+          </p>
+          <button class="btn-magic" (click)="cerrarAlertaVictoria(); $event.stopPropagation()">Continuar Coleccionando Victorias</button>
+        </div>
+      </div>
+    }
       </div>
     </div>
 
     <!-- Escenario de Magos -->
     <div class="duelo-combatientes">
+
       <!-- Mago Jugador -->
-      <div class="combatiente-card mago-player">
+      <div class="combatiente-card mago-player" [class.modo-peligro]="saludMago < 30">
         <div class="combatiente-avatar">🧙‍♂️</div>
         <div class="combatiente-datos">
           <h3>{{ nombreMago }}</h3>
           <input 
-            type="text" 
+            type="text"
             class="input-magic input-rename" 
             [(ngModel)]="nombreMago" 
             [disabled]="estadoDuelo === 'EN_CURSO'"
             placeholder="Renombrar mago..."
           />
+
+          <!-- Selector de Clase -->
+          <div class="mt-3">
+            <label class="block text-xs mb-1">👑 Clase de Héroe:</label>
+            <select 
+              class="input-magic select-rpg" 
+              [(ngModel)]="claseSeleccionada"
+              [disabled]="estadoDuelo === 'EN_CURSO'"
+            >
+              @for (clase of clasesDisponibles; track clase) {
+                <option [value]="clase">{{ clase }}</option>
+              }
+            </select>
+          </div>
+
           <div class="stat-bar">
             <span>Salud: {{ saludMago }}%</span>
             <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludMago"></div></div>
@@ -125,7 +173,11 @@
     <!-- Grimorio de Hechizos del Duelo (@for) -->
     @if (estadoDuelo === 'EN_CURSO') {
       <div class="spell-deck">
-        <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
+       <div class="flex justify-between items-center mb-3">
+          <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
+          <button class="btn-danger text-xs px-3 py-1" (click)="huirDuelo()">Huir del Duelo</button>
+          <span class="badge-magic">Energía: {{ energiaMago }}⚡</span> 
+        </div>
         <div class="spell-grid">
           @for (h of hechizosDuelo; track h.id) {
             <button 

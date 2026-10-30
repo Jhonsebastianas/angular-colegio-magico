@@ -39,6 +39,14 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
   nombreMago: string = 'Harry Potter';
   saludMago: number = 100;
   energiaMago: number = 100;
+  
+  claseSeleccionada: string = 'Reina Kuromi';
+  clasesDisponibles: string[] = ['Reina Kuromi', 'Caballero de la Luz', 'Cazadora de Demonios', 'Hechicera de las Sombras'];
+
+  victoriasConsecutivas: number = 0;
+
+  mostrarAlertaVictoria: boolean = false;
+  mostrarAlertaPeligro: boolean = true;
 
   nombreRival: string = 'Draco Malfoy';
   saludRival: number = 100;
@@ -52,10 +60,10 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
 
   // Grimorio de hechizos disponibles para el aprendiz
   hechizosDuelo: HechizoDuelo[] = [
-    { id: 1, nombre: 'Expelliarmus', tipo: 'Ataque', poder: 25, costoEnergia: 20, descripcion: 'Desarma al oponente con un rayo rojo escarlata.' },
-    { id: 2, nombre: 'Protego', tipo: 'Defensa', poder: 30, costoEnergia: 15, descripcion: 'Crea un escudo mágico que absorbe el siguiente impacto.' },
-    { id: 3, nombre: 'Episkey', tipo: 'Sanacion', poder: 20, costoEnergia: 25, descripcion: 'Restaura vitalidad y cura heridas menores.' },
-    { id: 4, nombre: 'Stupefy', tipo: 'Ataque', poder: 35, costoEnergia: 35, descripcion: 'Aturde al rival con una potente onda expansiva.' }
+    { id: 1, nombre: 'Rayo Loco Lila', tipo: 'Ataque', poder: 32, costoEnergia: 10, descripcion: 'Lanza un rayo de energía lila que impacta directamente.' },
+    { id: 2, nombre: 'Escudo de Calaveras', tipo: 'Defensa', poder: 35, costoEnergia: 15, descripcion: 'Invoca una barrera de calaveras que protege del ataque.' },
+    { id: 3, nombre: 'Elixir Oscuro', tipo: 'Sanacion', poder: 23, costoEnergia: 25, descripcion: 'Restaura vitalidad con un elixir mágico oscuro.' },
+    { id: 4, nombre: 'Destello de Sombra', tipo: 'Ataque', poder: 35, costoEnergia: 23, descripcion: 'Desata una poderosa onda expansiva.' }
   ];
 
   historialDuelo: RegistroTurno[] = [];
@@ -81,6 +89,8 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
     this.saludRival = 100;
     this.energiaRival = 100;
     this.numeroTurno = 1;
+    this.mostrarAlertaVictoria = false;
+    this.mostrarAlertaPeligro = true;
     this.historialDuelo = [
       {
         turno: 1,
@@ -129,7 +139,16 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
 
     // Verificar si el rival cayó
     if (this.saludRival <= 0) {
-      this.estadoDuelo = 'VICTORIA';
+      this.estadoDuelo = 'VICTORIA'
+      this.victoriasConsecutivas++;
+      this.mostrarAlertaVictoria = true;
+      this.historialDuelo.unshift({
+        turno: this.numeroTurno,
+        emisor: 'Sistema',
+        hechizo: '!Victoria Épica!',
+        efecto: `¡Victoria! Has derrotado a ${this.nombreRival} como ${this.claseSeleccionada}.`,
+        tipo: 'damage'
+      });
       return;
     }
 
@@ -166,6 +185,25 @@ export class ArtefactoCreativoComponent implements OnInit, OnDestroy {
   // 6. Alternar ambientación de la arena
   toggleArena(): void {
     this.arenaOscura = !this.arenaOscura;
+  }
+  // funcion para permitir al jugador retirarse del duelo, registrando la derrota en el historial
+   huirDuelo(): void {
+    this.estadoDuelo = 'DERROTA';
+    this.historialDuelo.unshift({
+      turno: this.numeroTurno,
+      emisor: this.nombreMago,
+      hechizo: 'Huir del Duelo',
+      efecto: `¡Has decidido retirarte del duelo! ${this.nombreRival} se lleva la victoria.`,
+      tipo: 'shield'
+    });
+  }
+    cerrarAlertaVictoria(): void {
+    this.mostrarAlertaVictoria = false;
+  }
+
+
+    cerrarAlertaPeligro(): void {
+    this.mostrarAlertaPeligro = false;
   }
 
   // 7. Lifecycle Hook: ngOnDestroy
