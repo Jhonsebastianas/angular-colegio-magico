@@ -5,164 +5,389 @@
     <span class="current">Reto 7 • El Lienzo Creativo (30%)</span>
   </div>
 
-  <section class="section-card card-magic" [class.arena-oscura]="arenaOscura">
-  <div class="section-header">
-    <div class="section-badge creative-badge">RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)</div>
-    <h2>🎨 El Laboratorio de Artefactos Mágicos</h2>
-    <p class="section-subtitle">
-      Demuestra tu creatividad y maestría técnica. Aquí tienes la libertad de dar vida a un artefacto mágico asombroso siguiendo los lineamientos de la rúbrica.
-    </p>
-  </div>
-
-  <div class="callout-didactico">
-    <h4>📜 Rúbrica de Evaluación del Reto Creativo (30%)</h4>
-    <p>
-      1. <strong>Múltiples Estados:</strong> Debe manejar al menos 3 estados interactivos (ej: Preparación, En Curso, Victoria/Derrota).<br>
-      2. <strong>Control Flow:</strong> Uso justificado de <span class="callout-code">{{ '@if' }}</span> y <span class="callout-code">{{ '@for' }}</span>.<br>
-      3. <strong>Data Binding:</strong> Implementar <span class="callout-code">[(ngModel)]</span> y enlaces dinámicos.<br>
-      4. <strong>Ciclos de Vida:</strong> Al menos dos hooks (<span class="callout-code">ngOnInit</span> y otro más).<br>
-      5. <strong>Estética y UX:</strong> Diseño mágico inmersivo, animaciones sutiles y buena experiencia de usuario.
-    </p>
-  </div>
-
-  <!-- Arena de Duelo Mágico -->
-  <div class="arena-container">
-    <div class="arena-top-bar">
-      <div class="arena-title">
-        <span>⚔️ Club de Duelo de Hogwarts</span>
-        <span class="badge-magic">Turno #{{ numeroTurno }}</span>
-      </div>
-
-      <div class="arena-actions">
-        <button class="btn-magic btn-secondary" (click)="toggleArena()">
-          {{ arenaOscura ? '☀️ Arena Iluminada' : '🌑 Arena de Sombras' }}
-        </button>
-        <button class="btn-magic" (click)="iniciarDuelo()">
-          🔄 Reiniciar Duelo
-        </button>
-      </div>
+  <section class="section-card card-magic lienzo-escarbato">
+    <div class="cielo-magico" aria-hidden="true">
+      <span class="luna-magica">🌙</span>
+      <span class="estrella e1">✦</span>
+      <span class="estrella e2">✧</span>
+      <span class="estrella e3">✦</span>
+      <span class="estrella e4">✧</span>
+      <span class="estrella e5">✦</span>
+      <span class="estrella e6">✧</span>
     </div>
 
-    <!-- Escenario de Magos -->
-    <div class="duelo-combatientes">
-      <!-- Mago Jugador -->
-      <div class="combatiente-card mago-player">
-        <div class="combatiente-avatar">🧙‍♂️</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreMago }}</h3>
-          <input 
-            type="text" 
-            class="input-magic input-rename" 
-            [(ngModel)]="nombreMago" 
-            [disabled]="estadoDuelo === 'EN_CURSO'"
-            placeholder="Renombrar mago..."
+    <div class="section-header">
+      <div class="section-badge creative-badge">
+        RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)
+      </div>
+      <h2>🦡 El Escarbato Mágico</h2>
+      <p class="section-subtitle">
+        Encuentra una cría en la madriguera, ponle nombre y cuídala. Los
+        escarbatos adoran todo lo que brilla: al jugar saldrán a buscar tesoros,
+        pero si los descuidas demasiado pueden escaparse tras un destello.
+      </p>
+    </div>
+
+    <!-- =====================================================================
+         ESTADO 1: MADRIGUERA (adopción y nombre de la cría)
+         ===================================================================== -->
+    @if (estadoEscarbato === 'madriguera') {
+      <div class="pantalla madriguera-pantalla">
+        <div class="madriguera-escena">
+          <div class="hoyo-magico">🕳️</div>
+          <div class="cria-escarbato flotando">
+            <img
+              class="cria-imagen"
+              src="/escarbato/escarbato-adopcion.jpg"
+              alt="Cría de escarbato asomando en su madriguera"
+            />
+          </div>
+          <span class="destello-adopcion d1">✨</span>
+          <span class="destello-adopcion d2">✧</span>
+          <span class="destello-adopcion d3">✨</span>
+          <p class="susurro-madriguera">Se oyen pequeños arañazos bajo la tierra...</p>
+        </div>
+
+        <div class="panel-adopcion">
+          <span class="etiqueta-estado">ESTADO • MADRIGUERA</span>
+          <h3>Una cría te observa con curiosidad</h3>
+          <p>
+            Sus ojitos reflejan la luna y su hocico tiembla de emoción. Antes de
+            cuidarlo, dale un nombre que lo acompañe toda su vida.
+          </p>
+
+          <label class="etiqueta-campo" for="nombre-escarbato">
+            Nombre del escarbato
+          </label>
+          <input
+            id="nombre-escarbato"
+            type="text"
+            class="input-magic input-nombre"
+            name="nombreEscarbato"
+            [(ngModel)]="nombreEscarbato"
+            placeholder="Ej. Niffler, Tebo, Bruma..."
+            maxlength="24"
+            autocomplete="off"
           />
-          <div class="stat-bar">
-            <span>Salud: {{ saludMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludMago"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Mágica: {{ energiaMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
-          </div>
-        </div>
-      </div>
 
-      <div class="vs-badge">VS</div>
+          @if (nombreEscarbato.trim().length > 0 && nombreEscarbato.trim().length < 2) {
+            <p class="aviso-campo">El nombre debe tener al menos 2 letras.</p>
+          }
 
-      <!-- Mago Rival -->
-      <div class="combatiente-card mago-rival">
-        <div class="combatiente-avatar">🧙🐍</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreRival }}</h3>
-          <span class="rival-tag">Adversario de Slytherin</span>
-          <div class="stat-bar">
-            <span>Salud: {{ saludRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludRival"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Rival: {{ energiaRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaRival"></div></div>
-          </div>
+          <button
+            class="btn-magic btn-adoptar"
+            [disabled]="nombreEscarbato.trim().length < 2"
+            (click)="adoptarEscarbato()"
+          >
+            🪄 Adoptar a la cría
+          </button>
         </div>
-      </div>
-    </div>
-
-    <!-- Panel de Estados del Duelo (@if) -->
-    @if (estadoDuelo === 'PREPARACION') {
-      <div class="estado-banner preparacion">
-        <span class="banner-icon">⚔️</span>
-        <div>
-          <h4>Duelo en Espera</h4>
-          <p>Ajusta el nombre de tu mago arriba y haz clic en "Iniciar Duelo" para alzar varitas.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">¡Empezar Duelo!</button>
       </div>
     }
 
-    @if (estadoDuelo === 'VICTORIA') {
-      <div class="estado-banner victoria">
-        <span class="banner-icon">🏆 🦁</span>
-        <div>
-          <h4>¡VICTORIA ÉPICA!</h4>
-          <p>¡Has derrotado a {{ nombreRival }}! Has ganado 50 puntos para tu casa.</p>
+    <!-- =====================================================================
+         ESTADO 2: CUIDANDO (mascota viva con ánimo y acciones)
+         ===================================================================== -->
+    @if (estadoEscarbato === 'cuidando') {
+      <div class="pantalla cuidando-pantalla">
+        <div class="barra-superior-mascota">
+          <div>
+            <span class="etiqueta-estado">ESTADO • CUIDANDO</span>
+            <h3>{{ nombreEscarbato }}</h3>
+          </div>
+          <div class="animo-chip" [ngClass]="'animo-' + animoEscarbato">
+            @if (animoEscarbato === 'feliz') {
+              <span>💛 Feliz</span>
+            }
+            @if (animoEscarbato === 'hambriento') {
+              <span>🍖 Hambriento</span>
+            }
+            @if (animoEscarbato === 'cansado') {
+              <span>😴 Cansado</span>
+            }
+          </div>
         </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">Revancha</button>
-      </div>
-    }
 
-    @if (estadoDuelo === 'DERROTA') {
-      <div class="estado-banner derrota">
-        <span class="banner-icon">💀 🐍</span>
-        <div>
-          <h4>¡HAS CAÍDO EN DUELO!</h4>
-          <p>Madame Pomfrey te espera en la enfermería. No te rindas y prueba otra táctica.</p>
-        </div>
-        <button class="btn-magic btn-danger" (click)="iniciarDuelo()">Intentar de Nuevo</button>
-      </div>
-    }
-
-    <!-- Grimorio de Hechizos del Duelo (@for) -->
-    @if (estadoDuelo === 'EN_CURSO') {
-      <div class="spell-deck">
-        <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
-        <div class="spell-grid">
-          @for (h of hechizosDuelo; track h.id) {
-            <button 
-              class="spell-card" 
-              [disabled]="energiaMago < h.costoEnergia" 
-              (click)="lanzarHechizo(h)"
-            >
-              <div class="spell-top">
-                <strong>{{ h.nombre }}</strong>
-                <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
-              </div>
-              <p class="spell-desc">{{ h.descripcion }}</p>
-              <div class="spell-power">
-                <span>Efecto: <strong>+{{ h.poder }} {{ h.tipo }}</strong></span>
-              </div>
-            </button>
+        <div class="alertas-magicas">
+          @if (hambre < 30) {
+            <div class="alerta alerta-hambre">
+              🍖 ¡Tengo hambre! Mi barriga hace ruidos mágicos.
+            </div>
+          }
+          @if (energia < 25) {
+            <div class="alerta alerta-sueno">
+              😴 ¡Tengo mucho sueño! Mis patitas pesan como piedras.
+            </div>
+          }
+          @if (felicidad < 30) {
+            <div class="alerta alerta-triste">
+              💧 Me siento solo... ¿jugamos un rato?
+            </div>
+          }
+          @if (hambre < 15 || felicidad < 15) {
+            <div class="alerta alerta-peligro">
+              💎 ¡Quiere escaparse tras algo brillante! ¡Cuídalo pronto!
+            </div>
           }
         </div>
+
+        <div class="grid-cuidado">
+          <div class="escena-mascota">
+            <span class="brillo-escena b1">✦</span>
+            <span class="brillo-escena b2">✧</span>
+            <span class="brillo-escena b3">✦</span>
+            <div
+              class="escarbato-principal flotando"
+              [ngClass]="'animo-' + animoEscarbato"
+            >
+              <img
+                class="escarbato-imagen"
+                src="/escarbato/escarbato-principal.jpg"
+                alt="Escarbato mágico al cuidado del usuario"
+              />
+              <span class="estado-emoji">{{ emojiEscarbato }}</span>
+            </div>
+            <div class="sombra-escarbato"></div>
+
+            @if (animoEscarbato === 'feliz') {
+              <span class="corazon-flotante c1">💛</span>
+              <span class="corazon-flotante c2">✨</span>
+            }
+            @if (animoEscarbato === 'hambriento') {
+              <span class="corazon-flotante c1">🍓</span>
+            }
+            @if (animoEscarbato === 'cansado') {
+              <span class="corazon-flotante c1">💤</span>
+            }
+
+            <p class="burbuja-mensaje">{{ mensajeEscarbato }}</p>
+          </div>
+
+          <div class="panel-estadisticas">
+            <h4>Estadísticas de {{ nombreEscarbato }}</h4>
+
+            <div class="stat-fila">
+              <span class="stat-nombre">🍖 Hambre</span>
+              <div class="barra-stat">
+                <div class="barra-fill stat-hambre" [style.width.%]="hambre"></div>
+              </div>
+              <strong class="stat-valor">{{ hambre }}</strong>
+            </div>
+
+            <div class="stat-fila">
+              <span class="stat-nombre">💛 Felicidad</span>
+              <div class="barra-stat">
+                <div class="barra-fill stat-felicidad" [style.width.%]="felicidad"></div>
+              </div>
+              <strong class="stat-valor">{{ felicidad }}</strong>
+            </div>
+
+            <div class="stat-fila">
+              <span class="stat-nombre">⚡ Energía</span>
+              <div class="barra-stat">
+                <div class="barra-fill stat-energia" [style.width.%]="energia"></div>
+              </div>
+              <strong class="stat-valor">{{ energia }}</strong>
+            </div>
+
+            <div class="progreso-evolucion">
+              <div class="progreso-texto">
+                <span>🌱 Cuidados para evolucionar</span>
+                <strong>{{ cuidadosCorrectos }} / {{ metaCuidados }}</strong>
+              </div>
+              <div class="barra-stat">
+                <div class="barra-fill stat-evolucion" [style.width.%]="progresoCuidados"></div>
+              </div>
+            </div>
+
+            <div class="selector-comida">
+              <label class="etiqueta-campo" for="comida-escarbato">
+                🍽️ Elige su alimento
+              </label>
+              <select
+                id="comida-escarbato"
+                class="input-magic selector-alimento"
+                name="comidaSeleccionada"
+                [(ngModel)]="comidaSeleccionadaId"
+              >
+                @for (comida of comidas; track comida.id) {
+                  <option [ngValue]="comida.id">
+                    {{ comida.emoji }} {{ comida.nombre }}
+                  </option>
+                }
+              </select>
+              <p class="detalle-comida">
+                {{ comidaSeleccionada.emoji }} {{ comidaSeleccionada.descripcion }}
+                <span class="bonus-comida">+{{ comidaSeleccionada.hambre }} hambre</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-acciones">
+          <button class="btn-magic btn-alimentar" (click)="alimentar()">
+            🍓 Alimentar
+          </button>
+          <button class="btn-magic btn-jugar" (click)="jugar()">
+            💎 Jugar / Buscar tesoros
+          </button>
+          <button class="btn-magic btn-dormir" (click)="dormir()">
+            🌙 Dormir
+          </button>
+        </div>
+
+        <div class="paneles-inferiores">
+          <div class="panel-bolsa">
+            <h4>
+              💎 Bolsa de tesoros
+              <span class="contador-tesoros">{{ contadorTesoros }}</span>
+            </h4>
+            <div class="lista-tesoros">
+              @for (tesoro of tesoros; track tesoro.id) {
+                <div class="tesoro-item" [ngClass]="'tesoro-' + tesoro.rareza">
+                  <span class="tesoro-emoji">{{ tesoro.emoji }}</span>
+                  <div class="tesoro-datos">
+                    <strong>{{ tesoro.nombre }}</strong>
+                    <small>{{ tesoro.rareza }}</small>
+                  </div>
+                </div>
+              } @empty {
+                <p class="texto-vacio">
+                  La bolsa aún está vacía. ¡Hazlo jugar para que encuentre algo
+                  brillante!
+                </p>
+              }
+            </div>
+          </div>
+
+          <div class="panel-historial">
+            <h4>📜 Cuidados recientes</h4>
+            <div class="lista-historial">
+              @for (registro of historialCuidados; track registro.id) {
+                <div class="registro-item">
+                  <span class="registro-emoji">{{ registro.emoji }}</span>
+                  <div class="registro-datos">
+                    <strong>{{ registro.accion }}</strong>
+                    <p>{{ registro.detalle }}</p>
+                  </div>
+                  <span class="registro-hora">{{ registro.hora }}</span>
+                </div>
+              } @empty {
+                <p class="texto-vacio">Todavía no hay cuidados registrados.</p>
+              }
+            </div>
+          </div>
+        </div>
       </div>
     }
 
-    <!-- Historial de Turnos (@for) -->
-    <div class="history-log">
-      <h4>📜 Bitácora de Encantamientos del Duelo</h4>
-      <div class="log-entries">
-        @for (entry of historialDuelo; track $index) {
-          <div class="log-row" [ngClass]="'entry-' + entry.tipo">
-            <span class="turn-num">T{{ entry.turno }}</span>
-            <span class="turn-actor">[{{ entry.emisor }}]:</span>
-            <span class="turn-spell">{{ entry.hechizo }}</span>
-            <span class="turn-effect">{{ entry.efecto }}</span>
+    <!-- =====================================================================
+         ESTADO 3: EVOLUCIONADO (forma final según los cuidados)
+         ===================================================================== -->
+    @if (estadoEscarbato === 'evolucionado') {
+      <div class="pantalla evolucion-pantalla">
+        <span class="etiqueta-estado">ESTADO • EVOLUCIONADO</span>
+        <div class="halo-evolucion"></div>
+        <div class="escarbato-evolucionado animacion-evolucion">
+          <img
+            class="escarbato-imagen evolucion-imagen"
+            src="/escarbato/escarbato-principal.jpg"
+            alt="Escarbato mágico en su forma evolucionada"
+          />
+          <span class="estado-emoji">{{ emojiEscarbato }}</span>
+        </div>
+
+        <div class="panel-evolucion">
+          <span class="etiqueta-evolucion">✨ EVOLUCIÓN MÁGICA COMPLETA ✨</span>
+          <h3>{{ tituloFormaEvolucion }}</h3>
+          <p class="descripcion-evolucion">{{ descripcionFormaEvolucion }}</p>
+
+          <div class="resumen-final">
+            <div class="resumen-dato">
+              <strong>{{ contadorTesoros }}</strong>
+              <span>tesoros</span>
+            </div>
+            <div class="resumen-dato">
+              <strong>{{ cuidadosCorrectos }}</strong>
+              <span>cuidados</span>
+            </div>
+            <div class="resumen-dato">
+              <strong>{{ hambre }}</strong>
+              <span>hambre</span>
+            </div>
+            <div class="resumen-dato">
+              <strong>{{ energia }}</strong>
+              <span>energía</span>
+            </div>
           </div>
-        } @empty {
-          <p class="empty-log">Aún no se han intercambiado hechizos en la arena.</p>
-        }
+
+          <p class="mensaje-evolucion">{{ mensajeEscarbato }}</p>
+
+          <div class="panel-bolsa panel-bolsa-evolucion">
+            <h4>
+              💎 Tesoros guardados
+              <span class="contador-tesoros">{{ contadorTesoros }}</span>
+            </h4>
+            <div class="lista-tesoros">
+              @for (tesoro of tesoros; track tesoro.id) {
+                <div class="tesoro-item" [ngClass]="'tesoro-' + tesoro.rareza">
+                  <span class="tesoro-emoji">{{ tesoro.emoji }}</span>
+                  <div class="tesoro-datos">
+                    <strong>{{ tesoro.nombre }}</strong>
+                    <small>{{ tesoro.rareza }}</small>
+                  </div>
+                </div>
+              } @empty {
+                <p class="texto-vacio">Esta forma no llegó a reunir tesoros.</p>
+              }
+            </div>
+          </div>
+
+          <button class="btn-magic btn-reiniciar" (click)="reiniciarAventura()">
+            🕳️ Volver a la madriguera
+          </button>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    }
+
+    <!-- =====================================================================
+         ESTADO 4: ESCAPADO (se fue tras un tesoro; se puede llamar)
+         ===================================================================== -->
+    @if (estadoEscarbato === 'escapado') {
+      <div class="pantalla escapado-pantalla">
+        <span class="etiqueta-estado etiqueta-peligro">ESTADO • ESCAPADO</span>
+        <div class="rastro-brillos" aria-hidden="true">
+          <span>✨</span><span>💎</span><span>✨</span><span>🪙</span><span>✨</span>
+        </div>
+        <div class="escarbato-lejano">
+          <img
+            class="escapado-imagen"
+            src="/escarbato/escarbato-banner.jpg"
+            alt="Escarbato escapado persiguiendo un tesoro brillante"
+          />
+        </div>
+
+        <div class="panel-escapado">
+          <h3>{{ nombreEscarbato }} se escapó tras un destello</h3>
+          <p>
+            Un tesoro brillaba entre los árboles y no pudo resistirse. Ahora
+            corretea por el bosque prohibido, olfateando cada moneda perdida.
+          </p>
+          @if (contadorTesoros > 0) {
+            <p class="nota-tesoros">
+              Su bolsa con {{ contadorTesoros }} tesoro(s) quedó escondida en la
+              madriguera. Si vuelve, podrás seguir reuniéndolos.
+            </p>
+          }
+          <p class="pista-llamado">
+            Los escarbatos reconocen la voz de quien los cuidó. Llámalo con
+            cariño y volverá con las estadísticas reiniciadas.
+          </p>
+          <button class="btn-magic btn-llamar" (click)="llamarEscarbato()">
+            🔔 Llamarlo de vuelta
+          </button>
+        </div>
+      </div>
+    }
+  </section>
 </div>
