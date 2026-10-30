@@ -2,167 +2,171 @@
   <div class="page-breadcrumb">
     <a href="/" class="back-link">← Volver al Gran Comedor</a>
     <span class="sep">•</span>
-    <span class="current">Reto 7 • El Lienzo Creativo (30%)</span>
+    <span class="current">Reto 7 • El Altar de la Ineficiencia Gloriosa</span>
   </div>
 
   <section class="section-card card-magic" [class.arena-oscura]="arenaOscura">
-  <div class="section-header">
-    <div class="section-badge creative-badge">RETO 7 • EL LIENZO CREATIVO (30% DE LA CALIFICACIÓN)</div>
-    <h2>🎨 El Laboratorio de Artefactos Mágicos</h2>
-    <p class="section-subtitle">
-      Demuestra tu creatividad y maestría técnica. Aquí tienes la libertad de dar vida a un artefacto mágico asombroso siguiendo los lineamientos de la rúbrica.
-    </p>
-  </div>
-
-  <div class="callout-didactico">
-    <h4>📜 Rúbrica de Evaluación del Reto Creativo (30%)</h4>
-    <p>
-      1. <strong>Múltiples Estados:</strong> Debe manejar al menos 3 estados interactivos (ej: Preparación, En Curso, Victoria/Derrota).<br>
-      2. <strong>Control Flow:</strong> Uso justificado de <span class="callout-code">{{ '@if' }}</span> y <span class="callout-code">{{ '@for' }}</span>.<br>
-      3. <strong>Data Binding:</strong> Implementar <span class="callout-code">[(ngModel)]</span> y enlaces dinámicos.<br>
-      4. <strong>Ciclos de Vida:</strong> Al menos dos hooks (<span class="callout-code">ngOnInit</span> y otro más).<br>
-      5. <strong>Estética y UX:</strong> Diseño mágico inmersivo, animaciones sutiles y buena experiencia de usuario.
-    </p>
-  </div>
-
-  <!-- Arena de Duelo Mágico -->
-  <div class="arena-container">
-    <div class="arena-top-bar">
-      <div class="arena-title">
-        <span>⚔️ Club de Duelo de Hogwarts</span>
-        <span class="badge-magic">Turno #{{ numeroTurno }}</span>
-      </div>
-
-      <div class="arena-actions">
-        <button class="btn-magic btn-secondary" (click)="toggleArena()">
-          {{ arenaOscura ? '☀️ Arena Iluminada' : '🌑 Arena de Sombras' }}
-        </button>
-        <button class="btn-magic" (click)="iniciarDuelo()">
-          🔄 Reiniciar Duelo
-        </button>
-      </div>
+    <div class="section-header">
+      <div class="section-badge creative-badge">RETO 7 • EL ARTEFACTO CREATIVO (ANTIMOLDE)</div>
+      <h2>🌌 El Altar de la Ineficiencia Gloriosa</h2>
+      <p class="section-subtitle">
+        Un espacio interactivo para crear coartadas absurdas, generar manifiestos artísticos y sabotear la monotonía corporativa.
+      </p>
     </div>
 
-    <!-- Escenario de Magos -->
-    <div class="duelo-combatientes">
-      <!-- Mago Jugador -->
-      <div class="combatiente-card mago-player">
-        <div class="combatiente-avatar">🧙‍♂️</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreMago }}</h3>
-          <input 
-            type="text" 
-            class="input-magic input-rename" 
-            [(ngModel)]="nombreMago" 
-            [disabled]="estadoDuelo === 'EN_CURSO'"
-            placeholder="Renombrar mago..."
-          />
-          <div class="stat-bar">
-            <span>Salud: {{ saludMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludMago"></div></div>
-          </div>
-          <div class="stat-bar">
-            <span>Energía Mágica: {{ energiaMago }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
+    <div class="arena-container">
+      <div class="arena-top-bar">
+        <div class="arena-title">
+          <span>🌀 Santuario de Evasión Creativa</span>
+          <span class="badge-magic">Estado: {{ estadoDuelo }}</span>
+        </div>
+        <div class="arena-actions">
+          <button class="btn-magic" (click)="iniciarDuelo()">⚡ Activar Santuario</button>
+          <button class="btn-magic btn-secondary" (click)="toggleArena()">🌓 Cambiar Atmósfera</button>
+        </div>
+      </div>
+
+      <!-- Configuración del Insurgente con Two-Way Binding y name obligatorio -->
+      <div class="duelo-combatientes" style="grid-template-columns: 1fr;">
+        <div class="combatiente-card mago-player" style="max-width: 600px; margin: 0 auto; text-align: center;">
+          <div class="combatiente-avatar">🧑‍🎤</div>
+          <div class="combatiente-datos">
+            <h3>Perfil del Insurgente</h3>
+            <input 
+              type="text" 
+              class="input-magic input-rename" 
+              [(ngModel)]="nombreMago" 
+              name="nombreMago"
+              placeholder="Tu alias revolucionario..."
+              style="margin-bottom: 0.75rem;"
+            />
+            <div class="stat-bar">
+              <span>Energía Creativa: {{ energiaMago }}%</span>
+              <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaMago"></div></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="vs-badge">VS</div>
+      <!-- Estado 1: Reposo (@if) -->
+      @if (estadoDuelo === 'PREPARACION') {
+        <div class="estado-banner preparacion" style="margin-top: 1.5rem; text-align: center;">
+          <span class="banner-icon">🌌</span>
+          <div>
+            <h4>El Santuario espera tu rebelión</h4>
+            <p>Personaliza tu alias arriba y haz clic en "Activar Santuario" para desbloquear las herramientas de evasión contra el sistema.</p>
+          </div>
+        </div>
+      }
 
-      <!-- Mago Rival -->
-      <div class="combatiente-card mago-rival">
-        <div class="combatiente-avatar">🧙🐍</div>
-        <div class="combatiente-datos">
-          <h3>{{ nombreRival }}</h3>
-          <span class="rival-tag">Adversario de Slytherin</span>
-          <div class="stat-bar">
-            <span>Salud: {{ saludRival }}%</span>
+      <!-- Estado 2: Victoria / Libertad Absoluta (@if) -->
+      @if (estadoDuelo === 'VICTORIA') {
+        <div class="estado-banner victoria" style="margin-top: 1.5rem; text-align: center;">
+          <span class="banner-icon">🎉✨</span>
+          <div>
+            <h4>¡Evasión Exitosa del Sistema!</h4>
+            <p>Has pulverizado la rigidez de la Matriz Gris. La ineficiencia gloriosa se ha instaurado con éxito.</p>
+          </div>
+          <button class="btn-magic" (click)="iniciarDuelo()" style="margin-top: 1rem;">Reiniciar Ciclo</button>
+        </div>
+      }
+
+      <!-- Contenido interactivo principal cuando está activo (@if y @for) -->
+      @if (estadoDuelo === 'EN_CURSO') {
+        <!-- Creador de Coartadas Absurdas con name en cada input/select -->
+        <div class="spell-deck" style="margin-top: 1.5rem; background: rgba(15, 23, 42, 0.8); padding: 1.25rem; border-radius: 10px;">
+          <h4>✍️ Forjador de Coartadas y Manifiestos Anti-Rutina</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div>
+              <label style="font-size: 0.8rem; color: #cbd5e1; display: block; margin-bottom: 0.3rem;">Idea o excusa absurda:</label>
+              <input 
+                type="text" 
+                class="input-magic" 
+                [(ngModel)]="nuevaCoartadaTitulo" 
+                name="nuevaCoartadaTitulo"
+                placeholder="Ej. Renunciar mentalmente a las 3 PM..." 
+                style="width: 100%; padding: 0.5rem;"
+              />
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: #cbd5e1; display: block; margin-bottom: 0.3rem;">Categoría:</label>
+              <select 
+                class="input-magic" 
+                [(ngModel)]="categoriaSeleccionada" 
+                name="categoriaSeleccionada"
+                style="width: 100%; padding: 0.5rem;">
+                <option value="Sabotaje Social">Sabotaje Social</option>
+                <option value="Evasión Digital">Evasión Digital</option>
+                <option value="Arte">Arte</option>
+                <option value="Filosofía Absurda">Filosofía Absurda</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-magic" style="margin-top: 1rem; width: 100%;" (click)="agregarCoartada()">
+            ✨ Guardar Coartada en el Altar
+          </button>
+        </div>
+
+        <!-- Listado interactivo de coartadas guardadas con @for -->
+        <div style="margin-top: 1.5rem;">
+          <h4 style="color: var(--gold-light); margin-bottom: 0.75rem;">📜 Tus Coartadas Registradas ({{ misCoartadas.length }})</h4>
+          <div class="spell-grid">
+            @for (coartada of misCoartadas; track coartada.id) {
+              <div class="spell-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <span class="cost-tag" style="background: rgba(168, 85, 247, 0.2); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">{{ coartada.categoria }}</span>
+                  <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #f8fafc;">"{{ coartada.titulo }}"</p>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.5rem;">
+                  <span style="font-size: 0.75rem; color: #a78bfa;">Absurdo: {{ coartada.nivelAbsurdo }}/10</span>
+                  <button class="btn-magic btn-danger" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" (click)="eliminarCoartada(coartada.id)">🗑️ Borrar</button>
+                </div>
+              </div>
+            } @empty {
+              <p class="empty-log">No hay coartadas guardadas. ¡Crea una arriba!</p>
+            }
+          </div>
+        </div>
+
+        <!-- Ataques contra la Matriz -->
+        <div class="spell-deck" style="margin-top: 2rem;">
+          <h4>🪄 Acciones Directas de Sabotaje (Debilita la Matriz Gris: {{ saludRival }}%):</h4>
+          <div class="stat-bar" style="margin-bottom: 1rem;">
+            <span>Integridad de la Matriz: {{ saludRival }}%</span>
             <div class="bar-bg"><div class="bar-fill hp" [style.width.%]="saludRival"></div></div>
           </div>
-          <div class="stat-bar">
-            <span>Energía Rival: {{ energiaRival }}%</span>
-            <div class="bar-bg"><div class="bar-fill mana" [style.width.%]="energiaRival"></div></div>
+          <div class="spell-grid">
+            @for (h of hechizosDuelo; track h.id) {
+              <button 
+                class="spell-card" 
+                [disabled]="energiaMago < h.costoEnergia" 
+                (click)="lanzarHechizo(h)"
+              >
+                <div class="spell-top">
+                  <strong>{{ h.nombre }}</strong>
+                  <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
+                </div>
+                <p class="spell-desc">{{ h.descripcion }}</p>
+              </button>
+            }
           </div>
         </div>
-      </div>
-    </div>
+      }
 
-    <!-- Panel de Estados del Duelo (@if) -->
-    @if (estadoDuelo === 'PREPARACION') {
-      <div class="estado-banner preparacion">
-        <span class="banner-icon">⚔️</span>
-        <div>
-          <h4>Duelo en Espera</h4>
-          <p>Ajusta el nombre de tu mago arriba y haz clic en "Iniciar Duelo" para alzar varitas.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">¡Empezar Duelo!</button>
-      </div>
-    }
-
-    @if (estadoDuelo === 'VICTORIA') {
-      <div class="estado-banner victoria">
-        <span class="banner-icon">🏆 🦁</span>
-        <div>
-          <h4>¡VICTORIA ÉPICA!</h4>
-          <p>¡Has derrotado a {{ nombreRival }}! Has ganado 50 puntos para tu casa.</p>
-        </div>
-        <button class="btn-magic" (click)="iniciarDuelo()">Revancha</button>
-      </div>
-    }
-
-    @if (estadoDuelo === 'DERROTA') {
-      <div class="estado-banner derrota">
-        <span class="banner-icon">💀 🐍</span>
-        <div>
-          <h4>¡HAS CAÍDO EN DUELO!</h4>
-          <p>Madame Pomfrey te espera en la enfermería. No te rindas y prueba otra táctica.</p>
-        </div>
-        <button class="btn-magic btn-danger" (click)="iniciarDuelo()">Intentar de Nuevo</button>
-      </div>
-    }
-
-    <!-- Grimorio de Hechizos del Duelo (@for) -->
-    @if (estadoDuelo === 'EN_CURSO') {
-      <div class="spell-deck">
-        <h4>🪄 Tu Mazo de Hechizos (Haz clic para lanzar):</h4>
-        <div class="spell-grid">
-          @for (h of hechizosDuelo; track h.id) {
-            <button 
-              class="spell-card" 
-              [disabled]="energiaMago < h.costoEnergia" 
-              (click)="lanzarHechizo(h)"
-            >
-              <div class="spell-top">
-                <strong>{{ h.nombre }}</strong>
-                <span class="cost-tag">{{ h.costoEnergia }}⚡</span>
-              </div>
-              <p class="spell-desc">{{ h.descripcion }}</p>
-              <div class="spell-power">
-                <span>Efecto: <strong>+{{ h.poder }} {{ h.tipo }}</strong></span>
-              </div>
-            </button>
+      <!-- Bitácora del Altar con @for -->
+      <div class="history-log" style="margin-top: 1.5rem;">
+        <h4>📜 Bitácora de la Ineficiencia</h4>
+        <div class="log-entries">
+          @for (entry of historialDuelo; track $index) {
+            <div class="log-row">
+              <span class="turn-num">[{{ entry.emisor }}]:</span>
+              <span class="turn-effect">{{ entry.efecto }}</span>
+            </div>
+          } @empty {
+            <p class="empty-log">El santuario está en silencio.</p>
           }
         </div>
       </div>
-    }
-
-    <!-- Historial de Turnos (@for) -->
-    <div class="history-log">
-      <h4>📜 Bitácora de Encantamientos del Duelo</h4>
-      <div class="log-entries">
-        @for (entry of historialDuelo; track $index) {
-          <div class="log-row" [ngClass]="'entry-' + entry.tipo">
-            <span class="turn-num">T{{ entry.turno }}</span>
-            <span class="turn-actor">[{{ entry.emisor }}]:</span>
-            <span class="turn-spell">{{ entry.hechizo }}</span>
-            <span class="turn-effect">{{ entry.efecto }}</span>
-          </div>
-        } @empty {
-          <p class="empty-log">Aún no se han intercambiado hechizos en la arena.</p>
-        }
-      </div>
     </div>
-  </div>
-</section>
+  </section>
 </div>
