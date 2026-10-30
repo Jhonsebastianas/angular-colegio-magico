@@ -102,11 +102,39 @@ export class CalderoComponent implements OnInit, OnDestroy {
   // MÉTODOS DEL RETO 3: PREPARAR NUEVA POCIÓN (DATA BINDING)
   // -------------------------------------------------------------------------
   esFormularioValido(): boolean {
-    return false;
+    const nombreValido = this.nuevoNombre && this.nuevoNombre.trim().length >= 3;
+    const tiempoValido = Number(this.nuevoTiempoCoccion) > 0;
+    const peligroValido = Number(this.nuevoNivelPeligro) >= 1 && Number(this.nuevoNivelPeligro) <= 10;
+    
+    return Boolean(nombreValido && tiempoValido && peligroValido);
   }
 
   prepararPocion(): void {
     if (!this.esFormularioValido()) return;
+
+    const nuevaPocion: Pocion = {
+      id: Date.now(),
+      nombre: this.nuevoNombre.trim(),
+      descripcion: this.nuevaDescripcion.trim() || 'Sin descripción detallada.',
+      nivelPeligro: Number(this.nuevoNivelPeligro),
+      tiempoCoccionMinutos: Number(this.nuevoTiempoCoccion),
+      tipoMagia: this.nuevoTipoMagia,
+      ingredientes: ['Ingrediente mágico base'],
+      estable: Number(this.nuevoNivelPeligro) < 8
+    };
+
+    // Agregar la poción al arreglo
+    this.pociones.unshift(nuevaPocion);
+
+    // Registrar estado en el Giratiempo (necesario para el Reto 6)
+    this.guardarEstadoGiratiempo();
+
+    // Limpiar los campos del formulario
+    this.nuevoNombre = '';
+    this.nuevaDescripcion = '';
+    this.nuevoNivelPeligro = 1;
+    this.nuevoTiempoCoccion = 10;
+    this.nuevoTipoMagia = 'Curacion';
   }
 
   eliminarPocion(id: number): void {
