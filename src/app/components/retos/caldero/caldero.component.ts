@@ -94,33 +94,42 @@ export class CalderoComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  // -------------------------------------------------------------------------
-  // MÉTODOS DEL RETO 3: PREPARAR NUEVA POCIÓN (DATA BINDING)
-  // -------------------------------------------------------------------------
-  // =========================================================================
-  // TODO: Reto 3 - Validar que:
-  // - nuevoNombre no esté vacío y tenga al menos 3 caracteres (sin espacios extra).
-  // - nuevoTiempoCoccion sea un número estrictamente mayor a 0.
-  // - nuevoNivelPeligro esté entre 1 y 10 inclusive.
-  // =========================================================================
+
   esFormularioValido(): boolean {
-    // TODO: Reto 3 - Reemplaza 'return false' por tus validaciones
-    return false;
-  }
+  const nombre = this.nuevoNombre.trim();
 
-  // =========================================================================
-  // TODO: Reto 3 - Agregar la nueva poción al arreglo 'this.pociones'
-  // - Debe validar que el formulario sea válido con this.esFormularioValido().
-  // - Debe crear un objeto 'Pocion' con id único (ej. Date.now()).
-  // - Debe agregarla a 'this.pociones'.
-  // - Debe llamar a this.guardarEstadoGiratiempo() para registrar el paso.
-  // - Debe limpiar los inputs del formulario (nuevoNombre = '', etc.).
-  // =========================================================================
+  return (
+    nombre.length >= 3 &&
+    this.nuevoTiempoCoccion > 0 &&
+    this.nuevoNivelPeligro >= 1 &&
+    this.nuevoNivelPeligro <= 10
+  );
+}
+
   prepararPocion(): void {
-    if (!this.esFormularioValido()) return;
+  if (!this.esFormularioValido()) return;
 
-    // TODO: Reto 3 - Construye el objeto Pocion, haz push a this.pociones y resetea las variables
-  }
+  const nuevaPocion: Pocion = {
+    id: Date.now(),
+    nombre: this.nuevoNombre.trim(),
+    descripcion: this.nuevaDescripcion,
+    nivelPeligro: this.nuevoNivelPeligro,
+    tiempoCoccionMinutos: this.nuevoTiempoCoccion,
+    tipoMagia: this.nuevoTipoMagia,
+    ingredientes: [],
+    estable: this.nuevoNivelPeligro < 8
+  };
+
+  this.pociones.push(nuevaPocion);
+
+  this.guardarEstadoGiratiempo();
+
+  this.nuevoNombre = '';
+  this.nuevaDescripcion = '';
+  this.nuevoNivelPeligro = 1;
+  this.nuevoTiempoCoccion = 10;
+  this.nuevoTipoMagia = 'Curacion';
+}
 
   eliminarPocion(id: number): void {
     this.pociones = this.pociones.filter(p => p.id !== id);
